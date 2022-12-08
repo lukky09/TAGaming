@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ShootMechanic : MonoBehaviour
+public class ShootMechanic : SnowBrawler
 {
     public GameObject ball;
     public float ballSpeed;
@@ -12,12 +12,13 @@ public class ShootMechanic : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        initialize();
     }
 
     // Update is called once per frame
     void Update()
     {
+
         if (Input.GetMouseButtonDown(0)) {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             GameObject ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
