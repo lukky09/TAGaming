@@ -24,7 +24,7 @@ public class ShootMechanic : SnowBrawler
             GameObject ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = direction.normalized;
-            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction);
+            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction,0);
         }
     }
 
