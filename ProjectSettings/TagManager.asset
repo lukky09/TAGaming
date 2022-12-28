@@ -8,6 +8,7 @@ TagManager:
   - PlayerTeam
   - EnemyTeam
   - Wall
+  - BallPile
   layers:
   - Default
   - TransparentFX
