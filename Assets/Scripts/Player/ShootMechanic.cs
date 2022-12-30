@@ -15,6 +15,7 @@ public class ShootMechanic : SnowBrawler
     void Start()
     {
         initialize();
+        playerteam = true;
         snowballreference = GetComponent<TakeSnowBall>();
     }
 
@@ -32,9 +33,4 @@ public class ShootMechanic : SnowBrawler
         }
     }
 
-    private void FixedUpdate()
-    {
-
-
-    }
 }

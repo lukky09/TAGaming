@@ -7,6 +7,8 @@ public class SnowBrawler : MonoBehaviour
 {
     static protected Slider playerTeamBar;
     static protected Slider enemyTeamBar;
+    protected bool playerteam;
+    protected int id;
 
     // Start is called before the first frame update
     static protected void initialize()
@@ -26,9 +28,4 @@ public class SnowBrawler : MonoBehaviour
             enemyTeamBar.value += amount;
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
 }
