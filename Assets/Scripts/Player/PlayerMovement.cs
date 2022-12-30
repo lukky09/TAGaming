@@ -29,7 +29,7 @@ public class PlayerMovement : MonoBehaviour
         {
             moveDirection /= diagonalCheck;
         }
-        if (Input.GetAxisRaw("Horizontal") != 0)
+        if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused)
             transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1, 1);
         animator.SetInteger("yMove", (int)Input.GetAxisRaw("Vertical"));
         animator.SetBool("xMove", Input.GetAxisRaw("Horizontal") != 0);
