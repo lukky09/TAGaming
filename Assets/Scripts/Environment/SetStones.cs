@@ -12,6 +12,7 @@ public class SetStones : MonoBehaviour
     {
         height = h;
         width = w;
+        Debug.Log(width + "," + height);
     }
     public static int getWidth()
     {
@@ -32,6 +33,7 @@ public class SetStones : MonoBehaviour
         {
             mapTilemap.SetTile(new Vector3Int(i, i, 1), rok);
         }
+        Debug.Log(width+","+height);
     }
 
     // Update is called once per frame
