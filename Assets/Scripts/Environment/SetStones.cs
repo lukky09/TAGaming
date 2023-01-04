@@ -5,6 +5,23 @@ using UnityEngine.Tilemaps;
 
 public class SetStones : MonoBehaviour
 {
+    static int width;
+    static int height;
+
+    public static void initializeSize(int h, int w)
+    {
+        height = h;
+        width = w;
+    }
+    public static int getWidth()
+    {
+        return width;
+    }
+    public static int getHeight()
+    {
+        return height;
+    }
+
     Tilemap mapTilemap;
     public TileBase rok;
     // Start is called before the first frame update

@@ -674,7 +674,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1681284055}
         m_TargetAssemblyTypeName: MainMenuNavigation, Assembly-CSharp
-        m_MethodName: startGame
+        m_MethodName: nextScene
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
