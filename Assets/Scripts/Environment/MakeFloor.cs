@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,21 +7,20 @@ using UnityEngine.Tilemaps;
 public class MakeFloor : MonoBehaviour
 {
     Tilemap mapTilemap;
-    public TileBase rok;
-    public int xLength, yHeight;
+    public TileBase floor;
     // Start is called before the first frame update
     void Start()
     {
         mapTilemap = this.GetComponent<Tilemap>();
-        for (int i = 0; i < 10; i++)
-        {
-            mapTilemap.SetTile(new Vector3Int(i, i, 1), rok);
-        }
+        mapTilemap.ClearAllTiles();
+        TileBase[] tilemaps = new TileBase[SetStones.getHeight() * SetStones.getWidth()];
+        Array.Fill(tilemaps, floor);
+        mapTilemap.SetTilesBlock(new BoundsInt(new Vector3Int(0, -SetStones.getHeight()+1, 1), new Vector3Int(SetStones.getWidth(), SetStones.getHeight(), 1)), tilemaps);
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

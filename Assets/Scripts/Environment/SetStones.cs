@@ -8,11 +8,12 @@ public class SetStones : MonoBehaviour
     static int width;
     static int height;
 
-    public static void initializeSize(int h, int w)
+    public static void initializeSize(int w, int h)
     {
         height = h;
         width = w;
-        Debug.Log(width + "," + height);
+        if (w % 2 == 1)
+            width--;
     }
     public static int getWidth()
     {
@@ -29,12 +30,20 @@ public class SetStones : MonoBehaviour
     void Start()
     {
         mapTilemap = this.GetComponent<Tilemap>();
-        for (int i = 0; i < 10; i++)
+        //horizontal
+        for (int i = 0; i < width; i++)
         {
-            mapTilemap.SetTile(new Vector3Int(i, i, 1), rok);
+            mapTilemap.SetTile(new Vector3Int(i, 0, 1), rok);
+            mapTilemap.SetTile(new Vector3Int(i, -height+1, 1), rok);
         }
-        Debug.Log(width+","+height);
+        //vertikal
+        for (int i = 1; i < height-1; i++)
+        {
+            mapTilemap.SetTile(new Vector3Int(0, -i, 1), rok);
+            mapTilemap.SetTile(new Vector3Int(width-1, -i, 1), rok);
+        }
     }
+
 
     // Update is called once per frame
     void Update()

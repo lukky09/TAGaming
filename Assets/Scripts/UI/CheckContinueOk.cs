@@ -12,7 +12,7 @@ public class CheckContinueOk : MonoBehaviour
     {
         bool ok = true;
         string textcontent;
-        int[] numbers = new int[2] { 0,0};
+        int[] numbers = new int[2];
         int i = 0;
 
         foreach (GameObject item in itemsToCheck)
@@ -20,16 +20,15 @@ public class CheckContinueOk : MonoBehaviour
             textcontent = item.GetComponent<TMP_InputField>().text;
             if (textcontent == "" || int.Parse(textcontent) < 15)
             {
-                numbers[i] = int.Parse(textcontent);
-                i++;
                 ok = false;
                 break;
             }
+            numbers[i] = int.Parse(textcontent);
+            i++;
         }
         gameObject.GetComponent<Button>().interactable = ok;
         if (ok)
         {
-            Debug.Log(numbers[0] + "," + numbers[1]);
             SetStones.initializeSize(numbers[0], numbers[1]);
         }
     }
