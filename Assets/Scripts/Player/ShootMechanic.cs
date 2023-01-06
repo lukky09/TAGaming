@@ -12,9 +12,8 @@ public class ShootMechanic : SnowBrawler
     [SerializeField] float aimMovementSpeedPerc;
 
     private bool isAiming;
-    private float aliveTime;
+    private float currentaimangle;
     private float currentAimTime;
-    private bool fromUserTeam;
     private TakeSnowBall snowballreference;
     private LineRenderer linemanager;
 
@@ -38,17 +37,18 @@ public class ShootMechanic : SnowBrawler
             currentAimTime = aimTime;
             isAiming = true;
             line.SetActive(true);
+        }
+        if (Input.GetMouseButtonUp(0) && isAiming)
+        {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             GameObject ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             Vector2 direction = mousePos - (Vector2)this.transform.position;
-            direction = direction.normalized;
+            direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
             ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, 0);
             snowballreference.decreaseballamount();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
             isAiming = false;
             line.SetActive(false);
+
         }
     }
 
@@ -59,10 +59,10 @@ public class ShootMechanic : SnowBrawler
             Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
             Debug.Log(transform.localScale.x);
             currentAimTime -= Time.deltaTime;
-            float angle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
-            linemanager.SetPosition(0, transform.position + Quaternion.Euler(0, 0, angle * -1 / 2) * pos * 20);
+            currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
+            linemanager.SetPosition(0, transform.position + Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * pos * 20);
             linemanager.SetPosition(1, transform.position);
-            linemanager.SetPosition(2, transform.position + Quaternion.Euler(0, 0, angle / 2) * pos * 20);
+            linemanager.SetPosition(2, transform.position + Quaternion.Euler(0, 0, currentaimangle / 2) * pos * 20);
         }
     }
 }
