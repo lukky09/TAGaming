@@ -2,8 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using Unity.VisualScripting;
 
-
+[IncludeInSettings(true)]
 public class BarScoreManager : MonoBehaviour
 {
     static protected Slider playerTeamBar;
