@@ -207,7 +207,7 @@ LineRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 7cd08c29451803f4780c89632807fddc, type: 2}
+  - {fileID: 2100000, guid: c3fc64b2f39de884ca7286140dad28ba, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -282,7 +282,7 @@ LineRenderer:
     numCornerVertices: 0
     numCapVertices: 0
     alignment: 0
-    textureMode: 1
+    textureMode: 0
     shadowBias: 0.5
     generateLightingData: 0
   m_UseWorldSpace: 0
@@ -5013,6 +5013,37 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc3a84e9be2fcc54b8ffc960795aab09, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1351460151
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351460138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: efe58df89b5b74a97a123b5ed2b70422, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"nest":{"source":"Macro","macro":0,"embed":null}}'
+    _objectReferences:
+    - {fileID: 11400000, guid: f1a78e47b70b26b4cbfbe1d791cfe14a, type: 2}
+--- !u!114 &1351460152
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1351460138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e741851cba3ad425c91ecf922cc6b379, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _data:
+    _json: '{"declarations":{"Kind":"Object","collection":{"$content":[],"$version":"A"},"$version":"A"}}'
+    _objectReferences: []
 --- !u!1 &1428146717
 GameObject:
   m_ObjectHideFlags: 0
@@ -5977,6 +6008,7 @@ GameObject:
   - component: {fileID: 2052031802}
   - component: {fileID: 2052031801}
   - component: {fileID: 2052031805}
+  - component: {fileID: 2052031806}
   m_Layer: 5
   m_Name: UICanvas
   m_TagString: Projectile
@@ -6082,6 +6114,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pauseScreen: {fileID: 1713364913}
+--- !u!114 &2052031806
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2052031800}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0ef9366765366048854c21db87e4e67, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &2066501434
 GameObject:
   m_ObjectHideFlags: 0

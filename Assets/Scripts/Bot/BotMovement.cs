@@ -18,7 +18,7 @@ public class BotMovement : SnowBrawler
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        base.addscore(true,0.1f);
+        BarScoreManager.addscore(true,0.1f);
         if (collision.GetComponent<BallMovement>() != null)
             collision.GetComponent<BallMovement>().delet();
     }

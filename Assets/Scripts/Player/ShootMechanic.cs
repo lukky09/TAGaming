@@ -20,7 +20,6 @@ public class ShootMechanic : SnowBrawler
     // Start is called before the first frame update
     void Start()
     {
-        initialize();
         playerteam = true;
         snowballreference = GetComponent<TakeSnowBall>();
         //line.transform.position = transform.position;
