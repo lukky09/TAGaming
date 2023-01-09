@@ -15,6 +15,7 @@ GameObject:
   - component: {fileID: 3380666572601521302}
   - component: {fileID: 3380666572601521304}
   - component: {fileID: 3380666572601521305}
+  - component: {fileID: 5534560865541083252}
   m_Layer: 3
   m_Name: MainPlayer
   m_TagString: Untagged
@@ -183,3 +184,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   ballSpeed: 5
+  line: {fileID: 0}
+  aimAngle: 0
+  aimTime: 0
+  aimMovementSpeedPerc: 0
+--- !u!114 &5534560865541083252
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380666572601521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 72fdefcce3695cc4a9c858b86bce9570, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  takeRange: 2.5
