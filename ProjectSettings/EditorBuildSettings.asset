@@ -8,9 +8,12 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/MainMenu.unity
     guid: 72d68fc5f84594a47969b4e471cfa306
-  - enabled: 1
-    path: Assets/Scenes/LevelSetting.unity
+  - enabled: 0
+    path: Assets/Scenes/LevelSettingTA.unity
     guid: 6d9321a297193b94d8b88763445bbbe0
+  - enabled: 1
+    path: Assets/Scenes/LevelSettingUser.unity
+    guid: 0afe5cb1b9269eb4db307d4fab6c2f2d
   - enabled: 1
     path: Assets/Scenes/MainLevel.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02

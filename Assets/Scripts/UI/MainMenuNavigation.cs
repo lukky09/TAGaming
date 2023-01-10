@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using static UnityEditor.Progress;
 
 public class MainMenuNavigation : MonoBehaviour
 {
@@ -11,14 +12,18 @@ public class MainMenuNavigation : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void startGame()
-    {
-        SceneManager.LoadScene("MainLevel");
-    }
-
     public void exitGame()
     {
         Application.Quit();
+    }
+
+    public void setLevelforUser(string preparsedint)
+    {
+        string[] split = preparsedint.Split(","[0]);
+        int width = int.Parse(split[0]);
+        int height = int.Parse(split[1]);
+        SetStones.initializeSize(width, height);
+        SceneManager.LoadScene("MainLevel");
     }
 
     //Untuk Pengecekan
@@ -30,4 +35,6 @@ public class MainMenuNavigation : MonoBehaviour
             gameObject.GetComponent<TMP_InputField>().text = (intinput - 1).ToString();
         }
     }
+
+    
 }
