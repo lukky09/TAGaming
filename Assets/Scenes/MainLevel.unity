@@ -591,7 +591,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a545bc3e759e98b4c89922eddbf5d73e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  FloorTilemapObject: {fileID: 0}
+  FloorTilemapObject: {fileID: 1052547707}
+  ObjectToFollow: {fileID: 0}
 --- !u!1 &590981790
 GameObject:
   m_ObjectHideFlags: 0
