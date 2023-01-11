@@ -9,7 +9,7 @@ EditorBuildSettings:
     path: Assets/Scenes/MainMenu.unity
     guid: 72d68fc5f84594a47969b4e471cfa306
   - enabled: 0
-    path: Assets/Scenes/LevelSettingTA.unity
+    path: Assets/Scenes/KhususTA/LevelSettingTA.unity
     guid: 6d9321a297193b94d8b88763445bbbe0
   - enabled: 1
     path: Assets/Scenes/LevelSettingUser.unity

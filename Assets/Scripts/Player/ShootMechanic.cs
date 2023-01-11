@@ -21,6 +21,7 @@ public class ShootMechanic : SnowBrawler
     void Start()
     {
         playerteam = true;
+        id = 0;
         snowballreference = GetComponent<TakeSnowBall>();
         //line.transform.position = transform.position;
         linemanager = line.GetComponent<LineRenderer>();
@@ -47,21 +48,23 @@ public class ShootMechanic : SnowBrawler
             snowballreference.decreaseballamount();
             isAiming = false;
             line.SetActive(false);
-
+        }
+        if (isAiming)
+        {
+            Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
+            if (transform.localScale.x == -1)
+                pos = Vector3.Reflect(pos, Vector3.right);
+            Debug.Log(transform.localScale.x);
+            currentAimTime -= Time.deltaTime;
+            currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
+            linemanager.SetPosition(0, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * pos * 20);
+            linemanager.SetPosition(1, Vector3.zero);
+            linemanager.SetPosition(2, Quaternion.Euler(0, 0, currentaimangle / 2) * pos * 20);
         }
     }
 
     private void FixedUpdate()
     {
-        if (isAiming)
-        {
-            Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
-            Debug.Log(transform.localScale.x);
-            currentAimTime -= Time.deltaTime;
-            currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
-            linemanager.SetPosition(0, transform.position + Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * pos * 20);
-            linemanager.SetPosition(1, transform.position);
-            linemanager.SetPosition(2, transform.position + Quaternion.Euler(0, 0, currentaimangle / 2) * pos * 20);
-        }
+        
     }
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
-using static UnityEditor.Progress;
 
 public class MainMenuNavigation : MonoBehaviour
 {
@@ -20,9 +19,9 @@ public class MainMenuNavigation : MonoBehaviour
     public void setLevelforUser(string preparsedint)
     {
         string[] split = preparsedint.Split(","[0]);
-        int width = int.Parse(split[0]);
-        int height = int.Parse(split[1]);
-        SetStones.initializeSize(width, height);
+        int width = int.Parse(split[0]) + 2;
+        int height = int.Parse(split[1]) + 2;
+        SetObjects.initializeSize(width, height);
         SceneManager.LoadScene("MainLevel");
     }
 

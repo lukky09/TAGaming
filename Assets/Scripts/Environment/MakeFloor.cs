@@ -13,9 +13,9 @@ public class MakeFloor : MonoBehaviour
     {
         mapTilemap = this.GetComponent<Tilemap>();
         mapTilemap.ClearAllTiles();
-        TileBase[] tilemaps = new TileBase[SetStones.getHeight() * SetStones.getWidth()];
+        TileBase[] tilemaps = new TileBase[SetObjects.getHeight() * SetObjects.getWidth()];
         Array.Fill(tilemaps, floor);
-        mapTilemap.SetTilesBlock(new BoundsInt(new Vector3Int(0, -SetStones.getHeight()+1, 1), new Vector3Int(SetStones.getWidth(), SetStones.getHeight(), 1)), tilemaps);
+        mapTilemap.SetTilesBlock(new BoundsInt(new Vector3Int(0, -SetObjects.getHeight()+1, 1), new Vector3Int(SetObjects.getWidth(), SetObjects.getHeight(), 1)), tilemaps);
     }
 
     // Update is called once per frame

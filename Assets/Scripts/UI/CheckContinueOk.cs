@@ -29,7 +29,7 @@ public class CheckContinueOk : MonoBehaviour
         gameObject.GetComponent<Button>().interactable = ok;
         if (ok)
         {
-            SetStones.initializeSize(numbers[0], numbers[1]);
+            SetObjects.initializeSize(numbers[0], numbers[1]);
         }
     }
 }
