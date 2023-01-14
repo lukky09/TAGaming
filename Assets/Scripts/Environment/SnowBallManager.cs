@@ -7,6 +7,10 @@ public class SnowBallManager : MonoBehaviour
     public static ArrayList snowballs;
     public GameObject snowballscontainer;
 
+    [SerializeField] float snowballRespawnTime;
+    [SerializeField] int snowballRespawnAmount;
+    float currentSnowballRespawnTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -14,6 +18,7 @@ public class SnowBallManager : MonoBehaviour
         foreach (Transform ballz in snowballscontainer.GetComponentsInChildren<Transform>())
             snowballs.Add(ballz.gameObject);
         snowballs.RemoveAt(0);
+        currentSnowballRespawnTimer = snowballRespawnAmount;
     }
 
     public static void destroyball(int index)

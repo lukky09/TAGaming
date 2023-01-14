@@ -12,4 +12,9 @@ public class SnowBrawler : MonoBehaviour
         this.playerteam = playerteam;
         this.id = id;
     }
+
+    public int getid()
+    {
+        return id;
+    }
 }
