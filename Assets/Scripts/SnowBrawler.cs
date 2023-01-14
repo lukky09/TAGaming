@@ -17,4 +17,9 @@ public class SnowBrawler : MonoBehaviour
     {
         return id;
     }
+
+    public int getplayerteam()
+    {
+        return id;
+    }
 }

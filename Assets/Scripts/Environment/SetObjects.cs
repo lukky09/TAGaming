@@ -7,8 +7,9 @@ public class SetObjects : MonoBehaviour
 {
     static int width;
     static int height;
-    static int[,] stage;
-    //0 = Kosong, 1 = batu, 2 = powerup, 3 = character
+    static int[,] stageFolded;
+    static int[,] stageUnfolded;
+    //0 = Kosong, 1 = batu, 2 = powerup, 3 = character, 4 = snowball (khusus unfolded)
 
     [SerializeField] GameObject levelCamera;
     [SerializeField] GameObject playerPrefab;
@@ -19,7 +20,9 @@ public class SetObjects : MonoBehaviour
         width = w;
         if (w % 2 == 1)
             width--;
-        stage = new int[h - 2, (w / 2) - 1];
+        stageFolded = new int[h - 2, (w / 2) - 1];
+        stageUnfolded = new int[h - 2, w - 2];
+        Debug.Log(stageUnfolded.Length);
     }
 
     static (int, int) getrandomcoordinate()
@@ -29,7 +32,12 @@ public class SetObjects : MonoBehaviour
 
     public static void setStage(int[,] stagearray)
     {
-        stage = stagearray;
+        stageFolded = stagearray;
+    }
+
+    public static void setMap(int index1,int index2, int number)
+    {
+        stageUnfolded[index1,index2] = number;
     }
 
     public static int getWidth()
@@ -39,6 +47,13 @@ public class SetObjects : MonoBehaviour
     public static int getHeight()
     {
         return height;
+    }
+    public static int[,] getMap(bool folded)
+    {
+        if (folded)
+            return stageFolded;
+        else
+            return stageUnfolded;
     }
 
     Tilemap mapTilemap;

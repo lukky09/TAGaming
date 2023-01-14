@@ -18,9 +18,4 @@ public class MakeFloor : MonoBehaviour
         mapTilemap.SetTilesBlock(new BoundsInt(new Vector3Int(0, -SetObjects.getHeight()+1, 1), new Vector3Int(SetObjects.getWidth(), SetObjects.getHeight(), 1)), tilemaps);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
 }

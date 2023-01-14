@@ -7,7 +7,7 @@ public class BallMovement : MonoBehaviour
 {
     private float speed;
     private Vector2 direction;
-    private int ownerid;
+    private bool fromPlayerTeam;
     Rigidbody2D thisRigid;
 
     // Start is called before the first frame update
@@ -16,11 +16,15 @@ public class BallMovement : MonoBehaviour
         thisRigid = this.GetComponent<Rigidbody2D>();
     }
 
-    public void initialize(float speed, Vector2 direction, int ownerid)
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam)
     {
         this.speed = speed;
         this.direction = direction;
-        this.ownerid = ownerid;
+        this.fromPlayerTeam = isPlayerTeam;
+    }
+    public bool getPlayerTeam()
+    {
+        return fromPlayerTeam;
     }
 
     public void delet()

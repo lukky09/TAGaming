@@ -7,9 +7,10 @@ public class SnowBallManager : MonoBehaviour
     public static ArrayList snowballs;
     public GameObject snowballscontainer;
 
-    [SerializeField] float snowballRespawnTime;
-    [SerializeField] int snowballRespawnAmount;
-    float currentSnowballRespawnTimer;
+    [SerializeField] GameObject snowball;
+    [SerializeField] float respawnTime;
+    [SerializeField] int respawnAmount;
+    float currentrespawnTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -17,15 +18,43 @@ public class SnowBallManager : MonoBehaviour
         snowballs = new ArrayList();
         foreach (Transform ballz in snowballscontainer.GetComponentsInChildren<Transform>())
             snowballs.Add(ballz.gameObject);
-        snowballs.RemoveAt(0);
-        currentSnowballRespawnTimer = snowballRespawnAmount;
+        currentrespawnTimer = respawnAmount;
     }
 
     public static void destroyball(int index)
     {
-        print(index);
-        Destroy((GameObject)snowballs[index]);
+        GameObject ball = (GameObject)snowballs[index];
+        SetObjects.setMap(-Mathf.FloorToInt(ball.transform.position.y) + 1, Mathf.FloorToInt(ball.transform.position.x) - 1, 0);
+        Destroy(ball);
         snowballs.RemoveAt(index);
     }
 
+    public void Update()
+    {
+        if(currentrespawnTimer <= 0)
+        {
+            currentrespawnTimer = respawnTime;
+            putballs();
+        }
+        currentrespawnTimer -= Time.deltaTime;
+    }
+
+
+    void putballs()
+    {
+        int x, y;
+        GameObject ballz;
+        for (int i = 0; i < respawnAmount; i++)
+        {
+            x = Mathf.RoundToInt(Random.Range(0,SetObjects.getWidth()-2));
+            y = Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight()-2));
+            if (SetObjects.getMap(false)[y,x] == 0)
+            {
+                ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 1.5f), Quaternion.identity);
+                ballz.transform.SetParent(snowballscontainer.transform, true);
+                snowballs.Add(ballz);
+                SetObjects.setMap(y,x,4);
+            }
+        }
+    }
 }
