@@ -39,6 +39,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             var fc = c as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
+            //deflatten(fc.ToFloatingPoints(),SetObjects.getWidth(), SetObjects.getHeight())
             var x1 = values[0];
             var y1 = values[1];
             var x2 = values[2];
@@ -58,10 +59,17 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Start();
     }
 
-    int[,] deflatten(int[] arrays)
+    int[,] deflatten(double[] arrays, int width, int height)
     {
-
-        return null;
+        int[,] result = new int[height, width];
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                result[i, j] = (int)arrays[i * height + width];
+            }
+        }
+        return result;
     }
 
     // Update is called once per frame
