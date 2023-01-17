@@ -568,7 +568,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c691221f5f4354180f74d0e91f8128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  crossoverMiddleValue: 0
+  crossoverMiddleValue: 25
 --- !u!1 &1070553103
 GameObject:
   m_ObjectHideFlags: 0

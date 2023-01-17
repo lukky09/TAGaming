@@ -22,6 +22,7 @@ public class MainMenuNavigation : MonoBehaviour
         int width = int.Parse(split[0]) + 2;
         int height = int.Parse(split[1]) + 2;
         SetObjects.initializeSize(width, height);
+        //nextScene();
         SceneManager.LoadScene("MainLevel");
     }
 

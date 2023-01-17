@@ -1,7 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using GeneticSharp;
+using UnityEngine.UI;
 using GeneticSharp.Domain.Chromosomes;
 using System;
 using static UnityEngine.Rendering.DebugUI;
@@ -19,9 +19,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 {
     [SerializeField] int crossoverMiddleValue;
 
+    Slider sliderReference;
+
     // Start is called before the first frame update
     void Start()
     {
+        sliderReference = gameObject.GetComponent<Slider>();
         int length = (SetObjects.getHeight() - 2) * (SetObjects.getWidth() - 2);
         double[] kosonganDouble = new double[length];
         double[] kosonganDoubleMax = (double[])kosonganDouble.Clone();
@@ -47,12 +50,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         //Metode Crossover
         float r = Random.Range(crossoverMiddleValue, length - crossoverMiddleValue);
         var crossover = new OnePointCrossover(Mathf.RoundToInt(r));
-        var mutation = new FlipBitMutation();
+        var mutation = new UniformMutation();
         var termination = new FitnessStagnationTermination(50);
 
         var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
         ga.Termination = termination;
         ga.Start();
+    }
+
+    int[,] deflatten(int[] arrays)
+    {
+
+        return null;
     }
 
     // Update is called once per frame
