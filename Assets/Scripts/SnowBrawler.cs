@@ -18,8 +18,8 @@ public class SnowBrawler : MonoBehaviour
         return id;
     }
 
-    public int getplayerteam()
+    public bool getplayerteam()
     {
-        return id;
+        return playerteam;
     }
 }

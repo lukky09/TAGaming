@@ -9,9 +9,9 @@ public class ShootMechanic : SnowBrawler
     [SerializeField] GameObject line;
     [SerializeField] float aimAngle;
     [SerializeField] float aimTime;
-    [SerializeField] float aimMovementSpeedPerc;
+    public float aimMovementSpeedPerc;
 
-    private bool isAiming;
+    public bool isAiming;
     private float currentaimangle;
     private float currentAimTime;
     private TakeSnowBall snowballreference;
@@ -45,6 +45,7 @@ public class ShootMechanic : SnowBrawler
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
             ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true);
+            ballin.layer = 6;
             snowballreference.decreaseballamount();
             isAiming = false;
             line.SetActive(false);
@@ -54,7 +55,6 @@ public class ShootMechanic : SnowBrawler
             Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
             if (transform.localScale.x == -1)
                 pos = Vector3.Reflect(pos, Vector3.right);
-            Debug.Log(transform.localScale.x);
             currentAimTime -= Time.deltaTime;
             currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
             linemanager.SetPosition(0, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * pos * 20);
@@ -63,8 +63,4 @@ public class ShootMechanic : SnowBrawler
         }
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
 }

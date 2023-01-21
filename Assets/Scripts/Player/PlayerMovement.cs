@@ -9,6 +9,7 @@ public class PlayerMovement : MonoBehaviour
     public float speed;
     Animator animator;
     Rigidbody2D thisRigid;
+    ShootMechanic SMReference;
 
     // Start is called before the first frame update
     void Start()
@@ -16,6 +17,7 @@ public class PlayerMovement : MonoBehaviour
         moveDirection = new Vector2(0,0);
         animator = this.GetComponent<Animator>();
         thisRigid = this.GetComponent<Rigidbody2D>();
+        SMReference = this.GetComponent<ShootMechanic>();
         thisRigid.useFullKinematicContacts = true;
     }
 
@@ -26,14 +28,13 @@ public class PlayerMovement : MonoBehaviour
         moveDirection.x = Input.GetAxisRaw("Horizontal") * speed ;
         moveDirection.y = Input.GetAxisRaw("Vertical") * speed;
         if (diagonalCheck != 0f)
-        {
             moveDirection /= diagonalCheck;
-        }
+        if (SMReference.isAiming)
+            moveDirection *= SMReference.aimMovementSpeedPerc;
         if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused)
             transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1, 1);
         animator.SetInteger("yMove", (int)Input.GetAxisRaw("Vertical"));
         animator.SetBool("xMove", Input.GetAxisRaw("Horizontal") != 0);
-        //transform.Translate(moveDirection * Time.deltaTime);
     }
 
     private void FixedUpdate()

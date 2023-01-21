@@ -186,9 +186,10 @@ MonoBehaviour:
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   ballSpeed: 5
   line: {fileID: 3767412540042823851}
-  aimAngle: 0
-  aimTime: 0
-  aimMovementSpeedPerc: 0
+  aimAngle: 90
+  aimTime: 1
+  aimMovementSpeedPerc: 0.75
+  isAiming: 0
 --- !u!114 &5534560865541083252
 MonoBehaviour:
   m_ObjectHideFlags: 0

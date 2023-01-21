@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8116715311126598152}
   - component: {fileID: 8116715311126598155}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BallPile
   m_TagString: BallPile
   m_Icon: {fileID: 0}

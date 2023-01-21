@@ -22,36 +22,16 @@ public class TakeSnowBall : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            if (Vector2.Distance(closestball.transform.position, transform.position) < takeRange)
-            {
-                SnowBallManager.destroyball(ballindex);
+            Debug.Log(takeRange);
+            bool deleted = SnowBallManager.getDeleteclosestball(transform, takeRange,true);
+            if (deleted)
                 currentballamount = 3;
-            }
         }
     }
 
     private void FixedUpdate()
     {
-        (closestball,ballindex) = getclosestball();
-    }
-
-    (GameObject,int) getclosestball()
-    {
-        GameObject closestball = null;
-        float closestrange = 999, range = 0;
-        int i = 0,index = -1;
-        foreach (GameObject ballz in SnowBallManager.snowballs)
-        {
-            range = Vector2.Distance(ballz.transform.position, transform.position);
-            if (range < closestrange)
-            {
-                closestball = ballz;
-                closestrange = range;
-                index = i;
-            }
-            i++;
-        }
-        return (closestball, index);
+        
     }
 
     public int getballamount()

@@ -57,4 +57,29 @@ public class SnowBallManager : MonoBehaviour
             }
         }
     }
+
+    static public bool getDeleteclosestball(Transform objecttransform, float rangetreshold, bool delete)
+    {
+        bool isdeleted = true;
+        float closestrange = 999, range = 0;
+        int i = 0, index = -1;
+        foreach (GameObject ballz in snowballs)
+        {
+            range = Vector2.Distance(ballz.transform.position, objecttransform.position);
+            if (range < closestrange)
+            {
+                closestrange = range;
+                index = i;
+            }
+            i++;
+        }
+        if (delete && closestrange < rangetreshold  && index >= 0)
+        {
+            destroyball(index);
+            isdeleted = true;
+        }
+        else if (!delete && closestrange < rangetreshold)
+            isdeleted = true;
+        return isdeleted;
+    }
 }
