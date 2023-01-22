@@ -22,7 +22,6 @@ public class SetObjects : MonoBehaviour
             width--;
         stageFolded = new int[h - 2, (w / 2) - 1];
         stageUnfolded = new int[h - 2, w - 2];
-        Debug.Log(stageUnfolded.Length);
     }
 
     static (int, int) getrandomcoordinate()
@@ -83,7 +82,7 @@ public class SetObjects : MonoBehaviour
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, new Vector3(width - x, y), Quaternion.identity);
         tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(false, 5);
         tempEnemyPrefab.GetComponent<SpriteRenderer>().color = Color.magenta;
-        for (int i = 1; i < 5; i++)
+        for (int i = 1; i < 5-4; i++)
         {
             (x, y) = getrandomcoordinate();
             tempEnemyPrefab = Instantiate(enemyPrefab, new Vector3(x, y), Quaternion.identity);

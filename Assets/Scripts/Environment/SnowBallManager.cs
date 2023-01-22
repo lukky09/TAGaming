@@ -50,7 +50,7 @@ public class SnowBallManager : MonoBehaviour
             y = Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight()-2));
             if (SetObjects.getMap(false)[y,x] == 0)
             {
-                ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 1.5f), Quaternion.identity);
+                ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 0.5f), Quaternion.identity);
                 ballz.transform.SetParent(snowballscontainer.transform, true);
                 snowballs.Add(ballz);
                 SetObjects.setMap(y,x,4);
@@ -60,12 +60,24 @@ public class SnowBallManager : MonoBehaviour
 
     static public bool getDeleteclosestball(Transform objecttransform, float rangetreshold, bool delete)
     {
-        bool isdeleted = true;
+        bool isdeleted = false;
+        int index = getNearestBallIndex(objecttransform, rangetreshold);
+        if (index >= 0)
+        {
+            if (delete)
+                destroyball(index);
+            isdeleted = true;
+        }
+        return isdeleted;
+    }
+
+    public static int getNearestBallIndex(Transform objectTracked)
+    {
         float closestrange = 999, range = 0;
         int i = 0, index = -1;
         foreach (GameObject ballz in snowballs)
         {
-            range = Vector2.Distance(ballz.transform.position, objecttransform.position);
+            range = Vector2.Distance(ballz.transform.position, objectTracked.position);
             if (range < closestrange)
             {
                 closestrange = range;
@@ -73,13 +85,15 @@ public class SnowBallManager : MonoBehaviour
             }
             i++;
         }
-        if (delete && closestrange < rangetreshold  && index >= 0)
-        {
-            destroyball(index);
-            isdeleted = true;
-        }
-        else if (!delete && closestrange < rangetreshold)
-            isdeleted = true;
-        return isdeleted;
+        return index;
+    }
+
+    public static int getNearestBallIndex(Transform objectTracked, float range)
+    {
+        int index = getNearestBallIndex(objectTracked);
+        if (Vector2.Distance(((GameObject)snowballs[index]).transform.position, objectTracked.position) < range)
+            return index;
+        else
+            return -1;
     }
 }

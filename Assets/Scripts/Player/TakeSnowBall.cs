@@ -29,11 +29,6 @@ public class TakeSnowBall : MonoBehaviour
         }
     }
 
-    private void FixedUpdate()
-    {
-        
-    }
-
     public int getballamount()
     {
         return currentballamount;
