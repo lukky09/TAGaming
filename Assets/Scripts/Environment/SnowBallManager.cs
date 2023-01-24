@@ -53,6 +53,7 @@ public class SnowBallManager : MonoBehaviour
                 ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 0.5f), Quaternion.identity);
                 ballz.transform.SetParent(snowballscontainer.transform, true);
                 snowballs.Add(ballz);
+                //Debug.Log("Bola ke-" + i + " = " + x + " " + y);
                 SetObjects.setMap(y,x,4);
             }
         }
@@ -95,5 +96,10 @@ public class SnowBallManager : MonoBehaviour
             return index;
         else
             return -1;
+    }
+
+    public static GameObject getBallfromIndex(int index)
+    {
+        return (GameObject)snowballs[index];
     }
 }
