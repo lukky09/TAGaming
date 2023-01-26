@@ -2,15 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
+using System.Linq;
 
 public class AStarAlgorithm : MonoBehaviour
 {
     public static Coordinate[] makeWay(Transform character, Transform ball)
-    { 
-        RaycastHit2D raycast = Physics2D.Linecast(character.localPosition, ball.localPosition);
-        if (raycast.collider == null)
+    {
+        if (!Physics2D.Linecast(character.localPosition, ball.localPosition, 6))
         {
             Coordinate ints = vectorToCoordinate(ball.localPosition);
+            Debug.Log("Shortcut");
             return new Coordinate[] { ints };
         }
         else
@@ -23,8 +24,8 @@ public class AStarAlgorithm : MonoBehaviour
                 result = result.parentNode;
             }
             coordinates.Reverse();
-            Coordinate[] finalcoordinates = (Coordinate[])coordinates.ToArray(typeof(Coordinate));
-            return optimizePath(finalcoordinates);
+            Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
+            return finalcoordinates;
         }
     }
 
@@ -32,7 +33,6 @@ public class AStarAlgorithm : MonoBehaviour
     {
         ArrayList resultAL = new ArrayList();
         Coordinate currentpoint = path[0];
-        resultAL.Add(currentpoint);
         int tempindex = 1;
         while (tempindex <= path.Length - 1)
         {
@@ -44,7 +44,7 @@ public class AStarAlgorithm : MonoBehaviour
             }
             tempindex++;
         }
-        resultAL.Add(path[1]);
+        resultAL.Add(path[path.Length - 1]);
         return (Coordinate[])resultAL.ToArray(typeof(Coordinate));
     }
 
@@ -70,7 +70,7 @@ public class AStarAlgorithm : MonoBehaviour
         Coordinate newcoor;
         while (listNode.Count > 0)
         {
-            currentnode = (AstarNode)listNode[0]; 
+            currentnode = (AstarNode)listNode[0];
             //Debug.Log(currentnode.ToString());
             listNode.RemoveAt(0);
             if (currentnode.coordinate.xCoor == posisibola.xCoor && currentnode.coordinate.yCoor == posisibola.yCoor)
@@ -81,11 +81,11 @@ public class AStarAlgorithm : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 newcoor = new Coordinate(currentnode.coordinate.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), currentnode.coordinate.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
-                if (newcoor.yCoor < mapheight && newcoor.xCoor < maplength && map[newcoor.yCoor, newcoor.xCoor] != 1)
+                if (Enumerable.Range(0, mapheight - 1).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength - 1).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1)
                 {
                     distance = Vector2.Distance(newcoor.returnAsVector(), ball.position);
                     tempnode = new AstarNode(newcoor, currentnode.g + 1, distance, currentnode);
-                    
+
                     isput = false;
                     for (int j = 0; j < listNode.Count; j++)
                     {
@@ -109,6 +109,7 @@ public class AStarAlgorithm : MonoBehaviour
         return new Coordinate(Mathf.RoundToInt(vent.x - 1.5f), Mathf.RoundToInt(-vent.y - 0.5f));
     }
 }
+
 class AstarNode
 {
     public Coordinate coordinate;
@@ -133,7 +134,7 @@ class AstarNode
     }
 }
 
-[Inspectable]
+[System.Serializable,Inspectable]
 public class Coordinate
 {
     public int xCoor, yCoor;
