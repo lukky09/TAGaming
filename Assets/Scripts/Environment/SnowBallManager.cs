@@ -63,6 +63,7 @@ public class SnowBallManager : MonoBehaviour
     {
         bool isdeleted = false;
         int index = getNearestBallIndex(objecttransform, rangetreshold);
+        Debug.Log(index);
         if (index >= 0)
         {
             if (delete)

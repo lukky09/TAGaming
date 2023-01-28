@@ -22,8 +22,7 @@ public class TakeSnowBall : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            Debug.Log(takeRange);
-            bool deleted = SnowBallManager.getDeleteclosestball(transform, takeRange,true);
+            bool deleted = SnowBallManager.getDeleteclosestball(transform, takeRange, true);
             if (deleted)
                 currentballamount = 3;
         }

@@ -8,6 +8,7 @@ public class BallMovement : MonoBehaviour
     private float speed;
     private Vector2 direction;
     private bool fromPlayerTeam;
+    private int ballScore;
     Rigidbody2D thisRigid;
 
     // Start is called before the first frame update
@@ -16,7 +17,7 @@ public class BallMovement : MonoBehaviour
         thisRigid = this.GetComponent<Rigidbody2D>();
     }
 
-    public void initialize(float speed, Vector2 direction, bool isPlayerTeam)
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam,int ballScore)
     {
         this.speed = speed;
         this.direction = direction;
@@ -32,12 +33,6 @@ public class BallMovement : MonoBehaviour
         Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void FixedUpdate()
     {
         thisRigid.MovePosition((Vector2)this.transform.position + direction * Time.deltaTime * speed);
@@ -47,5 +42,11 @@ public class BallMovement : MonoBehaviour
     {
         if (collision.tag == "Wall")
             Destroy(gameObject);
+    }
+
+    public void ballIsCatched(bool isPlayerTeam,int addScore)
+    {
+        this.fromPlayerTeam = isPlayerTeam;
+        this.ballScore += addScore;
     }
 }

@@ -44,7 +44,7 @@ public class ShootMechanic : SnowBrawler
             GameObject ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
-            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true);
+            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true,10);
             ballin.layer = 6;
             snowballreference.decreaseballamount();
             isAiming = false;
