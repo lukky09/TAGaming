@@ -22,10 +22,16 @@ public class BallMovement : MonoBehaviour
         this.speed = speed;
         this.direction = direction;
         this.fromPlayerTeam = isPlayerTeam;
+        this.ballScore = ballScore;
     }
     public bool getPlayerTeam()
     {
         return fromPlayerTeam;
+    }
+
+    public int getBallScore()
+    {
+        return ballScore;
     }
 
     public void delet()

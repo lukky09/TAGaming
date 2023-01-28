@@ -24,9 +24,11 @@ public class SnowBallManager : MonoBehaviour
     public static void destroyball(int index)
     {
         GameObject ball = (GameObject)snowballs[index];
-        SetObjects.setMap(-Mathf.FloorToInt(ball.transform.position.y) + 1, Mathf.FloorToInt(ball.transform.position.x) - 1, 0);
+        Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
+        SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
         Destroy(ball);
         snowballs.RemoveAt(index);
+        snowballs.TrimToSize();
     }
 
     public void Update()
@@ -63,7 +65,6 @@ public class SnowBallManager : MonoBehaviour
     {
         bool isdeleted = false;
         int index = getNearestBallIndex(objecttransform, rangetreshold);
-        Debug.Log(index);
         if (index >= 0)
         {
             if (delete)
