@@ -150,9 +150,13 @@ public class Coordinate
         return new Vector2(xCoor + 1.5f, -yCoor - 0.5f);
     }
 
-    
     public override string ToString()
     {
         return xCoor + "," + yCoor;
+    }
+
+    public static Coordinate getRandomCoordinate()
+    {
+        return new Coordinate(Mathf.RoundToInt(Random.Range(0, (SetObjects.getWidth() - 2) / 2)) + 1, -Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight() - 2)) - 1);
     }
 }
