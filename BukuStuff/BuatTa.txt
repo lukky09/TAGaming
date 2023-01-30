@@ -1,0 +1,7 @@
+1 Pendahuluan
+2. Algo Gen. + Implementasi Unity
+3. Njelasin Unity + Cara Kerjanya
+4. Analisa Game
+5. Desain + Implementasi Game
+6. Uji Coba
+7. Penututp
