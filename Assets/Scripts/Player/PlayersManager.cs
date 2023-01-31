@@ -27,12 +27,15 @@ public class PlayersManager : MonoBehaviour
 
     public void makeNewPlayer(Coordinate c)
     {
+        Material m = new Material(playerMaterial);
+        m.SetColor("_OutlineColor", Color.yellow);
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] == null)
             {
-                players[i] = Instantiate(playerPrefab, c.returnAsVector(),Quaternion.identity);
+                players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
                 levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i]);
+                players[i].GetComponent<SpriteRenderer>().material = new Material(m);
                 break;
             }
         }
@@ -41,7 +44,10 @@ public class PlayersManager : MonoBehaviour
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
     {
         Material m = new Material(playerMaterial);
-        m.SetColor("OutlineColor",Color.magenta);
+        if(isPlayerTeam)
+            m.SetColor("_OutlineColor", Color.blue);
+        else
+        m.SetColor("_OutlineColor", Color.red);
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] == null)
@@ -49,6 +55,7 @@ public class PlayersManager : MonoBehaviour
                 GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
                 tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(isPlayerTeam, i);
                 tempEnemyPrefab.GetComponent<SpriteRenderer>().material = new Material(m);
+                players[i] = tempEnemyPrefab;
                 break;
             }
         }
