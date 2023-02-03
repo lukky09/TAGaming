@@ -39,11 +39,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             var fc = c as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
-            //deflatten(fc.ToFloatingPoints(),SetObjects.getWidth(), SetObjects.getHeight())
+            int[,] map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth(), SetObjects.getHeight());
             var x1 = values[0];
             var y1 = values[1];
             var x2 = values[2];
             var y2 = values[3];
+            bool[,][] flags = new bool[map.GetLength(0), map.GetLength(1)][];
             return Math.Sqrt(Math.Pow(x2 - x1, 2) + Math.Pow(y2 - y1, 2));
         });
         //Metode milih ortu
