@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
 {
-    GameObject[] players;
+    static GameObject[] players;
     [SerializeField] Material playerMaterial;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] GameObject enemyPrefab;
@@ -59,5 +59,22 @@ public class PlayersManager : MonoBehaviour
                 break;
             }
         }
+    }
+
+    public static GameObject getnearestPlayer(Transform player)
+    {
+        float closestrange = 999, range = 0;
+        int i = 0, index = -1;
+        foreach (GameObject currplayer in players)
+        {
+            range = Vector2.Distance(player.transform.position, player.position);
+            if (range < closestrange)
+            {
+                closestrange = range;
+                index = i;
+            }
+            i++;
+        }
+        return players[i];
     }
 }
