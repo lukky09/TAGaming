@@ -13,7 +13,9 @@ using GeneticSharp.Domain.Crossovers;
 using Random = UnityEngine.Random;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Terminations;
+using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
+using TMPro;
 
 public class GeneticAlgorithmGenerator : MonoBehaviour
 {
@@ -21,16 +23,22 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int PanjangWallWeight;
     [SerializeField] int PanjangWallVertikalAmt;
     [SerializeField] int PanjangWallHorizontalAmt;
-    Slider sliderReference;
+    TextMeshProUGUI tmpro;
 
     // Start is called before the first frame update
     void Start()
     {
-        sliderReference = gameObject.GetComponent<Slider>();
-        int length = (SetObjects.getHeight() - 2) * (SetObjects.getWidth() - 2);
+        int iterasi = 0;
+        int length = (SetObjects.getHeight()) * (SetObjects.getWidth());
+        int[,] map = new int[SetObjects.getHeight(), SetObjects.getWidth()];
         double[] kosonganDouble = new double[length];
         double[] kosonganDoubleMax = (double[])kosonganDouble.Clone();
         Array.Fill(kosonganDoubleMax, 4);
+        if (PanjangWallVertikalAmt == 0)
+            PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
+        if (PanjangWallHorizontalAmt == 0)
+            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 8);
+        tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
         //Kromosom
         var chromosome = new FloatingPointChromosome(kosonganDouble, kosonganDoubleMax, Enumerable.Repeat(3, length).ToArray(), Enumerable.Repeat(0, length).ToArray());
@@ -39,18 +47,23 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         //Fitness (nti ganti)
         var fitness = new FuncFitness((c) =>
         {
+            iterasi++;
+            tmpro.text = "Iterasi ke-" + iterasi;
+
             var fc = c as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
-            int[,] map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth(), SetObjects.getHeight());
+            map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth() , SetObjects.getHeight() );
             float fitness = 0;
             // Panjang Wall
-            fitness += getLengthFitness(map);
+            fitness += getLengthAndPlayersFitness(map);
             // Aksesibilitas Area Wall
+            fitness += getAreaFitness(map);
             // Jarak Kelompok Wall?
             // Aksesibilitas Power Up
             // Rasio Power up dan jumlah powerup
-            bool[,][] flags = new bool[map.GetLength(0), map.GetLength(1)][];
-            return 1;
+            //bool[,][] flags = new bool[map.GetLength(0), map.GetLength(1)][];
+            Debug.Log("Iterasi ke-" + iterasi + " = " + fitness);
+            return fitness;
         });
         //Metode milih ortu
         var selection = new RouletteWheelSelection();
@@ -63,10 +76,14 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
         ga.Termination = termination;
         ga.Start();
+        var a = ga.BestChromosome as FloatingPointChromosome;
+        SetObjects.setMap(deflatten(a.ToFloatingPoints(), SetObjects.getWidth(), SetObjects.getHeight()));
+        MainMenuNavigation.nextScene();
     }
 
     int[,] deflatten(double[] arrays, int width, int height)
     {
+        Debug.Log(arrays.Length + ", " + width + "," + height);
         int[,] result = new int[height, width];
         for (int i = 0; i < height; i++)
         {
@@ -78,10 +95,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         return result;
     }
 
-    // Update is called once per frame
-    float getLengthFitness(int[,] map)
+    float getLengthAndPlayersFitness(int[,] map)
     {
         float fitnessvalue = 0;
+        float playeramount = 0;
         int jtemp, itemp;
         for (int i = 0; i < SetObjects.getHeight(); i++)
             for (int j = 0; j < SetObjects.getWidth(); j++)
@@ -91,31 +108,41 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     if (j + 1 < SetObjects.getWidth() && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
                     {
                         jtemp = j;
-                        while (map[i, jtemp] == 1 && jtemp < SetObjects.getWidth())
+                        while (jtemp < SetObjects.getWidth() && map[i, jtemp] == 1)
                             jtemp++;
                         fitnessvalue += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
                     }
                     //Cek Vertikal
-                    if (i + 1 < SetObjects.getHeight() && map[i+1, j] == 1 && (i == 0 || map[i-1,j] != 1))
+                    if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
                     {
                         itemp = i;
-                        while (map[itemp, j] == 1 && itemp < SetObjects.getHeight())
+                        while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
                             itemp++;
                         fitnessvalue += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
                     }
                     //Cek Diagonal
-                    if (i + 1 < SetObjects.getHeight() && i + 1 < SetObjects.getHeight() && map[i + 1, j+1] == 1 && (i-1 >= 0 && j-1 >= 0 && map[i - 1, j-1] != 1))
-                    {
-                        itemp = i;
-                        jtemp = j;
-                        while (map[itemp, jtemp] == 1 && itemp < SetObjects.getHeight() && jtemp< SetObjects.getWidth())
-                        {
-                            itemp++;
-                            jtemp++;
-                        }
-                        fitnessvalue += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
-                    }
+                    //if (i + 1 < SetObjects.getHeight() && i + 1 < SetObjects.getHeight() && map[i + 1, j + 1] == 1 && (i - 1 >= 0 && j - 1 >= 0 && map[i - 1, j - 1] != 1))
+                    //{
+                    //    itemp = i;
+                    //    jtemp = j;
+                    //    while (map[itemp, jtemp] == 1 && itemp < SetObjects.getHeight() && jtemp < SetObjects.getWidth())
+                    //    {
+                    //        itemp++;
+                    //        jtemp++;
+                    //    }
+                    //    fitnessvalue += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+                    //}
                 }
-        return fitnessvalue * PanjangWallWeight;
+                else if (map[i, j] == 3)
+                    playeramount++;
+        if (playeramount != 5)
+            return fitnessvalue * PanjangWallWeight / 2;
+        else
+            return fitnessvalue * PanjangWallWeight;
+    }
+
+    float getAreaFitness(int[,] map)
+    {
+        return 0;
     }
 }

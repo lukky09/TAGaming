@@ -6,12 +6,12 @@ using TMPro;
 
 public class MainMenuNavigation : MonoBehaviour
 {
-    public void nextScene()
+    public static void nextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
-    public void exitGame()
+    public static void exitGame()
     {
         Application.Quit();
     }

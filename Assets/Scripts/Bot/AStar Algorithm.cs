@@ -157,6 +157,6 @@ public class Coordinate
 
     public static Coordinate getRandomCoordinate()
     {
-        return new Coordinate(Mathf.RoundToInt(Random.Range(0, (SetObjects.getWidth() - 2) / 2)) + 1, Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight() - 2)) - 1);
+        return new Coordinate(Mathf.RoundToInt(Random.Range(0, SetObjects.getWidth()  / 2)), Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight())));
     }
 }

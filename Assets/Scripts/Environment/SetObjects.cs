@@ -1,5 +1,8 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -21,7 +24,7 @@ public class SetObjects : MonoBehaviour
         stageUnfolded = new int[h - 2, w - 2];
     }
 
-    public static void setStage(int[,] stagearray)
+    public static void setMap(int[,] stagearray)
     {
         stageFolded = stagearray;
     }
@@ -31,13 +34,14 @@ public class SetObjects : MonoBehaviour
         stageUnfolded[index1,index2] = number;
     }
 
+
     public static int getWidth()
     {
-        return width;
+        return width-2;
     }
     public static int getHeight()
     {
-        return height;
+        return height-2;
     }
     public static int[,] getMap(bool folded)
     {
@@ -65,7 +69,21 @@ public class SetObjects : MonoBehaviour
             mapTilemap.SetTile(new Vector3Int(0, -i, 1), rok);
             mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
         }
-
+        //mapFolded itu asumsikan di kiri
+        Debug.Log(String.Join(" ", stageFolded.Cast<int>()));
+        for (int i = 0; i < height-2; i++)
+        {
+            for (int j = 0; j < (int)((width - 2) / 2); j++)
+            {
+                stageUnfolded[i, j] = stageFolded[i, j];
+                stageUnfolded[i, width - 3 - j] = stageFolded[i, j];
+                if (stageUnfolded[i, j] == 1)
+                {
+                    mapTilemap.SetTile(new Vector3Int(j + 1, -i - 1, 1), rok);
+                    mapTilemap.SetTile(new Vector3Int(width - j - 2, -i - 1, 1), rok);
+                }
+            }
+        }
     }
 
 }
