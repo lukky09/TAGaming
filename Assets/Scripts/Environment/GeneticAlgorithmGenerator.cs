@@ -50,7 +50,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             tmpro.text = "Iterasi ke-" + iterasi;
             var fc = c as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
-            Debug.Log("Dari " + string.Join(",", values));
             int[,] map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth() , SetObjects.getHeight());
             Debug.Log("Jadi "+String.Join(",", map.Cast<int>()));
             float fitness = 0;
@@ -89,8 +88,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             for (int j = 0; j < width; j++)
             {
-                result[i, j] = (int)arrays[i * height + j];
-                //Debug.Log(arrays.Length+","+i + "," + j + "," + arrays[i * height + j] + "," + result[i, j] + "," + (i * height + j));
+                result[i, j] = (int)arrays[i * width + j];
             }
         }
         return result;
@@ -137,7 +135,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 else if (map[i, j] == 3)
                     playeramount++;
         if (playeramount != 5)
-            return fitnessvalue * PanjangWallWeight / 2;
+            return 0;
         else
             return fitnessvalue * PanjangWallWeight;
     }
