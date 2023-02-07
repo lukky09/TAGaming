@@ -75,6 +75,6 @@ public class PlayersManager : MonoBehaviour
             }
             i++;
         }
-        return players[i];
+        return players[index];
     }
 }

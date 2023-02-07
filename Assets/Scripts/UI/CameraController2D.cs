@@ -30,7 +30,7 @@ public class CameraController2D : MonoBehaviour
     {
         //ini harus ada ukuran levelnya biar g glitchy
         float x = Mathf.Clamp(followedObjetTransform.position.x, tilesize[0], SetObjects.getWidth() + 2 - tilesize[0]);
-        float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() + 2 + tilesize[1] + 1, -tilesize[1] + 1);
+        float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() - 2 + tilesize[1] + 1, -tilesize[1] + 1);
         transform.position = new Vector3(x, y, -10);
     }
 }

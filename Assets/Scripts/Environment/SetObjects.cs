@@ -70,7 +70,6 @@ public class SetObjects : MonoBehaviour
             mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
         }
         //mapFolded itu asumsikan di kiri
-        Debug.Log(String.Join(" ", stageFolded.Cast<int>()));
         for (int i = 0; i < height-2; i++)
         {
             for (int j = 0; j < (int)((width - 2) / 2); j++)

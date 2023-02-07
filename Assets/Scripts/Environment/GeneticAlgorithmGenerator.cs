@@ -30,7 +30,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     {
         int iterasi = 0;
         int length = (SetObjects.getHeight()) * (SetObjects.getWidth());
-        int[,] map = new int[SetObjects.getHeight(), SetObjects.getWidth()];
         double[] kosonganDouble = new double[length];
         double[] kosonganDoubleMax = (double[])kosonganDouble.Clone();
         Array.Fill(kosonganDoubleMax, 4);
@@ -44,15 +43,16 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         var chromosome = new FloatingPointChromosome(kosonganDouble, kosonganDoubleMax, Enumerable.Repeat(3, length).ToArray(), Enumerable.Repeat(0, length).ToArray());
         //Populasi
         var population = new Population(50, 100, chromosome);
-        //Fitness (nti ganti)
+        //Fitness
         var fitness = new FuncFitness((c) =>
         {
             iterasi++;
             tmpro.text = "Iterasi ke-" + iterasi;
-
             var fc = c as FloatingPointChromosome;
             var values = fc.ToFloatingPoints();
-            map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth() , SetObjects.getHeight() );
+            Debug.Log("Dari " + string.Join(",", values));
+            int[,] map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth() , SetObjects.getHeight());
+            Debug.Log("Jadi "+String.Join(",", map.Cast<int>()));
             float fitness = 0;
             // Panjang Wall
             fitness += getLengthAndPlayersFitness(map);
@@ -62,16 +62,17 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             // Aksesibilitas Power Up
             // Rasio Power up dan jumlah powerup
             //bool[,][] flags = new bool[map.GetLength(0), map.GetLength(1)][];
-            Debug.Log("Iterasi ke-" + iterasi + " = " + fitness);
-            return fitness;
+            //Debug.Log("Iterasi ke-" + iterasi + " = " + fitness);
+            return Random.Range(0,10) * Random.Range(0, 10);
         });
         //Metode milih ortu
         var selection = new RouletteWheelSelection();
+        
         //Metode Crossover
         float r = Random.Range(crossoverMiddleValue, length - crossoverMiddleValue);
         var crossover = new OnePointCrossover(Mathf.RoundToInt(r));
         var mutation = new UniformMutation();
-        var termination = new FitnessStagnationTermination(50);
+        var termination = new FitnessStagnationTermination(10);
 
         var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
         ga.Termination = termination;
@@ -83,13 +84,13 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
     int[,] deflatten(double[] arrays, int width, int height)
     {
-        Debug.Log(arrays.Length + ", " + width + "," + height);
         int[,] result = new int[height, width];
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                result[i, j] = (int)arrays[i * height + width];
+                result[i, j] = (int)arrays[i * height + j];
+                //Debug.Log(arrays.Length+","+i + "," + j + "," + arrays[i * height + j] + "," + result[i, j] + "," + (i * height + j));
             }
         }
         return result;
