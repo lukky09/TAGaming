@@ -1,10 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using GeneticSharp.Domain.Chromosomes;
 using System;
-using static UnityEngine.Rendering.DebugUI;
 using System.Linq;
 using GeneticSharp.Domain.Populations;
 using GeneticSharp.Domain.Fitnesses;
@@ -13,7 +11,6 @@ using GeneticSharp.Domain.Crossovers;
 using Random = UnityEngine.Random;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Terminations;
-using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
 using TMPro;
 
@@ -23,6 +20,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int PanjangWallWeight;
     [SerializeField] int PanjangWallVertikalAmt;
     [SerializeField] int PanjangWallHorizontalAmt;
+    [SerializeField] int AreaWeight;
     TextMeshProUGUI tmpro;
 
     // Start is called before the first frame update
@@ -142,6 +140,52 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
     float getAreaFitness(int[,] map)
     {
-        return 0;
+        Queue<Coordinate> q;
+        Coordinate c,tempCoor;
+        ArrayList areasSize = new ArrayList();
+        int size;
+        bool[,] ischecked = new bool[SetObjects.getHeight(), SetObjects.getWidth()];
+        for (int i = 0; i < SetObjects.getHeight(); i++)
+            for (int j = 0; j < SetObjects.getWidth(); j++)
+                if (map[i, j] == 1 && !ischecked[i,j])
+                {
+                    size = 1;
+                    q = new Queue<Coordinate>();
+                    q.Enqueue(new Coordinate(j,i));
+                    while (q.Count > 0)
+                    {
+                        c = q.Dequeue();
+                        ischecked[c.yCoor, c.xCoor] = true;
+                        for (int k = 0; k < 4; k++)
+                        {
+                            tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
+                            if (tempCoor.xCoor > 0 && tempCoor.yCoor > 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < SetObjects.getWidth() && map[i, j] == 1 && !ischecked[i, j])
+                            {
+                                q.Enqueue(tempCoor);
+                                size++;
+                            }    
+
+                        }
+                    }
+                    areasSize.Add(size);
+                }
+        int biggest = -999;
+        float fitness = 0;
+        // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
+        if (areasSize.Count > 1)
+        {
+            for (int i = 0; i < areasSize.Count; i++)
+            {
+                fitness += (int)areasSize[i];
+                if ((int)areasSize[i] > biggest)
+                    biggest = (int)areasSize[i];
+            }
+            fitness = biggest;
+        }
+        else
+        {
+            fitness = (int)areasSize[0];
+        }
+        return fitness * AreaWeight;
     }
 }
