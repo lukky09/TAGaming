@@ -11,8 +11,43 @@ using GeneticSharp.Domain.Crossovers;
 using Random = UnityEngine.Random;
 using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Terminations;
+using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
 using TMPro;
+
+public class GameChromosome : ChromosomeBase
+{
+    private readonly int m_ukuranMap;
+    public GameChromosome(int ukuranMap) : base(ukuranMap)
+    {
+        m_ukuranMap = ukuranMap;
+        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 2);
+        for (int i = 0; i < ukuranMap; i++)
+        {
+            ReplaceGene(i, new Gene(mapValues[i]));
+        }
+        for (int i = 0; i < 5; i++)
+        {
+            ReplaceGene(i, new Gene(3));
+        }
+    }
+
+    public override Gene GenerateGene(int geneIndex)
+    {
+        return new Gene(RandomizationProvider.Current.GetInt(0, m_ukuranMap));
+    }
+
+    public override IChromosome CreateNew()
+    {
+        return new GameChromosome(m_ukuranMap);
+    }
+
+    public override IChromosome Clone()
+    {
+        var clone = base.Clone() as GameChromosome;
+        return clone;
+    }
+}
 
 public class GeneticAlgorithmGenerator : MonoBehaviour
 {
@@ -21,91 +56,97 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int PanjangWallVertikalAmt;
     [SerializeField] int PanjangWallHorizontalAmt;
     [SerializeField] int AreaWeight;
+    [SerializeField] int StagnationTerminationAmt;
     TextMeshProUGUI tmpro;
+    int mapWidth;
 
     // Start is called before the first frame update
     void Start()
     {
-        int iterasi = 0;
-        int length = (SetObjects.getHeight()) * (SetObjects.getWidth());
-        double[] kosonganDouble = new double[length];
-        double[] kosonganDoubleMax = (double[])kosonganDouble.Clone();
-        Array.Fill(kosonganDoubleMax, 4);
+        mapWidth = (int)(SetObjects.getWidth() / 2);
+        int jumPlayer;
+        float temp1, temp2, fitness;
+        int length = (SetObjects.getHeight()) * (SetObjects.getWidth()/2);
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
-            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 8);
+            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 2);
         tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
         //Kromosom
-        var chromosome = new FloatingPointChromosome(kosonganDouble, kosonganDoubleMax, Enumerable.Repeat(3, length).ToArray(), Enumerable.Repeat(0, length).ToArray());
+        var chromosome = new GameChromosome(length);
         //Populasi
         var population = new Population(50, 100, chromosome);
         //Fitness
-        var fitness = new FuncFitness((c) =>
+        var fitnessfunc = new FuncFitness((c) =>
         {
-            iterasi++;
-            tmpro.text = "Iterasi ke-" + iterasi;
-            var fc = c as FloatingPointChromosome;
-            var values = fc.ToFloatingPoints();
-            int[,] map = deflatten(fc.ToFloatingPoints(), SetObjects.getWidth() , SetObjects.getHeight());
-            Debug.Log("Jadi "+String.Join(",", map.Cast<int>()));
-            float fitness = 0;
+            var fc = c.GetGenes();
+            int[,] map = deflatten(fc, mapWidth, SetObjects.getHeight());
+            fitness = 0;
             // Panjang Wall
-            fitness += getLengthAndPlayersFitness(map);
+            (jumPlayer, temp1) = getLengthAndPlayersFitness(map);
+            fitness += temp1;
             // Aksesibilitas Area Wall
-            fitness += getAreaFitness(map);
+            temp2 = getAreaFitness(map);
+            fitness += temp2;
             // Jarak Kelompok Wall?
             // Aksesibilitas Power Up
             // Rasio Power up dan jumlah powerup
-            //bool[,][] flags = new bool[map.GetLength(0), map.GetLength(1)][];
-            //Debug.Log("Iterasi ke-" + iterasi + " = " + fitness);
-            return Random.Range(0,10) * Random.Range(0, 10);
+            fitness -= Mathf.Pow(jumPlayer - 5, 3);
+            Debug.Log(temp1 + "," + temp2 + "," + jumPlayer+" = "+fitness);
+            return fitness;
         });
         //Metode milih ortu
         var selection = new RouletteWheelSelection();
         
         //Metode Crossover
         float r = Random.Range(crossoverMiddleValue, length - crossoverMiddleValue);
-        var crossover = new OnePointCrossover(Mathf.RoundToInt(r));
-        var mutation = new UniformMutation();
-        var termination = new FitnessStagnationTermination(10);
+        var crossover = new UniformCrossover();
+        var mutation = new UniformMutation(false);
+        var termination = new FitnessStagnationTermination(StagnationTerminationAmt);
 
-        var ga = new GeneticAlgorithm(population, fitness, selection, crossover, mutation);
+        var ga = new GeneticAlgorithm(population, fitnessfunc, selection, crossover, mutation);
         ga.Termination = termination;
+
+        ga.GenerationRan += (sender, e) =>
+        {
+            tmpro.text = "Iterasi ke-" + ga.GenerationsNumber;
+        };
+
         ga.Start();
-        var a = ga.BestChromosome as FloatingPointChromosome;
-        SetObjects.setMap(deflatten(a.ToFloatingPoints(), SetObjects.getWidth(), SetObjects.getHeight()));
+
+        var a = ga.BestChromosome.GetGenes();
+        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()));
         MainMenuNavigation.nextScene();
     }
 
-    int[,] deflatten(double[] arrays, int width, int height)
+    int[,] deflatten(Gene[] arrays, int width, int height)
     {
         int[,] result = new int[height, width];
         for (int i = 0; i < height; i++)
         {
             for (int j = 0; j < width; j++)
             {
-                result[i, j] = (int)arrays[i * width + j];
+                result[i, j] = (int)((Gene)arrays[i * width + j]).Value;
             }
         }
         return result;
     }
 
-    float getLengthAndPlayersFitness(int[,] map)
+    (int,float) getLengthAndPlayersFitness(int[,] map)
     {
         float fitnessvalue = 0;
-        float playeramount = 0;
+        int playeramount = 0;
         int jtemp, itemp;
         for (int i = 0; i < SetObjects.getHeight(); i++)
-            for (int j = 0; j < SetObjects.getWidth(); j++)
+            for (int j = 0; j < mapWidth; j++)
                 if (map[i, j] == 1)
                 {
                     //Cek Horizontal
-                    if (j + 1 < SetObjects.getWidth() && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
+                    if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
                     {
                         jtemp = j;
-                        while (jtemp < SetObjects.getWidth() && map[i, jtemp] == 1)
+                        while (jtemp < mapWidth && map[i, jtemp] == 1)
                             jtemp++;
                         fitnessvalue += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
                     }
@@ -132,38 +173,37 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
                 else if (map[i, j] == 3)
                     playeramount++;
-        if (playeramount != 5)
-            return 0;
-        else
-            return fitnessvalue * PanjangWallWeight;
+        return (playeramount,fitnessvalue * PanjangWallWeight);
     }
 
     float getAreaFitness(int[,] map)
     {
         Queue<Coordinate> q;
-        Coordinate c,tempCoor;
+        Coordinate c, tempCoor;
         ArrayList areasSize = new ArrayList();
         int size;
-        bool[,] ischecked = new bool[SetObjects.getHeight(), SetObjects.getWidth()];
+        bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
         for (int i = 0; i < SetObjects.getHeight(); i++)
-            for (int j = 0; j < SetObjects.getWidth(); j++)
-                if (map[i, j] == 1 && !ischecked[i,j])
+            for (int j = 0; j < mapWidth; j++)
+                if (map[i, j] != 1 && !ischecked[i, j])
                 {
                     size = 1;
+                    ischecked[i, j] = true;
                     q = new Queue<Coordinate>();
-                    q.Enqueue(new Coordinate(j,i));
+                    q.Enqueue(new Coordinate(j, i));
                     while (q.Count > 0)
                     {
                         c = q.Dequeue();
-                        ischecked[c.yCoor, c.xCoor] = true;
+
                         for (int k = 0; k < 4; k++)
                         {
-                            tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
-                            if (tempCoor.xCoor > 0 && tempCoor.yCoor > 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < SetObjects.getWidth() && map[i, j] == 1 && !ischecked[i, j])
+                            tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
+                            if (tempCoor.xCoor >= 0 && tempCoor.yCoor >= 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < mapWidth && map[tempCoor.yCoor, tempCoor.xCoor] != 1 && !ischecked[tempCoor.yCoor, tempCoor.xCoor])
                             {
+                                ischecked[tempCoor.yCoor, tempCoor.xCoor] = true;
                                 q.Enqueue(tempCoor);
                                 size++;
-                            }    
+                            }
 
                         }
                     }
@@ -171,6 +211,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
         int biggest = -999;
         float fitness = 0;
+
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
         if (areasSize.Count > 1)
         {

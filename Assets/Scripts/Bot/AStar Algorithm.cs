@@ -134,7 +134,7 @@ class AstarNode
     }
 }
 
-[System.Serializable,Inspectable]
+[System.Serializable, Inspectable]
 public class Coordinate
 {
     public int xCoor, yCoor;
