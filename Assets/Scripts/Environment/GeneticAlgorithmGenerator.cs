@@ -20,6 +20,7 @@ public class GameChromosome : ChromosomeBase
     private readonly int m_ukuranMap;
     public GameChromosome(int ukuranMap) : base(ukuranMap)
     {
+        int temp;
         m_ukuranMap = ukuranMap;
         var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 2);
         for (int i = 0; i < ukuranMap; i++)
@@ -28,7 +29,10 @@ public class GameChromosome : ChromosomeBase
         }
         for (int i = 0; i < 5; i++)
         {
-            ReplaceGene(i, new Gene(3));
+            temp = Mathf.FloorToInt(Random.Range(0, ukuranMap));
+            while (mapValues[temp] == 3)
+                temp = Mathf.FloorToInt(Random.Range(0, ukuranMap));
+            ReplaceGene(temp, new Gene(3));
         }
     }
 
