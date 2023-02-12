@@ -22,7 +22,8 @@ public class GameChromosome : ChromosomeBase
     {
         int temp;
         m_ukuranMap = ukuranMap;
-        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 2);
+        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 3);
+        
         for (int i = 0; i < ukuranMap; i++)
         {
             ReplaceGene(i, new Gene(mapValues[i]));
@@ -38,7 +39,7 @@ public class GameChromosome : ChromosomeBase
 
     public override Gene GenerateGene(int geneIndex)
     {
-        return new Gene(RandomizationProvider.Current.GetInt(0, m_ukuranMap));
+        return new Gene(RandomizationProvider.Current.GetInt(0, 3));
     }
 
     public override IChromosome CreateNew()
@@ -62,7 +63,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] bool includeAreaFitness;
     [SerializeField] int AreaWeight;
     [SerializeField] bool includePURatioFitness;
-    [SerializeField] int PURatioFitness;
+    [SerializeField] float PURatioAmt;
+    [SerializeField] int PURatioWeight;
     [SerializeField] int StagnationTerminationAmt;
     TextMeshProUGUI tmpro;
     int mapWidth;
@@ -70,11 +72,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        double fitness;
         mapWidth = (int)(SetObjects.getWidth() / 2);
-        int jumPlayer = 0;
-        float fitness;
         float[] tempfitness = new float[5];
         int length = (SetObjects.getHeight()) * (SetObjects.getWidth()/2);
+        Debug.Log(length);
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
@@ -90,30 +92,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             var fc = c.GetGenes();
             int[,] map = deflatten(fc, mapWidth, SetObjects.getHeight());
-            fitness = 0;
-            // Panjang Wall
-            if (includeWallFitness)
-            {
-                (jumPlayer, tempfitness[0]) = getLengthAndPlayersFitness(map);
-                fitness += tempfitness[0];
-            }
-            // Aksesibilitas Area Wall
-            if (includeAreaFitness)
-            {
-                tempfitness[1] = getAreaFitness(map);
-                fitness += tempfitness[1];
-            }
-            // Jarak Kelompok Wall?
-            // Aksesibilitas Power Up
-            // Rasio ukuran arena dan jumlah powerup masuk di area fitness
-            if (includePURatioFitness)
-            {
-                tempfitness[4] = getAreaFitness(map);
-                fitness += tempfitness[1];
-            }
-
-            fitness -= Mathf.Pow(MathF.Abs(jumPlayer - 5) * 5, 3);
-            Debug.Log(String.Join(",",tempfitness) + ", " + jumPlayer+" = "+fitness);
+            fitness = fitnessFunction(map);
+            //Debug.Log(fitness);
             return fitness;
         });
         //Metode milih ortu
@@ -152,14 +132,25 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         return result;
     }
 
-    (int,float) getLengthAndPlayersFitness(int[,] map)
+    double fitnessFunction(int[,] map)
     {
-        float fitnessvalue = 0;
-        int playeramount = 0;
+        int[] objAmt = new int[4];
+        double[] fitnessScores = new double[5];
+        //Utk Wall
         int jtemp, itemp;
+        //Utk Area
+        int size;
+        Queue<Coordinate> q;
+        Coordinate c, tempCoor;
+        ArrayList areasSize = new ArrayList();
+        bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
+
         for (int i = 0; i < SetObjects.getHeight(); i++)
             for (int j = 0; j < mapWidth; j++)
-                if (map[i, j] == 1)
+            {
+                objAmt[map[i, j]]++;
+                // Fitness Wall
+                if (map[i, j] == 1 && includeWallFitness)
                 {
                     //Cek Horizontal
                     if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
@@ -167,7 +158,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         jtemp = j;
                         while (jtemp < mapWidth && map[i, jtemp] == 1)
                             jtemp++;
-                        fitnessvalue += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
+                        fitnessScores[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
                     }
                     //Cek Vertikal
                     if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
@@ -175,36 +166,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         itemp = i;
                         while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
                             itemp++;
-                        fitnessvalue += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+                        fitnessScores[0] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
                     }
-                    //Cek Diagonal
-                    //if (i + 1 < SetObjects.getHeight() && i + 1 < SetObjects.getHeight() && map[i + 1, j + 1] == 1 && (i - 1 >= 0 && j - 1 >= 0 && map[i - 1, j - 1] != 1))
-                    //{
-                    //    itemp = i;
-                    //    jtemp = j;
-                    //    while (map[itemp, jtemp] == 1 && itemp < SetObjects.getHeight() && jtemp < SetObjects.getWidth())
-                    //    {
-                    //        itemp++;
-                    //        jtemp++;
-                    //    }
-                    //    fitnessvalue += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
-                    //}
                 }
-                else if (map[i, j] == 3)
-                    playeramount++;
-        return (playeramount,fitnessvalue * PanjangWallWeight);
-    }
-
-    float getAreaFitness(int[,] map)
-    {
-        Queue<Coordinate> q;
-        Coordinate c, tempCoor;
-        ArrayList areasSize = new ArrayList();
-        int size;
-        bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
-        for (int i = 0; i < SetObjects.getHeight(); i++)
-            for (int j = 0; j < mapWidth; j++)
-                if (map[i, j] != 1 && !ischecked[i, j])
+                else if (map[i, j] != 1 && !ischecked[i, j])
                 {
                     size = 1;
                     ischecked[i, j] = true;
@@ -213,7 +178,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     while (q.Count > 0)
                     {
                         c = q.Dequeue();
-
                         for (int k = 0; k < 4; k++)
                         {
                             tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
@@ -223,39 +187,34 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                                 q.Enqueue(tempCoor);
                                 size++;
                             }
-
                         }
                     }
                     areasSize.Add(size);
                 }
+            }
+        fitnessScores[0] *= PanjangWallWeight;
         int biggest = -999;
-        float fitness = 0;
 
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
-        if (areasSize.Count > 1)
+        for (int i = 0; i < areasSize.Count; i++)
         {
+            if ((int)areasSize[i] > biggest)
+                biggest = (int)areasSize[i];
+        }
+        if (includeAreaFitness)
+        {
+            fitnessScores[1] = biggest * 2;
             for (int i = 0; i < areasSize.Count; i++)
             {
-                fitness += (int)areasSize[i];
-                if ((int)areasSize[i] > biggest)
-                    biggest = (int)areasSize[i];
+                fitnessScores[1] -= (int)areasSize[i];
             }
-            fitness = biggest * 2;
-            for (int i = 0; i < areasSize.Count; i++)
-            {
-                fitness -= (int)areasSize[i];
-            }
-            return fitness;
+            fitnessScores[1] *= AreaWeight;
         }
-        else
+        if (includePURatioFitness)
         {
-            fitness = (int)areasSize[0];
+            fitnessScores[4] = -(float)Math.Pow(((objAmt[2] / biggest) - PURatioAmt) * 100, 2) * PURatioWeight;
         }
-        return fitness * AreaWeight;
-    }
-
-    float getPURatioFitness(int[,] map)
-    {
-        return 0;
+        //Debug.Log(String.Join(',', fitnessScores));
+        return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
     }
 }
