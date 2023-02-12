@@ -55,11 +55,14 @@ public class GameChromosome : ChromosomeBase
 
 public class GeneticAlgorithmGenerator : MonoBehaviour
 {
-    [SerializeField] int crossoverMiddleValue;
+    [SerializeField] bool includeWallFitness;
     [SerializeField] int PanjangWallWeight;
     [SerializeField] int PanjangWallVertikalAmt;
     [SerializeField] int PanjangWallHorizontalAmt;
+    [SerializeField] bool includeAreaFitness;
     [SerializeField] int AreaWeight;
+    [SerializeField] bool includePURatioFitness;
+    [SerializeField] int PURatioFitness;
     [SerializeField] int StagnationTerminationAmt;
     TextMeshProUGUI tmpro;
     int mapWidth;
@@ -68,8 +71,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     void Start()
     {
         mapWidth = (int)(SetObjects.getWidth() / 2);
-        int jumPlayer;
-        float temp1, temp2, fitness;
+        int jumPlayer = 0;
+        float fitness;
+        float[] tempfitness = new float[5];
         int length = (SetObjects.getHeight()) * (SetObjects.getWidth()/2);
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
@@ -88,23 +92,34 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             int[,] map = deflatten(fc, mapWidth, SetObjects.getHeight());
             fitness = 0;
             // Panjang Wall
-            (jumPlayer, temp1) = getLengthAndPlayersFitness(map);
-            fitness += temp1;
+            if (includeWallFitness)
+            {
+                (jumPlayer, tempfitness[0]) = getLengthAndPlayersFitness(map);
+                fitness += tempfitness[0];
+            }
             // Aksesibilitas Area Wall
-            temp2 = getAreaFitness(map);
-            fitness += temp2;
+            if (includeAreaFitness)
+            {
+                tempfitness[1] = getAreaFitness(map);
+                fitness += tempfitness[1];
+            }
             // Jarak Kelompok Wall?
             // Aksesibilitas Power Up
-            // Rasio Power up dan jumlah powerup
-            fitness -= Mathf.Pow(jumPlayer - 5, 3);
-            Debug.Log(temp1 + "," + temp2 + "," + jumPlayer+" = "+fitness);
+            // Rasio ukuran arena dan jumlah powerup masuk di area fitness
+            if (includePURatioFitness)
+            {
+                tempfitness[4] = getAreaFitness(map);
+                fitness += tempfitness[1];
+            }
+
+            fitness -= Mathf.Pow(MathF.Abs(jumPlayer - 5) * 5, 3);
+            Debug.Log(String.Join(",",tempfitness) + ", " + jumPlayer+" = "+fitness);
             return fitness;
         });
         //Metode milih ortu
         var selection = new RouletteWheelSelection();
         
         //Metode Crossover
-        float r = Random.Range(crossoverMiddleValue, length - crossoverMiddleValue);
         var crossover = new UniformCrossover();
         var mutation = new UniformMutation(false);
         var termination = new FitnessStagnationTermination(StagnationTerminationAmt);
@@ -225,12 +240,22 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 if ((int)areasSize[i] > biggest)
                     biggest = (int)areasSize[i];
             }
-            fitness = biggest;
+            fitness = biggest * 2;
+            for (int i = 0; i < areasSize.Count; i++)
+            {
+                fitness -= (int)areasSize[i];
+            }
+            return fitness;
         }
         else
         {
             fitness = (int)areasSize[0];
         }
         return fitness * AreaWeight;
+    }
+
+    float getPURatioFitness(int[,] map)
+    {
+        return 0;
     }
 }

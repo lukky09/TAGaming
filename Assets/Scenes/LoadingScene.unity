@@ -272,11 +272,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   crossoverMiddleValue: 25
-  PanjangWallWeight: 250
+  includeWallFitness: 1
+  PanjangWallWeight: 25
   PanjangWallVertikalAmt: 0
   PanjangWallHorizontalAmt: 0
+  includeAreaFitness: 1
   AreaWeight: 25
-  StagnationTerminationAmt: 100
+  StagnationTerminationAmt: 50
 --- !u!1 &563776447
 GameObject:
   m_ObjectHideFlags: 0
