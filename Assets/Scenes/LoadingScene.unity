@@ -271,13 +271,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c691221f5f4354180f74d0e91f8128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  includeWallFitness: 1
+  includeWallFitness: 0
   PanjangWallWeight: 50
   PanjangWallVertikalAmt: 0
   PanjangWallHorizontalAmt: 0
-  includeAreaFitness: 1
+  includeAreaFitness: 0
   AreaWeight: 25
-  includePURatioFitness: 1
+  includeWallGapFitness: 0
+  WallGapLength: 2
+  WallGapWeight: 25
+  includePUPAccesibilityFitness: 1
+  PUPAccesibilityWeight: 100
+  includePURatioFitness: 0
   PURatioAmt: 0.03
   PURatioWeight: 25
   StagnationTerminationAmt: 50

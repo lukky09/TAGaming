@@ -54,14 +54,21 @@ public class AStarAlgorithm : MonoBehaviour
     }
 
     //Fix bisa
-    static AstarNode doAstarAlgo(Transform character, Transform ball)
+    public static AstarNode doAstarAlgo(Transform character, Transform ball)
     {
         int[,] map = SetObjects.getMap(false);
         ArrayList listNode = new ArrayList();
         Coordinate posisikarakter = vectorToCoordinate(character.position);
         Coordinate posisibola = vectorToCoordinate(ball.position);
         //inisialisasi
-        listNode.Add(new AstarNode(posisikarakter, 0, Vector2.Distance(character.position, ball.position), null));
+        return doAstarAlgo(posisikarakter, posisibola);
+    }
+
+    public static AstarNode doAstarAlgo(Coordinate posisikarakter, Coordinate posisibola)
+    {
+        int[,] map = SetObjects.getMap(false);
+        ArrayList listNode = new ArrayList();
+        listNode.Add(new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null));
 
         AstarNode currentnode, tempnode, resultnode = null;
         float distance;
@@ -83,7 +90,7 @@ public class AStarAlgorithm : MonoBehaviour
                 newcoor = new Coordinate(currentnode.coordinate.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), currentnode.coordinate.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
                 if (Enumerable.Range(0, mapheight - 1).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength - 1).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1)
                 {
-                    distance = Vector2.Distance(newcoor.returnAsVector(), ball.position);
+                    distance = Coordinate.Distance(newcoor, posisibola);
                     tempnode = new AstarNode(newcoor, currentnode.g + 1, distance, currentnode);
 
                     isput = false;
@@ -101,7 +108,10 @@ public class AStarAlgorithm : MonoBehaviour
                 }
             }
         }
-        return resultnode;
+        if (listNode.Count == 0)
+            return null;
+        else
+            return resultnode;
     }
 
     public static Coordinate vectorToCoordinate(Vector2 vent)
@@ -110,7 +120,7 @@ public class AStarAlgorithm : MonoBehaviour
     }
 }
 
-class AstarNode
+public class AstarNode
 {
     public Coordinate coordinate;
     public float f, g, h;
@@ -143,6 +153,11 @@ public class Coordinate
     {
         this.xCoor = xCoor;
         this.yCoor = yCoor;
+    }
+
+    public static float Distance(Coordinate c1, Coordinate c2)
+    {
+        return Mathf.Sqrt(Mathf.Pow(c1.xCoor - c2.xCoor, 2) + Mathf.Pow(c1.yCoor - c2.yCoor, 2));
     }
 
     public Vector2 returnAsVector()

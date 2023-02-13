@@ -62,6 +62,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int PanjangWallHorizontalAmt;
     [SerializeField] bool includeAreaFitness;
     [SerializeField] int AreaWeight;
+    [SerializeField] bool includeWallGapFitness;
+    [SerializeField] int WallGapLength;
+    [SerializeField] int WallGapWeight;
+    [SerializeField] bool includePUPAccesibilityFitness;
+    [SerializeField] float PUPAccesibilityWeight;
     [SerializeField] bool includePURatioFitness;
     [SerializeField] float PURatioAmt;
     [SerializeField] int PURatioWeight;
@@ -136,8 +141,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     {
         int[] objAmt = new int[4];
         double[] fitnessScores = new double[5];
+
         //Utk Wall
         int jtemp, itemp;
+
         //Utk Area
         int size;
         Queue<Coordinate> q;
@@ -145,32 +152,66 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ArrayList areasSize = new ArrayList();
         bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
 
+        //untuk aksesibilitas PowerUp
+        ArrayList lokasiPlayer = new ArrayList();
+        ArrayList lokasiPowerUp = new ArrayList();
+
         for (int i = 0; i < SetObjects.getHeight(); i++)
             for (int j = 0; j < mapWidth; j++)
             {
                 objAmt[map[i, j]]++;
                 // Fitness Wall
-                if (map[i, j] == 1 && includeWallFitness)
+                if (map[i, j] == 1)
                 {
-                    //Cek Horizontal
-                    if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
+                    if (includeWallFitness)
                     {
-                        jtemp = j;
-                        while (jtemp < mapWidth && map[i, jtemp] == 1)
-                            jtemp++;
-                        fitnessScores[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
+                        //Cek Horizontal
+                        if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
+                        {
+                            jtemp = j;
+                            while (jtemp < mapWidth && map[i, jtemp] == 1)
+                                jtemp++;
+                            fitnessScores[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
+                        }
+                        //Cek Vertikal
+                        if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
+                        {
+                            itemp = i;
+                            while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
+                                itemp++;
+                            fitnessScores[0] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+                        }
                     }
-                    //Cek Vertikal
-                    if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
+                    if (includeWallGapFitness)
                     {
-                        itemp = i;
-                        while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
-                            itemp++;
-                        fitnessScores[0] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+                        //Cek Horizontal
+                        if (j + 1 < mapWidth && map[i, j + 1] != 1)
+                        {
+                            jtemp = j+1;
+                            while (jtemp < mapWidth && map[i, jtemp] != 1)
+                                jtemp++;
+                            fitnessScores[2] += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
+                        }
+                        //Cek Vertikal
+                        if (i + 1 < SetObjects.getHeight() && map[i + 1, j] != 1)
+                        {
+                            itemp = i+1;
+                            while (itemp < SetObjects.getHeight() && map[itemp, j] != 1)
+                                itemp++;
+                            fitnessScores[2] += Mathf.Log10((itemp - i) * 10 / WallGapLength);
+                        }
                     }
                 }
                 else if (map[i, j] != 1 && !ischecked[i, j])
                 {
+                    if (includePUPAccesibilityFitness)
+                    {
+                        if (map[i, j] == 2)
+                            lokasiPowerUp.Add(new Coordinate(j, i));
+                        else if (map[i, j] == 3)
+                            lokasiPlayer.Add(new Coordinate(j, i));
+                    }
+
                     size = 1;
                     ischecked[i, j] = true;
                     q = new Queue<Coordinate>();
@@ -193,7 +234,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
             }
         fitnessScores[0] *= PanjangWallWeight;
-        int biggest = -999;
+        fitnessScores[2] *= WallGapWeight;
+        float biggest = -999;
 
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
         for (int i = 0; i < areasSize.Count; i++)
@@ -210,11 +252,39 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             }
             fitnessScores[1] *= AreaWeight;
         }
+
+        //Setiap powerup akan dicek bila bisa dicapai player terdekat
+        int index;
+        float tempDistance;
+        if (includePUPAccesibilityFitness)
+        {
+            for (int i = 0; i < lokasiPowerUp.Count; i++)
+            {
+                biggest = 999;
+                for (int j = 0; j < lokasiPlayer.Count; j++)
+                {
+                    tempDistance = Vector2.Distance(((Coordinate)lokasiPowerUp[i]).returnAsVector(), ((Coordinate)lokasiPlayer[j]).returnAsVector());
+                    tempDistance = Coordinate.Distance((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]);
+                    if (tempDistance < biggest)
+                    {
+                        biggest = tempDistance;
+                        index = j;
+                    }
+                    if (AStarAlgorithm.doAstarAlgo((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]) != null)
+                    {
+                        fitnessScores[3]++;
+                    }
+                }
+            }
+            fitnessScores[3] = fitnessScores[3] / lokasiPowerUp.Count * PUPAccesibilityWeight;
+        }
+
         if (includePURatioFitness)
         {
             fitnessScores[4] = -(float)Math.Pow(((objAmt[2] / biggest) - PURatioAmt) * 100, 2) * PURatioWeight;
         }
-        //Debug.Log(String.Join(',', fitnessScores));
+
+        Debug.Log(String.Join(',', fitnessScores));
         return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
     }
 }
