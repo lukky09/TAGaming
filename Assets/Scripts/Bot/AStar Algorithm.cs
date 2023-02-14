@@ -56,8 +56,6 @@ public class AStarAlgorithm : MonoBehaviour
     //Fix bisa
     public static AstarNode doAstarAlgo(Transform character, Transform ball)
     {
-        int[,] map = SetObjects.getMap(false);
-        ArrayList listNode = new ArrayList();
         Coordinate posisikarakter = vectorToCoordinate(character.position);
         Coordinate posisibola = vectorToCoordinate(ball.position);
         //inisialisasi
@@ -67,9 +65,15 @@ public class AStarAlgorithm : MonoBehaviour
     public static AstarNode doAstarAlgo(Coordinate posisikarakter, Coordinate posisibola)
     {
         int[,] map = SetObjects.getMap(false);
+        return doAstarAlgo(posisikarakter, posisibola, map);
+    }
+
+    public static AstarNode doAstarAlgo(Coordinate posisikarakter, Coordinate posisibola, int[,] map)
+    {
+       
+        bool[,] isChecked = new bool[map.GetLength(0), map.GetLength(1)];
         ArrayList listNode = new ArrayList();
         listNode.Add(new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null));
-
         AstarNode currentnode, tempnode, resultnode = null;
         float distance;
         bool isput;
@@ -78,6 +82,7 @@ public class AStarAlgorithm : MonoBehaviour
         while (listNode.Count > 0)
         {
             currentnode = (AstarNode)listNode[0];
+            isChecked[currentnode.coordinate.yCoor, currentnode.coordinate.xCoor] = true;
             //Debug.Log(currentnode.ToString());
             listNode.RemoveAt(0);
             if (currentnode.coordinate.xCoor == posisibola.xCoor && currentnode.coordinate.yCoor == posisibola.yCoor)
@@ -88,7 +93,7 @@ public class AStarAlgorithm : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 newcoor = new Coordinate(currentnode.coordinate.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), currentnode.coordinate.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
-                if (Enumerable.Range(0, mapheight - 1).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength - 1).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1)
+                if (Enumerable.Range(0, mapheight - 1).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength - 1).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1 && !isChecked[newcoor.yCoor, newcoor.xCoor])
                 {
                     distance = Coordinate.Distance(newcoor, posisibola);
                     tempnode = new AstarNode(newcoor, currentnode.g + 1, distance, currentnode);
@@ -98,6 +103,7 @@ public class AStarAlgorithm : MonoBehaviour
                     {
                         if (((AstarNode)listNode[j]).f >= tempnode.f)
                         {
+                            isChecked[newcoor.yCoor, newcoor.xCoor] = true;
                             isput = true;
                             listNode.Insert(j, tempnode);
                             break;
@@ -114,7 +120,7 @@ public class AStarAlgorithm : MonoBehaviour
             return resultnode;
     }
 
-    public static Coordinate vectorToCoordinate(Vector2 vent)
+        public static Coordinate vectorToCoordinate(Vector2 vent)
     {
         return new Coordinate(Mathf.RoundToInt(vent.x - 1.5f), Mathf.RoundToInt(-vent.y - 0.5f));
     }

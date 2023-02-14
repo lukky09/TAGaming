@@ -14,15 +14,19 @@ using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
 using TMPro;
+using System.Threading.Tasks;
+using GeneticSharp.Infrastructure.Framework.Threading;
 
 public class GameChromosome : ChromosomeBase
 {
     private readonly int m_ukuranMap;
-    public GameChromosome(int ukuranMap) : base(ukuranMap)
+    private readonly int m_powerup;
+    public GameChromosome(int ukuranMap,int powerup) : base(ukuranMap)
     {
         int temp;
         m_ukuranMap = ukuranMap;
-        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 3);
+        m_powerup = powerup;
+        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, 0, 2);
         
         for (int i = 0; i < ukuranMap; i++)
         {
@@ -35,6 +39,13 @@ public class GameChromosome : ChromosomeBase
                 temp = Mathf.FloorToInt(Random.Range(0, ukuranMap));
             ReplaceGene(temp, new Gene(3));
         }
+        for (int i = 0; i < powerup; i++)
+        {
+            temp = Mathf.FloorToInt(Random.Range(0, ukuranMap));
+            while (mapValues[temp] == 3 || mapValues[temp] == 2)
+                temp = Mathf.FloorToInt(Random.Range(0, ukuranMap));
+            ReplaceGene(temp, new Gene(2));
+        }
     }
 
     public override Gene GenerateGene(int geneIndex)
@@ -44,7 +55,7 @@ public class GameChromosome : ChromosomeBase
 
     public override IChromosome CreateNew()
     {
-        return new GameChromosome(m_ukuranMap);
+        return new GameChromosome(m_ukuranMap,m_powerup);
     }
 
     public override IChromosome Clone()
@@ -81,15 +92,19 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         mapWidth = (int)(SetObjects.getWidth() / 2);
         float[] tempfitness = new float[5];
         int length = (SetObjects.getHeight()) * (SetObjects.getWidth()/2);
-        Debug.Log(length);
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
             PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 2);
         tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
+        //Multithreading
+        var taskExecutor = new ParallelTaskExecutor();
+        taskExecutor.MinThreads = 12;
+        taskExecutor.MaxThreads = 12;
+
         //Kromosom
-        var chromosome = new GameChromosome(length);
+        var chromosome = new GameChromosome(length,Mathf.FloorToInt(PURatioAmt * length));
         //Populasi
         var population = new Population(50, 100, chromosome);
         //Fitness
@@ -111,6 +126,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         var ga = new GeneticAlgorithm(population, fitnessfunc, selection, crossover, mutation);
         ga.Termination = termination;
+        //ga.TaskExecutor = taskExecutor;
 
         ga.GenerationRan += (sender, e) =>
         {
@@ -204,14 +220,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
                 else if (map[i, j] != 1 && !ischecked[i, j])
                 {
-                    if (includePUPAccesibilityFitness)
-                    {
-                        if (map[i, j] == 2)
-                            lokasiPowerUp.Add(new Coordinate(j, i));
-                        else if (map[i, j] == 3)
-                            lokasiPlayer.Add(new Coordinate(j, i));
-                    }
-
                     size = 1;
                     ischecked[i, j] = true;
                     q = new Queue<Coordinate>();
@@ -231,6 +239,13 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         }
                     }
                     areasSize.Add(size);
+                }
+                if (includePUPAccesibilityFitness)
+                {
+                    if (map[i, j] == 2)
+                        lokasiPowerUp.Add(new Coordinate(j, i));
+                    if (map[i, j] == 3)
+                        lokasiPlayer.Add(new Coordinate(j, i));
                 }
             }
         fitnessScores[0] *= PanjangWallWeight;
@@ -254,34 +269,36 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Setiap powerup akan dicek bila bisa dicapai player terdekat
-        int index;
+        int indexPlayer = 0;
         float tempDistance;
-        if (includePUPAccesibilityFitness)
+        if (includePUPAccesibilityFitness && lokasiPlayer.Count>0)
         {
             for (int i = 0; i < lokasiPowerUp.Count; i++)
             {
                 biggest = 999;
                 for (int j = 0; j < lokasiPlayer.Count; j++)
                 {
-                    tempDistance = Vector2.Distance(((Coordinate)lokasiPowerUp[i]).returnAsVector(), ((Coordinate)lokasiPlayer[j]).returnAsVector());
                     tempDistance = Coordinate.Distance((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]);
                     if (tempDistance < biggest)
                     {
                         biggest = tempDistance;
-                        index = j;
-                    }
-                    if (AStarAlgorithm.doAstarAlgo((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]) != null)
-                    {
-                        fitnessScores[3]++;
+                        indexPlayer = j;
                     }
                 }
+                if (AStarAlgorithm.doAstarAlgo((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[indexPlayer], map) != null)
+                {
+                    fitnessScores[3]++;
+                }
             }
-            fitnessScores[3] = fitnessScores[3] / lokasiPowerUp.Count * PUPAccesibilityWeight;
+            if (lokasiPowerUp.Count == 0)
+                fitnessScores[3] = 0;
+            else
+                fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
         if (includePURatioFitness)
         {
-            fitnessScores[4] = -(float)Math.Pow(((objAmt[2] / biggest) - PURatioAmt) * 100, 2) * PURatioWeight;
+            fitnessScores[4] = 1 - ((objAmt[2] / biggest) - PURatioAmt) * PURatioWeight;
         }
 
         Debug.Log(String.Join(',', fitnessScores));
