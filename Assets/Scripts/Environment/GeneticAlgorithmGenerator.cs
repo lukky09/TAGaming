@@ -75,6 +75,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int AreaWeight;
     [SerializeField] bool includeWallGapFitness;
     [SerializeField] int WallGapLength;
+    [SerializeField] int WallGapLengthMax;
     [SerializeField] int WallGapWeight;
     [SerializeField] bool includePUPAccesibilityFitness;
     [SerializeField] float PUPAccesibilityWeight;
@@ -160,13 +161,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         //Utk Wall
         int jtemp, itemp;
+        int[] wSize = new int[2]; //jumlah [horizontal - vertikal]
+        float[] wScore = new float[2]; //skor total  
 
         //Utk Area
-        int size;
+        int size, totalSize = 0;
         Queue<Coordinate> q;
         Coordinate c, tempCoor;
         ArrayList areasSize = new ArrayList();
         bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
+
+        //Utk gap wall
+        int jumlahGap = 0;
 
         //untuk aksesibilitas PowerUp
         ArrayList lokasiPlayer = new ArrayList();
@@ -184,18 +190,20 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         //Cek Horizontal
                         if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
                         {
+                            wSize[0]++;
                             jtemp = j;
                             while (jtemp < mapWidth && map[i, jtemp] == 1)
                                 jtemp++;
-                            fitnessScores[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
+                            wScore[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
                         }
                         //Cek Vertikal
                         if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
                         {
+                            wSize[1]++;
                             itemp = i;
                             while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
                                 itemp++;
-                            fitnessScores[0] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+                            wScore[1] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
                         }
                     }
                     if (includeWallGapFitness)
@@ -203,18 +211,26 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         //Cek Horizontal
                         if (j + 1 < mapWidth && map[i, j + 1] != 1)
                         {
-                            jtemp = j+1;
-                            while (jtemp < mapWidth && map[i, jtemp] != 1)
+                            jtemp = j + 1;
+                            while (jtemp < mapWidth && map[i, jtemp] != 1 )
                                 jtemp++;
-                            fitnessScores[2] += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
+                            if (jtemp - j < WallGapLengthMax)
+                            {
+                                jumlahGap++;
+                                fitnessScores[2] += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
+                            }
                         }
                         //Cek Vertikal
                         if (i + 1 < SetObjects.getHeight() && map[i + 1, j] != 1)
                         {
-                            itemp = i+1;
+                            itemp = i + 1;
                             while (itemp < SetObjects.getHeight() && map[itemp, j] != 1)
                                 itemp++;
-                            fitnessScores[2] += Mathf.Log10((itemp - i) * 10 / WallGapLength);
+                            if (itemp - i < WallGapLengthMax)
+                            {
+                                jumlahGap++;
+                                fitnessScores[2] += Mathf.Log10((itemp - i) * 10 / WallGapLength);
+                            }
                         }
                     }
                 }
@@ -248,13 +264,23 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         lokasiPlayer.Add(new Coordinate(j, i));
                 }
             }
-        fitnessScores[0] *= PanjangWallWeight;
-        fitnessScores[2] *= WallGapWeight;
+
+        if (includeWallFitness)
+        {
+            if (wSize[0] > 0)
+                fitnessScores[0] += wScore[0] / wSize[0];
+            if (wSize[1] > 0)
+                fitnessScores[0] += wScore[1] / wSize[1];
+            fitnessScores[0] = (fitnessScores[0] / 2) * PanjangWallWeight;
+        }
+
+        fitnessScores[2]  = fitnessScores[2] * WallGapWeight / jumlahGap;
         float biggest = -999;
 
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
         for (int i = 0; i < areasSize.Count; i++)
         {
+            totalSize += (int)areasSize[i];
             if ((int)areasSize[i] > biggest)
                 biggest = (int)areasSize[i];
         }
@@ -265,13 +291,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             {
                 fitnessScores[1] -= (int)areasSize[i];
             }
-            fitnessScores[1] *= AreaWeight;
+            fitnessScores[1] = fitnessScores[1] * AreaWeight / totalSize;
+        }
+
+        if (includePURatioFitness)
+        {
+            fitnessScores[4] = (1 - MathF.Abs((objAmt[2] / biggest) - PURatioAmt)) * PURatioWeight;
         }
 
         //Setiap powerup akan dicek bila bisa dicapai player terdekat
         int indexPlayer = 0;
         float tempDistance;
-        if (includePUPAccesibilityFitness && lokasiPlayer.Count>0)
+        if (includePUPAccesibilityFitness && lokasiPlayer.Count > 0)
         {
             for (int i = 0; i < lokasiPowerUp.Count; i++)
             {
@@ -296,12 +327,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
-        if (includePURatioFitness)
-        {
-            fitnessScores[4] = 1 - ((objAmt[2] / biggest) - PURatioAmt) * PURatioWeight;
-        }
 
-        Debug.Log(String.Join(',', fitnessScores));
+        Debug.Log(String.Join(" - ", fitnessScores));
         return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
     }
 }
