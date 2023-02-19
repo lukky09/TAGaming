@@ -17,8 +17,12 @@ public class SnowBallManager : MonoBehaviour
     {
         snowballs = new ArrayList();
         foreach (Transform ballz in snowballscontainer.GetComponentsInChildren<Transform>())
+        {
             snowballs.Add(ballz.gameObject);
-        currentrespawnTimer = respawnAmount;
+        }
+        //Ini perlu karena parentnya termasuk dalam getComponentInChildren entah kenapa
+        snowballs.RemoveAt(0);
+        currentrespawnTimer = respawnTime;
     }
 
     public static void destroyball(int index)

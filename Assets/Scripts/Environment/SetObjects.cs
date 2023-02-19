@@ -24,9 +24,17 @@ public class SetObjects : MonoBehaviour
         stageUnfolded = new int[h - 2, w - 2];
     }
 
-    public static void setMap(int[,] stagearray)
+    public static void setMap(int[,] stagearray,bool isFolded)
     {
-        stageFolded = stagearray;
+        if (isFolded)
+            stageFolded = stagearray;
+        else
+        {
+            stageUnfolded = stagearray;
+            height = stagearray.GetLength(0);
+            width = stagearray.GetLength(1);
+        }
+           
     }
 
     public static void setMap(int index1,int index2, int number)

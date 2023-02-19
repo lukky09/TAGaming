@@ -8,7 +8,10 @@ public class AStarAlgorithm : MonoBehaviour
 {
     public static Coordinate[] makeWay(Transform character, Transform ball)
     {
-        if (!Physics2D.Linecast(character.localPosition, ball.localPosition, 6))
+        // layermask bukan integer tapi biner ternyata
+        RaycastHit2D hit = Physics2D.Linecast(character.position, ball.position, 64);
+        Debug.Log(hit.transform.gameObject.layer);
+        if (!Physics2D.Linecast(character.position, ball.position))
         {
             Coordinate ints = vectorToCoordinate(ball.localPosition);
             Debug.Log("Shortcut");
@@ -59,11 +62,6 @@ public class AStarAlgorithm : MonoBehaviour
         Coordinate posisikarakter = vectorToCoordinate(character.position);
         Coordinate posisibola = vectorToCoordinate(ball.position);
         //inisialisasi
-        return doAstarAlgo(posisikarakter, posisibola);
-    }
-
-    public static AstarNode doAstarAlgo(Coordinate posisikarakter, Coordinate posisibola)
-    {
         int[,] map = SetObjects.getMap(false);
         return doAstarAlgo(posisikarakter, posisibola, map);
     }

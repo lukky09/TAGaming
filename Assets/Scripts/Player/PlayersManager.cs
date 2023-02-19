@@ -15,9 +15,9 @@ public class PlayersManager : MonoBehaviour
     {
         players = new GameObject[10];
         Coordinate coor =  Coordinate.getRandomCoordinate();
-        makeNewPlayer(coor);
-        makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor),false);
-        for (int i = 1; i < 5 - 4; i++)
+        //makeNewPlayer(coor);
+        //makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor),false);
+        for (int i = 1; i < 5 - 5; i++)
         {
             coor = Coordinate.getRandomCoordinate();
             makeNewPlayer(coor);
@@ -34,7 +34,7 @@ public class PlayersManager : MonoBehaviour
             if (players[i] == null)
             {
                 players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
-                levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i]);
+                levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i],false);
                 players[i].GetComponent<SpriteRenderer>().material = new Material(m);
                 break;
             }

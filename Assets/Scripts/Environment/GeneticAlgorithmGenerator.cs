@@ -137,7 +137,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Start();
 
         var a = ga.BestChromosome.GetGenes();
-        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()));
+        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()),true);
         MainMenuNavigation.nextScene();
     }
 

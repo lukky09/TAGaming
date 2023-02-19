@@ -7,6 +7,7 @@ public class CameraController2D : MonoBehaviour
 {
     //[SerializeField] GameObject FloorTilemapObject;
     [SerializeField] GameObject ObjectToFollow;
+    [SerializeField] bool freeFollow;
 
     //Tilemap FloorTilemapReference;
     float[] tilesize; // width, height
@@ -20,17 +21,25 @@ public class CameraController2D : MonoBehaviour
         followedObjetTransform = ObjectToFollow.transform;
     }
 
-    public void setCameraFollower(GameObject anobject)
+    public void setCameraFollower(GameObject anobject,bool free)
     {
         followedObjetTransform = anobject.transform;
+        freeFollow = free;
     }
 
     // Update is called once per frame
     void Update()
     {
-        //ini harus ada ukuran levelnya biar g glitchy
-        float x = Mathf.Clamp(followedObjetTransform.position.x, tilesize[0], SetObjects.getWidth() + 2 - tilesize[0]);
-        float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() - 2 + tilesize[1] + 1, -tilesize[1] + 1);
-        transform.position = new Vector3(x, y, -10);
+        if (!freeFollow)
+        {
+            //ini harus ada ukuran levelnya biar g glitchy
+            float x = Mathf.Clamp(followedObjetTransform.position.x, tilesize[0], SetObjects.getWidth() + 2 - tilesize[0]);
+            float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() - 2 + tilesize[1] + 1, -tilesize[1] + 1);
+            transform.position = new Vector3(x, y, -10);
+        }
+        else
+        {
+            transform.position = new Vector3(followedObjetTransform.position.x, followedObjetTransform.position.y, -10);
+        }
     }
 }
