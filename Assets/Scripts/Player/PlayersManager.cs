@@ -15,9 +15,9 @@ public class PlayersManager : MonoBehaviour
     {
         players = new GameObject[10];
         Coordinate coor =  Coordinate.getRandomCoordinate();
-        //makeNewPlayer(coor);
-        //makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor),false);
-        for (int i = 1; i < 5 - 5; i++)
+        makeNewPlayer(coor);
+        makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor),false);
+        for (int i = 1; i < 5 - 4; i++)
         {
             coor = Coordinate.getRandomCoordinate();
             makeNewPlayer(coor);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
 using System.Linq;
+using System;
+using Random = UnityEngine.Random;
 
 public class AStarAlgorithm : MonoBehaviour
 {
@@ -10,7 +12,6 @@ public class AStarAlgorithm : MonoBehaviour
     {
         // layermask bukan integer tapi biner ternyata
         RaycastHit2D hit = Physics2D.Linecast(character.position, ball.position, 64);
-        Debug.Log(hit.transform.gameObject.layer);
         if (!Physics2D.Linecast(character.position, ball.position))
         {
             Coordinate ints = vectorToCoordinate(ball.localPosition);
@@ -39,7 +40,7 @@ public class AStarAlgorithm : MonoBehaviour
         int tempindex = 1;
         while (tempindex <= path.Length - 1)
         {
-            if (!isStraight(currentpoint, path[tempindex]) && Physics2D.Linecast(currentpoint.returnAsVector(), path[tempindex].returnAsVector()))
+            if (!isStraight(currentpoint, path[tempindex]) && Physics2D.Linecast(currentpoint.returnAsVector(), path[tempindex].returnAsVector(),64))
             {
                 resultAL.Add(path[tempindex - 1]);
                 currentpoint = path[tempindex - 1];
@@ -80,8 +81,8 @@ public class AStarAlgorithm : MonoBehaviour
         while (listNode.Count > 0)
         {
             currentnode = (AstarNode)listNode[0];
+            Debug.Log(currentnode.coordinate.ToString()+","+listNode.Count);
             isChecked[currentnode.coordinate.yCoor, currentnode.coordinate.xCoor] = true;
-            //Debug.Log(currentnode.ToString());
             listNode.RemoveAt(0);
             if (currentnode.coordinate.xCoor == posisibola.xCoor && currentnode.coordinate.yCoor == posisibola.yCoor)
             {
@@ -91,7 +92,7 @@ public class AStarAlgorithm : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 newcoor = new Coordinate(currentnode.coordinate.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), currentnode.coordinate.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
-                if (Enumerable.Range(0, mapheight - 1).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength - 1).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1 && !isChecked[newcoor.yCoor, newcoor.xCoor])
+                if (Enumerable.Range(0, mapheight).Contains(newcoor.yCoor) && Enumerable.Range(0, maplength).Contains(newcoor.xCoor) && map[newcoor.yCoor, newcoor.xCoor] != 1 && !isChecked[newcoor.yCoor, newcoor.xCoor])
                 {
                     distance = Coordinate.Distance(newcoor, posisibola);
                     tempnode = new AstarNode(newcoor, currentnode.g + 1, distance, currentnode);
@@ -113,7 +114,10 @@ public class AStarAlgorithm : MonoBehaviour
             }
         }
         if (listNode.Count == 0)
+        {
+            Debug.Log("Ga dapet jalan");
             return null;
+        }
         else
             return resultnode;
     }
@@ -144,7 +148,7 @@ public class AstarNode
 
     public override string ToString()
     {
-        return coordinate.ToString() + ", G= " + g + ", H= " + h + ", Parent =" + (parentNode != null);
+        return coordinate.ToString() + ", G= " + g + ", H= " + h + ", F= " + f + " Parent =" + (parentNode != null);
     }
 }
 
@@ -171,7 +175,7 @@ public class Coordinate
 
     public override string ToString()
     {
-        return xCoor + "," + yCoor;
+        return "X : "+xCoor + ", Y : " + yCoor;
     }
 
     public static Coordinate getRandomCoordinate()

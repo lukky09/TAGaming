@@ -8,6 +8,7 @@ public class MaptoArray : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        SetObjects ah = gameObject.GetComponent<SetObjects>();
         Tilemap tilemap = GetComponent<Tilemap>();
 
         tilemap.CompressBounds();
@@ -23,11 +24,13 @@ public class MaptoArray : MonoBehaviour
                 TileBase tile = allTiles[x + y * bounds.size.x];
                 if (tile != null && tile.name == "rok")
                 {
-                    map[bounds.size.y - y - 2, x - 1] = 1;
+                    map[bounds.size.y - 2 - y , x - 1] = 1;
                 }
             }
         }
 
         SetObjects.setMap(map, false);
+        ah.clearMap();
+        ah.fillMap();
     }
 }
