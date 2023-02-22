@@ -98,7 +98,7 @@ public class SnowBallManager : MonoBehaviour
     public static int getNearestBallIndex(Transform objectTracked, float range)
     {
         int index = getNearestBallIndex(objectTracked);
-        if (Vector2.Distance(((GameObject)snowballs[index]).transform.position, objectTracked.position) < range)
+        if (index > -1 && Vector2.Distance(((GameObject)snowballs[index]).transform.position, objectTracked.position) < range)
             return index;
         else
             return -1;

@@ -271,6 +271,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c691221f5f4354180f74d0e91f8128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  useMirrorFitness: 0
   includeWallFitness: 1
   PanjangWallWeight: 1
   PanjangWallVertikalAmt: 0

@@ -22,8 +22,6 @@ public class SetObjects : MonoBehaviour
         width = w;
         if (w % 2 == 1)
             width--;
-        stageFolded = new int[h - 2, (w / 2) - 1];
-        stageUnfolded = new int[h - 2, w - 2];
     }
 
     public static void setMap(int[,] stagearray, bool isFolded)
@@ -36,7 +34,6 @@ public class SetObjects : MonoBehaviour
             height = stagearray.GetLength(0) + 2;
             width = stagearray.GetLength(1) + 2;
         }
-
     }
 
     public static void setMap(int index1, int index2, int number)
@@ -80,20 +77,23 @@ public class SetObjects : MonoBehaviour
         }
         //mapFolded itu asumsikan di kiri
         if (stageFolded != null)
+        {
+            stageUnfolded = new int[height - 2, width - 2];
             for (int i = 0; i < height - 2; i++)
             {
-                for (int j = 0; j < (int)((width - 2 / 2)); j++)
+                for (int j = 0; j < (int)((width - 2) / 2); j++)
                 {
                     stageUnfolded[i, j] = stageFolded[i, j];
                     stageUnfolded[i, width - 3 - j] = stageFolded[i, j];
                 }
             }
+        }
         fillMap();
     }
 
     public void fillMap()
     {
-
+        Debug.Log("Filling Map");
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {

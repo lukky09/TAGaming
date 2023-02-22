@@ -67,6 +67,7 @@ public class GameChromosome : ChromosomeBase
 
 public class GeneticAlgorithmGenerator : MonoBehaviour
 {
+    [SerializeField] bool useMirrorFitness;
     [SerializeField] bool includeWallFitness;
     [SerializeField] int PanjangWallWeight;
     [SerializeField] int PanjangWallVertikalAmt;
@@ -90,13 +91,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     void Start()
     {
         double fitness;
-        mapWidth = (int)(SetObjects.getWidth() / 2);
+       if(!useMirrorFitness)
+            mapWidth = (int)(SetObjects.getWidth() / 2);
+       else
+            mapWidth = (int)SetObjects.getWidth();
         float[] tempfitness = new float[5];
-        int length = (SetObjects.getHeight()) * (SetObjects.getWidth()/2);
+        int length = SetObjects.getHeight() * mapWidth;
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
-            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 2);
+            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / ((useMirrorFitness) ? 4 : 2));
+        
+            
         tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
         //Multithreading
@@ -137,7 +143,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Start();
 
         var a = ga.BestChromosome.GetGenes();
-        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()),true);
+        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()),!useMirrorFitness);
         MainMenuNavigation.nextScene();
     }
 
@@ -149,6 +155,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             for (int j = 0; j < width; j++)
             {
                 result[i, j] = (int)((Gene)arrays[i * width + j]).Value;
+                if (useMirrorFitness)
+                    result[i, width - 1 - j] = (int)((Gene)arrays[i * width + j]).Value;
             }
         }
         return result;
@@ -328,7 +336,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
 
-        Debug.Log(String.Join(" - ", fitnessScores));
+        //Debug.Log(String.Join(" - ", fitnessScores));
         return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
     }
 }

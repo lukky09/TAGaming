@@ -28,7 +28,13 @@ public class AStarAlgorithm : MonoBehaviour
                 result = result.parentNode;
             }
             coordinates.Reverse();
+            Debug.Log("Panjang : "+coordinates.Count);
             Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
+            Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            for (int i = 0; i < finalcoordinates.Length; i++)
+            {
+                Debug.Log(((Coordinate)finalcoordinates[i]).ToString());
+            }
             return finalcoordinates;
         }
     }
@@ -69,7 +75,7 @@ public class AStarAlgorithm : MonoBehaviour
 
     public static AstarNode doAstarAlgo(Coordinate posisikarakter, Coordinate posisibola, int[,] map)
     {
-       
+
         bool[,] isChecked = new bool[map.GetLength(0), map.GetLength(1)];
         ArrayList listNode = new ArrayList();
         listNode.Add(new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null));
@@ -81,7 +87,6 @@ public class AStarAlgorithm : MonoBehaviour
         while (listNode.Count > 0)
         {
             currentnode = (AstarNode)listNode[0];
-            Debug.Log(currentnode.coordinate.ToString()+","+listNode.Count);
             isChecked[currentnode.coordinate.yCoor, currentnode.coordinate.xCoor] = true;
             listNode.RemoveAt(0);
             if (currentnode.coordinate.xCoor == posisibola.xCoor && currentnode.coordinate.yCoor == posisibola.yCoor)
@@ -114,8 +119,7 @@ public class AStarAlgorithm : MonoBehaviour
             }
         }
         if (listNode.Count == 0)
-        {
-            Debug.Log("Ga dapet jalan");
+        { 
             return null;
         }
         else
@@ -130,6 +134,7 @@ public class AStarAlgorithm : MonoBehaviour
 
 public class AstarNode
 {
+    [SerializeField]
     public Coordinate coordinate;
     public float f, g, h;
     public AstarNode parentNode;
@@ -155,6 +160,7 @@ public class AstarNode
 [System.Serializable, Inspectable]
 public class Coordinate
 {
+    [SerializeField]
     public int xCoor, yCoor;
 
     public Coordinate(int xCoor, int yCoor)
