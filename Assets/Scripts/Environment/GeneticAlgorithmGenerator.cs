@@ -100,7 +100,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
-            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / ((useMirrorFitness) ? 4 : 2));
+            PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 4);
         
             
         tmpro = gameObject.GetComponent<TextMeshProUGUI>();
@@ -280,6 +280,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             if (wSize[1] > 0)
                 fitnessScores[0] += wScore[1] / wSize[1];
             fitnessScores[0] = (fitnessScores[0] / 2) * PanjangWallWeight;
+          
         }
 
         fitnessScores[2]  = fitnessScores[2] * WallGapWeight / jumlahGap;
@@ -336,7 +337,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
 
-        //Debug.Log(String.Join(" - ", fitnessScores));
+        Debug.Log(String.Join(" - ", fitnessScores));
         return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
     }
 }

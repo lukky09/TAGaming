@@ -185,6 +185,7 @@ MonoBehaviour:
   playerMaterial: {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
   playerPrefab: {fileID: 3380666572601521298, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
   enemyPrefab: {fileID: 8190896904697680640, guid: 4690a3ed094d4ca4b98e55ac896d4ed2, type: 3}
+  spawnPlayer: 1
   levelCamera: {fileID: 519420028}
 --- !u!1 &479397658
 GameObject:
@@ -379,6 +380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ObjectToFollow: {fileID: 0}
+  freeFollow: 0
 --- !u!1 &590981790
 GameObject:
   m_ObjectHideFlags: 0

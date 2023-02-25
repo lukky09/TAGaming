@@ -31,10 +31,6 @@ public class AStarAlgorithm : MonoBehaviour
             Debug.Log("Panjang : "+coordinates.Count);
             Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
             Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
-            for (int i = 0; i < finalcoordinates.Length; i++)
-            {
-                Debug.Log(((Coordinate)finalcoordinates[i]).ToString());
-            }
             return finalcoordinates;
         }
     }

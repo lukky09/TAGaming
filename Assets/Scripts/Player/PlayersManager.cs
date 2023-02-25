@@ -4,24 +4,36 @@ using UnityEngine;
 
 public class PlayersManager : MonoBehaviour
 {
-    static GameObject[] players;
+    GameObject[] players;
     [SerializeField] Material playerMaterial;
     [SerializeField] GameObject playerPrefab;
     [SerializeField] GameObject enemyPrefab;
+    [SerializeField] bool spawnPlayer;
+    [SerializeField] GameObject playersContainer;
 
     [SerializeField] GameObject levelCamera;
 
     private void Start()
     {
         players = new GameObject[10];
-        Coordinate coor =  Coordinate.getRandomCoordinate();
-        makeNewPlayer(coor);
-        makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor),false);
-        for (int i = 1; i < 5 - 4; i++)
+        if (spawnPlayer)
         {
-            coor = Coordinate.getRandomCoordinate();
+            Coordinate coor = Coordinate.getRandomCoordinate();
             makeNewPlayer(coor);
             makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor), false);
+            for (int i = 1; i < 5 - 4; i++)
+            {
+                coor = Coordinate.getRandomCoordinate();
+                makeNewPlayer(coor);
+                makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor), false);
+            }
+        }
+        else
+        {
+            for (int i = 0; i < playersContainer.transform.childCount; i++)
+            {
+                players[i] = playersContainer.transform.GetChild(i).gameObject;
+            }
         }
     }
 
@@ -34,7 +46,7 @@ public class PlayersManager : MonoBehaviour
             if (players[i] == null)
             {
                 players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
-                levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i],false);
+                levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i], false);
                 players[i].GetComponent<SpriteRenderer>().material = new Material(m);
                 break;
             }
@@ -44,10 +56,10 @@ public class PlayersManager : MonoBehaviour
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
     {
         Material m = new Material(playerMaterial);
-        if(isPlayerTeam)
+        if (isPlayerTeam)
             m.SetColor("_OutlineColor", Color.blue);
         else
-        m.SetColor("_OutlineColor", Color.red);
+            m.SetColor("_OutlineColor", Color.red);
         for (int i = 0; i < players.Length; i++)
         {
             if (players[i] == null)
@@ -61,20 +73,26 @@ public class PlayersManager : MonoBehaviour
         }
     }
 
-    public static GameObject getnearestPlayer(Transform player)
+    public GameObject getnearestPlayer(Transform player)
     {
-        float closestrange = 999, range = 0;
+        float closestrange = 999, range;
         int i = 0, index = -1;
         foreach (GameObject currplayer in players)
         {
-            range = Vector2.Distance(player.transform.position, player.position);
-            if (range < closestrange)
+            if (currplayer != null)
             {
-                closestrange = range;
-                index = i;
+                range = Vector2.Distance(player.transform.position, currplayer.transform.position);
+                if (range < closestrange && range > 0)
+                {
+                    closestrange = range;
+                    index = i;
+                }
+                i++;
             }
-            i++;
         }
-        return players[index];
+        if (index > 0)
+            return players[index];
+        else
+            return null;
     }
 }

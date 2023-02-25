@@ -63,18 +63,6 @@ public class SetObjects : MonoBehaviour
     void Start()
     {
         mapTilemap = this.GetComponent<Tilemap>();
-        //horizontal
-        for (int i = 0; i < width; i++)
-        {
-            mapTilemap.SetTile(new Vector3Int(i, 0, 1), rok);
-            mapTilemap.SetTile(new Vector3Int(i, -height + 1, 1), rok);
-        }
-        //vertikal
-        for (int i = 1; i < height - 1; i++)
-        {
-            mapTilemap.SetTile(new Vector3Int(0, -i, 1), rok);
-            mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
-        }
         //mapFolded itu asumsikan di kiri
         if (stageFolded != null)
         {
@@ -93,7 +81,18 @@ public class SetObjects : MonoBehaviour
 
     public void fillMap()
     {
-        Debug.Log("Filling Map");
+        //horizontal
+        for (int i = 0; i < width; i++)
+        {
+            mapTilemap.SetTile(new Vector3Int(i, 0, 1), rok);
+            mapTilemap.SetTile(new Vector3Int(i, -height + 1, 1), rok);
+        }
+        //vertikal
+        for (int i = 1; i < height - 1; i++)
+        {
+            mapTilemap.SetTile(new Vector3Int(0, -i, 1), rok);
+            mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
+        }
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {
