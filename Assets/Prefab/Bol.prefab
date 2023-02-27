@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 439908767231987628}
   - component: {fileID: 1842336168261054960}
   - component: {fileID: 275797149061839128}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Bol
   m_TagString: Projectile
   m_Icon: {fileID: 0}

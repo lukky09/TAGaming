@@ -17,6 +17,7 @@ public class ShootMechanic : SnowBrawler
     private float currentAimTime;
     private TakeSnowBall snowballreference;
     private LineRenderer linemanager;
+    private CatchBall ballcatch;
 
     // Start is called before the first frame update
     void Start()
@@ -24,16 +25,17 @@ public class ShootMechanic : SnowBrawler
         playerteam = true;
         id = 0;
         snowballreference = GetComponent<TakeSnowBall>();
-        //line.transform.position = transform.position;
         linemanager = line.GetComponent<LineRenderer>();
         currentAimTime = 0;
         isAiming = false;
+        ballcatch = GetComponent<CatchBall>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && snowballreference.getballamount() > 0)
+        Debug.Log(ballcatch.getBall() == null);
+        if (Input.GetMouseButtonDown(0) && (snowballreference.getballamount() > 0 || ballcatch.getBall() != null))
         {
             currentAimTime = aimTime;
             isAiming = true;
@@ -45,8 +47,7 @@ public class ShootMechanic : SnowBrawler
             GameObject ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
-            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true, ballScore);
-            ballin.layer = 6;
+            ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true, ballScore, this.GetComponent<BoxCollider2D>());
             snowballreference.decreaseballamount();
             isAiming = false;
             line.SetActive(false);

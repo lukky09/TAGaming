@@ -10,6 +10,7 @@ public class PlayerMovement : MonoBehaviour
     Animator animator;
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
+    CatchBall CBReference;
 
     // Start is called before the first frame update
     void Start()
@@ -18,6 +19,7 @@ public class PlayerMovement : MonoBehaviour
         animator = this.GetComponent<Animator>();
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
+        CBReference = GetComponent<CatchBall>();
         thisRigid.useFullKinematicContacts = true;
     }
 
@@ -39,7 +41,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
+        if(CBReference.getCatchTime()<0)
+            thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
     }
 
     private void OnCollisionEnter2D(Collision2D collision)

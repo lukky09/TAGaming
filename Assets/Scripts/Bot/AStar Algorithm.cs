@@ -28,9 +28,9 @@ public class AStarAlgorithm : MonoBehaviour
                 result = result.parentNode;
             }
             coordinates.Reverse();
-            Debug.Log("Panjang : "+coordinates.Count);
+            //Debug.Log("Panjang : "+coordinates.Count);
             Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
-            Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            //Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
             return finalcoordinates;
         }
     }

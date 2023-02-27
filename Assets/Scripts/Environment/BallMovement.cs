@@ -17,12 +17,13 @@ public class BallMovement : MonoBehaviour
         thisRigid = this.GetComponent<Rigidbody2D>();
     }
 
-    public void initialize(float speed, Vector2 direction, bool isPlayerTeam,int ballScore)
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam,int ballScore,Collider2D you)
     {
         this.speed = speed;
         this.direction = direction;
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore = ballScore;
+        Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
     }
     public bool getPlayerTeam()
     {

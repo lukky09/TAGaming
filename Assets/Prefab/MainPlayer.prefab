@@ -16,9 +16,10 @@ GameObject:
   - component: {fileID: 3380666572601521304}
   - component: {fileID: 3380666572601521305}
   - component: {fileID: 5534560865541083252}
+  - component: {fileID: -1919244248669674146}
   m_Layer: 3
   m_Name: MainPlayer
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -145,7 +146,7 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: -0.017618716, y: 0.0058729053}
+  m_Offset: {x: -0.013529345, y: -0.02479726}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0.5, y: 0.5}
@@ -156,7 +157,7 @@ BoxCollider2D:
     adaptiveTiling: 0
   m_AutoTiling: 0
   serializedVersion: 2
-  m_Size: {x: 0.47143793, y: 0.9530939}
+  m_Size: {x: 0.42236564, y: 0.8426813}
   m_EdgeRadius: 0
 --- !u!114 &3380666572601521304
 MonoBehaviour:
@@ -204,6 +205,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   takeRange: 1
+--- !u!114 &-1919244248669674146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380666572601521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4981d692fed9660459e21153988e1385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  catchButton: 101
+  catchTime: 0.5
+  scoreAdd: 2
 --- !u!1 &3767412540042823851
 GameObject:
   m_ObjectHideFlags: 0
