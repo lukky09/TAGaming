@@ -7,6 +7,7 @@ public class CatchBall : MonoBehaviour
     [SerializeField] KeyCode catchButton;
     [SerializeField] float catchTime;
     [SerializeField] int scoreAdd;
+    [SerializeField] float speedAdd;
     float currentCatchTime;
     GameObject caughtSnowBall;
 
@@ -21,8 +22,11 @@ public class CatchBall : MonoBehaviour
         {
             if (currentCatchTime > 0)
             {
+                if (caughtSnowBall != null)
+                    Destroy(caughtSnowBall);
                 caughtSnowBall = collision.gameObject;
-                caughtSnowBall.GetComponent<BallMovement>().ballIsCatched(this.GetComponent<SnowBrawler>().getplayerteam(),scoreAdd);
+                caughtSnowBall.SetActive(false);
+                caughtSnowBall.GetComponent<BallMovement>().ballIsCatched(this.GetComponent<SnowBrawler>().getplayerteam(), scoreAdd, speedAdd, GetComponent<BoxCollider2D>());
                 Debug.Log("Nangkap");
             }
             else
@@ -30,8 +34,8 @@ public class CatchBall : MonoBehaviour
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (!bol.getPlayerTeam())
                     BarScoreManager.addscore(false, 10);
+                Destroy(collision.gameObject);
             }
-            Destroy(collision.gameObject);
         }
     }
 

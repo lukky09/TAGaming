@@ -220,6 +220,7 @@ MonoBehaviour:
   catchButton: 101
   catchTime: 0.5
   scoreAdd: 2
+  speedAdd: 1
 --- !u!1 &3767412540042823851
 GameObject:
   m_ObjectHideFlags: 0

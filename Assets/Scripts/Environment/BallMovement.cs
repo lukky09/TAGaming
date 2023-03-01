@@ -5,11 +5,12 @@ using UnityEngine.EventSystems;
 
 public class BallMovement : MonoBehaviour
 {
-    private float speed;
+    [SerializeField] float speed;
     private Vector2 direction;
     private bool fromPlayerTeam;
     private int ballScore;
     Rigidbody2D thisRigid;
+    Collider2D currentCollider;
 
     // Start is called before the first frame update
     void Start()
@@ -51,9 +52,19 @@ public class BallMovement : MonoBehaviour
             Destroy(gameObject);
     }
 
-    public void ballIsCatched(bool isPlayerTeam,int addScore)
+    public void ballIsCatched(bool isPlayerTeam, int addScore, float speed, Collider2D you)
     {
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore += addScore;
+        this.speed += speed;
+        if (currentCollider != null)
+            Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you, false);
+        Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
+        currentCollider = you;
+    }
+
+    public void setDirection(Vector2 direction)
+    {
+        this.direction = direction;
     }
 }
