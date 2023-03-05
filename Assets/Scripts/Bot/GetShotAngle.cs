@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class GetShotAngle :MonoBehaviour
 {
-   public async static Task<float> GetAngle(GameObject you, GameObject them, float ballspeed,float ballSpeed)
+   public async static Task<float> GetAngle(GameObject you, GameObject them, float ballspeed)
     {
         //HUKUM COSINEE!!!!!!!!!
         Vector2 pos1 = them.transform.position;
