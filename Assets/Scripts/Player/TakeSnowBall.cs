@@ -6,6 +6,7 @@ public class TakeSnowBall : MonoBehaviour
 {
     public float takeRange;
 
+    int ballPowerId;
     int currentballamount;
     GameObject closestball;
     int ballindex;
@@ -22,10 +23,23 @@ public class TakeSnowBall : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.E))
         {
-            bool deleted = SnowBallManager.getDeleteclosestball(transform, takeRange, true);
-            if (deleted)
-                currentballamount = 3;
+            if (SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>())
+            {
+                ballPowerId = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
+            }
+            else
+            {
+                ballPowerId = 0;
+                bool deleted = SnowBallManager.getDeleteclosestball(transform, takeRange, true);
+                if (deleted)
+                    currentballamount = 3;
+            }
         }
+    }
+
+    public int getPowerId()
+    {
+        return ballPowerId;
     }
 
     public int getballamount()

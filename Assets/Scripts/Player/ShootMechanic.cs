@@ -56,7 +56,7 @@ public class ShootMechanic : SnowBrawler
             }
             else {
                 ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
-                ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true, ballScore, this.GetComponent<BoxCollider2D>());
+                ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true, ballScore, this.GetComponent<BoxCollider2D>(),snowballreference.getPowerId());
                 snowballreference.decreaseballamount();
             }
             isAiming = false;

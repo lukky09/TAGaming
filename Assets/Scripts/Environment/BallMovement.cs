@@ -11,6 +11,7 @@ public class BallMovement : MonoBehaviour
     private int ballScore;
     Rigidbody2D thisRigid;
     Collider2D currentCollider;
+    private int powerupId;
 
     // Start is called before the first frame update
     void Start()
@@ -25,6 +26,12 @@ public class BallMovement : MonoBehaviour
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore = ballScore;
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
+    }
+
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you,int powerupId)
+    {
+        initialize(speed, direction, isPlayerTeam, ballScore, you);
+        this.powerupId = powerupId;
     }
     public bool getPlayerTeam()
     {
