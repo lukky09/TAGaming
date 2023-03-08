@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ShootMechanic : SnowBrawler
 {
-    public GameObject ball;
     [SerializeField] GameObject line;
     [SerializeField] float aimAngle;
     [SerializeField] float aimTime;
@@ -41,23 +40,9 @@ public class ShootMechanic : SnowBrawler
         if (Input.GetMouseButtonUp(0) && isAiming)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            GameObject ballin;
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
-            if (caughtBall != null)
-            {
-                ballin = caughtBall;
-                ballin.GetComponent<BallMovement>().setDirection(direction);
-                ballin.transform.position = this.transform.position;
-                ballin.SetActive(true);
-                caughtBall = null;
-            }
-            else
-            {
-                ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
-                ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, true, ballScoreInitial, this.GetComponent<BoxCollider2D>(), ballPowerId);
-                ballAmount--;
-            }
+            shootBall(direction);
             isAiming = false;
             line.SetActive(false);
         }

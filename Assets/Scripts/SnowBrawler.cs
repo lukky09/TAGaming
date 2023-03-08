@@ -4,12 +4,13 @@ using UnityEngine;
 
 public class SnowBrawler : MonoBehaviour
 {
-    protected bool playerteam { get; set; }
+
     protected int ballAmount { get; set; }
     protected float currentBallCatchTimer { get; set; }
     protected GameObject caughtBall { get; set; }
     protected int ballPowerId { get; set; }
 
+    public bool playerteam;
     public float throwSpeed;
     public float runSpeed;
     public int ballScoreInitial;
@@ -17,6 +18,7 @@ public class SnowBrawler : MonoBehaviour
     public float ballSpeedAdd;
     public float ballCatchTimer;
     public float ballTakeRange;
+    public GameObject ball;
 
 
     public void initializeBrawler(bool playerteam, float throwSpeed,float runSpeed,int ballScoreAdd, float ballSpeedAdd,float ballCatchTimer,float ballTakeRange)
@@ -52,7 +54,7 @@ public class SnowBrawler : MonoBehaviour
                     Destroy(caughtBall);
                 caughtBall = collision.gameObject;
                 caughtBall.SetActive(false);
-                caughtBall.GetComponent<BallMovement>().ballIsCatched(this.GetComponent<SnowBrawler>().getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>());
+                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>());
             }
             else
             {
@@ -63,13 +65,14 @@ public class SnowBrawler : MonoBehaviour
             }
         }
     }
-    
+
     public void getBall()
     {
         if (SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>())
         {
             ballPowerId = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
-            ballAmount = 1;
+            if (ballPowerId > 0)
+                ballAmount = 1;
         }
         else
         {
@@ -80,6 +83,27 @@ public class SnowBrawler : MonoBehaviour
                 SnowBallManager.deleteclosestball(transform, ballTakeRange);
                 ballAmount = 3;
             }
+        }
+    }
+
+    public void shootBall(Vector2 direction)
+    {
+        GameObject ballin;
+        if (caughtBall != null)
+        {
+            ballin = caughtBall;
+            ballin.GetComponent<BallMovement>().setDirection(direction);
+            ballin.transform.position = this.transform.position;
+            ballin.SetActive(true);
+            caughtBall = null;
+        }
+        else
+        {
+            Debug.Log(ballAmount);
+            ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
+            ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), ballPowerId);
+            ballAmount--;
+            Debug.Log(ballAmount);
         }
     }
 
@@ -101,5 +125,10 @@ public class SnowBrawler : MonoBehaviour
     public float getCatchTimer()
     {
         return currentBallCatchTimer;
+    }
+
+    public GameObject getCaughtBall()
+    {
+        return caughtBall;
     }
 }

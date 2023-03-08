@@ -182,13 +182,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853902fbd6e80e741bcf2db6a1068d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  throwSpeed: 0
-  runSpeed: 0
-  ballScoreInitial: 0
-  ballScoreAdd: 0
-  ballSpeedAdd: 0
-  ballCatchTimer: 0
-  ballTakeRange: 0
+  playerteam: 1
+  throwSpeed: 15
+  runSpeed: 7.5
+  ballScoreInitial: 10
+  ballScoreAdd: 2
+  ballSpeedAdd: 1
+  ballCatchTimer: 0.5
+  ballTakeRange: 1
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   line: {fileID: 3767412540042823851}
   aimAngle: 90

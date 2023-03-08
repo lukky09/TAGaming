@@ -21,7 +21,7 @@ public class PowerUp : MonoBehaviour
         m.SetFloat("_OutlineThickness", 5);
         ball = transform.GetChild(0).gameObject;
         ball.GetComponent<SpriteRenderer>().material = m;
-        currentSpawnTime = spawnTime;
+        currentSpawnTime = 0;
     }
 
     private void Update()
@@ -40,6 +40,8 @@ public class PowerUp : MonoBehaviour
     public int getPowerupId()
     {
         ball.SetActive(false);
+        if (currentSpawnTime > 0)
+            return 0;
         currentSpawnTime = spawnTime;
         return 1; 
     }

@@ -45,10 +45,7 @@ public class BallMovement : MonoBehaviour
 
     public void addScore(int score)
     {
-        Debug.Log("Add Score");
-        Debug.Log("Before: "+ballScore);
         ballScore += score;
-        Debug.Log(ballScore);
     }
 
     public void trySelfDestruct()
