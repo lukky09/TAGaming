@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 3380666572601521302}
   - component: {fileID: 3380666572601521304}
   - component: {fileID: 3380666572601521305}
-  - component: {fileID: 5534560865541083252}
   - component: {fileID: -1919244248669674146}
   m_Layer: 3
   m_Name: MainPlayer
@@ -171,7 +170,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b8e6bdf7134ca46ab6babcbf22949a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 7.5
 --- !u!114 &3380666572601521305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -184,27 +182,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 853902fbd6e80e741bcf2db6a1068d14, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  throwSpeed: 0
+  runSpeed: 0
+  ballScoreInitial: 0
+  ballScoreAdd: 0
+  ballSpeedAdd: 0
+  ballCatchTimer: 0
+  ballTakeRange: 0
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
-  ballSpeed: 15
   line: {fileID: 3767412540042823851}
   aimAngle: 90
   aimTime: 1
-  ballScore: 10
   aimMovementSpeedPerc: 0.75
   isAiming: 0
---- !u!114 &5534560865541083252
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3380666572601521298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 72fdefcce3695cc4a9c858b86bce9570, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  takeRange: 1
 --- !u!114 &-1919244248669674146
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -218,9 +208,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   catchButton: 101
-  catchTime: 0.5
-  scoreAdd: 2
-  speedAdd: 1
 --- !u!1 &3767412540042823851
 GameObject:
   m_ObjectHideFlags: 0

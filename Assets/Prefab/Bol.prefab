@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 439908767231987628}
   - component: {fileID: 1842336168261054960}
   - component: {fileID: 275797149061839128}
+  - component: {fileID: 4140358004628356765}
   m_Layer: 6
   m_Name: Bol
   m_TagString: Projectile
@@ -76,12 +77,12 @@ SpriteRenderer:
   m_SortingLayerID: -1790865707
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 4dceeddf8809126498931378ea029a2d, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 668bf47d4a2ce4e4d838afc894e9cc8d, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 1, y: 1}
+  m_Size: {x: 0.5, y: 0.5}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
@@ -100,9 +101,9 @@ CircleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0.0012741089, y: 0.0053594112}
+  m_Offset: {x: 0.0000005364418, y: -0.0048332065}
   serializedVersion: 2
-  m_Radius: 0.2547598
+  m_Radius: 0.18978256
 --- !u!50 &1842336168261054960
 Rigidbody2D:
   serializedVersion: 4
@@ -137,3 +138,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 0
+--- !u!114 &4140358004628356765
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284263136227948241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 997961d072347e549905d223cff89f1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  pierceScoreAdd: 5

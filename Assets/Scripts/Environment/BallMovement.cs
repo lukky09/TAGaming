@@ -43,9 +43,23 @@ public class BallMovement : MonoBehaviour
         return ballScore;
     }
 
-    public void delet()
+    public void addScore(int score)
     {
-        Destroy(gameObject);
+        Debug.Log("Add Score");
+        Debug.Log("Before: "+ballScore);
+        ballScore += score;
+        Debug.Log(ballScore);
+    }
+
+    public void trySelfDestruct()
+    {
+        if (powerupId != 1)
+            Destroy(gameObject);
+        else
+        {
+            Debug.Log(powerupId);
+            GetComponent<BallPowerUp>().modifyBall(powerupId);
+        }
     }
 
     private void FixedUpdate()

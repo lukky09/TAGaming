@@ -6,11 +6,10 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     Vector2 moveDirection;
-    public float speed;
     Animator animator;
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
-    CatchBall CBReference;
+    SnowBrawler SBReference;
 
     // Start is called before the first frame update
     void Start()
@@ -19,7 +18,7 @@ public class PlayerMovement : MonoBehaviour
         animator = this.GetComponent<Animator>();
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
-        CBReference = GetComponent<CatchBall>();
+        SBReference = this.GetComponent<SnowBrawler>();
         thisRigid.useFullKinematicContacts = true;
     }
 
@@ -27,8 +26,8 @@ public class PlayerMovement : MonoBehaviour
     void Update()
     {
         float diagonalCheck = Mathf.Sqrt(Mathf.Pow(Input.GetAxisRaw("Horizontal"), 2) + Mathf.Pow(Input.GetAxisRaw("Vertical"), 2));
-        moveDirection.x = Input.GetAxisRaw("Horizontal") * speed ;
-        moveDirection.y = Input.GetAxisRaw("Vertical") * speed;
+        moveDirection.x = Input.GetAxisRaw("Horizontal") * SBReference.runSpeed ;
+        moveDirection.y = Input.GetAxisRaw("Vertical") * SBReference.runSpeed;
         if (diagonalCheck != 0f)
             moveDirection /= diagonalCheck;
         if (SMReference.isAiming)
@@ -41,13 +40,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if(CBReference.getCatchTime()<0)
+        if (GetComponent<SnowBrawler>().getCatchTimer() < 0)
             thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
-    }
-
-    private void OnCollisionEnter2D(Collision2D collision)
-    {
-        //Debug.Log(collision.gameObject.transform.name);
     }
 
 }

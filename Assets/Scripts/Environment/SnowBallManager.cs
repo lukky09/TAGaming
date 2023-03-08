@@ -65,17 +65,22 @@ public class SnowBallManager : MonoBehaviour
         }
     }
 
-    static public bool getDeleteclosestball(Transform objecttransform, float rangetreshold, bool delete)
+    static public bool deleteclosestball(Transform objecttransform, float rangetreshold)
     {
         bool isdeleted = false;
         int index = getNearestBallIndex(objecttransform, rangetreshold);
         if (index >= 0)
         {
-            if (delete)
-                destroyball(index);
+            destroyball(index);
             isdeleted = true;
         }
         return isdeleted;
+    }
+
+    static public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
+    {
+        int index = getNearestBallIndex(objecttransform);
+        return (GameObject)snowballs[index];
     }
 
     public static int getNearestBallIndex(Transform objectTracked)

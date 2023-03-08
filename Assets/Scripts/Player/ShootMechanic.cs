@@ -5,36 +5,34 @@ using UnityEngine;
 public class ShootMechanic : SnowBrawler
 {
     public GameObject ball;
-    public float ballSpeed;
     [SerializeField] GameObject line;
     [SerializeField] float aimAngle;
     [SerializeField] float aimTime;
-    [SerializeField] int ballScore;
     public float aimMovementSpeedPerc;
 
     public bool isAiming;
     private float currentaimangle;
     private float currentAimTime;
-    private TakeSnowBall snowballreference;
     private LineRenderer linemanager;
-    private CatchBall ballcatch;
 
     // Start is called before the first frame update
     void Start()
     {
         playerteam = true;
-        id = 0;
-        snowballreference = GetComponent<TakeSnowBall>();
         linemanager = line.GetComponent<LineRenderer>();
         currentAimTime = 0;
         isAiming = false;
-        ballcatch = GetComponent<CatchBall>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && (snowballreference.getballamount() > 0 || ballcatch.getBall() != null))
+        base.Update();
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            getBall();
+        }
+        if (Input.GetMouseButtonDown(0) && (ballAmount > 0 || caughtBall != null))
         {
             currentAimTime = aimTime;
             isAiming = true;
@@ -46,18 +44,19 @@ public class ShootMechanic : SnowBrawler
             GameObject ballin;
             Vector2 direction = mousePos - (Vector2)this.transform.position;
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
-            if (ballcatch.getBall() != null)
+            if (caughtBall != null)
             {
-                ballin = ballcatch.getBall();
+                ballin = caughtBall;
                 ballin.GetComponent<BallMovement>().setDirection(direction);
                 ballin.transform.position = this.transform.position;
                 ballin.SetActive(true);
-                ballcatch.deleteBall();
+                caughtBall = null;
             }
-            else {
+            else
+            {
                 ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
-                ballin.GetComponent<BallMovement>().initialize(ballSpeed, direction, true, ballScore, this.GetComponent<BoxCollider2D>(),snowballreference.getPowerId());
-                snowballreference.decreaseballamount();
+                ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, true, ballScoreInitial, this.GetComponent<BoxCollider2D>(), ballPowerId);
+                ballAmount--;
             }
             isAiming = false;
             line.SetActive(false);

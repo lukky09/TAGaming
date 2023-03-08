@@ -186,6 +186,7 @@ MonoBehaviour:
   playerPrefab: {fileID: 3380666572601521298, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
   enemyPrefab: {fileID: 8190896904697680640, guid: 4690a3ed094d4ca4b98e55ac896d4ed2, type: 3}
   spawnPlayer: 1
+  playersContainer: {fileID: 0}
   levelCamera: {fileID: 519420028}
 --- !u!1 &479397658
 GameObject:
@@ -838,6 +839,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rok: {fileID: 11400000, guid: 54711e54b9bb0ad4da8b25014eba7d13, type: 2}
+  powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
 --- !u!114 &728283040
 MonoBehaviour:
   m_ObjectHideFlags: 0

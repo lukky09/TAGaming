@@ -65,7 +65,7 @@ public class PlayersManager : MonoBehaviour
             if (players[i] == null)
             {
                 GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
-                tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(isPlayerTeam, i);
+                tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(isPlayerTeam, 7.5f, 15, 2, 1, 1,0.5f);
                 tempEnemyPrefab.GetComponent<SpriteRenderer>().material = new Material(m);
                 players[i] = tempEnemyPrefab;
                 break;

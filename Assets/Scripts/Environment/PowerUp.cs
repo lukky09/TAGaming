@@ -7,20 +7,28 @@ public class PowerUp : MonoBehaviour
     [SerializeField]
     float spawnTime;
     float currentSpawnTime;
-    Color disColor;
+    GameObject ball;
+    [SerializeField]
+    Material playerMaterial;
+    [SerializeField]
+    Color materialColor;
 
     // Start is called before the first frame update
     void Start()
     {
+        Material m = new Material(playerMaterial);
+        m.SetColor("_OutlineColor", materialColor);
+        m.SetFloat("_OutlineThickness", 5);
+        ball = transform.GetChild(0).gameObject;
+        ball.GetComponent<SpriteRenderer>().material = m;
         currentSpawnTime = spawnTime;
-        disColor = this.GetComponent<SpriteRenderer>().color;
     }
 
     private void Update()
     {
         currentSpawnTime -= Time.deltaTime;
         if (currentSpawnTime <= 0)
-            this.GetComponent<SpriteRenderer>().color = disColor;
+            ball.SetActive(true);
         
     }
 
@@ -31,7 +39,7 @@ public class PowerUp : MonoBehaviour
 
     public int getPowerupId()
     {
-        this.GetComponent<SpriteRenderer>().color = new Color(disColor.r, disColor.g, disColor.b, disColor.a / 2);
+        ball.SetActive(false);
         currentSpawnTime = spawnTime;
         return 1; 
     }
