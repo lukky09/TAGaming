@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class PlayersManager : MonoBehaviour
 {
@@ -73,16 +74,18 @@ public class PlayersManager : MonoBehaviour
         }
     }
 
-    public GameObject getnearestPlayer(Transform player)
+    public GameObject getnearestPlayer(Transform player,bool includeCollision)
     {
         float closestrange = 999, range;
         int i = 0, index = -1;
+        RaycastHit2D cekKolisi;
         foreach (GameObject currplayer in players)
         {
             if (currplayer != null)
             {
+                cekKolisi = Physics2D.Linecast(player.position, currplayer.transform.position, 64);
                 range = Vector2.Distance(player.transform.position, currplayer.transform.position);
-                if (range < closestrange && range > 0)
+                if (range < closestrange && range > 0 && !(includeCollision && cekKolisi))
                 {
                     closestrange = range;
                     index = i;
