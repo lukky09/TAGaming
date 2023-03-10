@@ -92,6 +92,7 @@ public class SnowBrawler : MonoBehaviour
         if (caughtBall != null)
         {
             ballin = caughtBall;
+            ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
             ballin.GetComponent<BallMovement>().setDirection(direction);
             ballin.transform.position = this.transform.position;
             ballin.SetActive(true);
@@ -99,11 +100,10 @@ public class SnowBrawler : MonoBehaviour
         }
         else
         {
-            Debug.Log(ballAmount);
             ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
+            ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
             ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), ballPowerId);
             ballAmount--;
-            Debug.Log(ballAmount);
         }
     }
 
