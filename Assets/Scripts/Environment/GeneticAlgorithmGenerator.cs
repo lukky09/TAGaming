@@ -337,7 +337,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
 
-        Debug.Log(String.Join(" - ", fitnessScores));
-        return fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3);
+        //Debug.Log(String.Join(" - ", fitnessScores));
+        return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3), 3);
     }
 }

@@ -10,7 +10,6 @@ public class CatchBall : MonoBehaviour
     private void Start()
     {
         brawlerReference = GetComponent<SnowBrawler>();
-        Debug.Log(brawlerReference == null); 
     }
 
     // Update is called once per frame

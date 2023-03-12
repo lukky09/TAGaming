@@ -16,6 +16,8 @@ public class SetObjects : MonoBehaviour
     Tilemap mapTilemap;
     public TileBase rok;
     public GameObject powerUp;
+    [SerializeField]
+    GameObject playerManagerReference;
 
     public static void initializeSize(int w, int h)
     {
@@ -95,15 +97,27 @@ public class SetObjects : MonoBehaviour
             mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
         }
         Coordinate tempCoor;
+        bool playerMade = false, isTeam = false;
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {
+                tempCoor = new Coordinate(j, i);
                 if (stageUnfolded[i, j] == 1)
                     mapTilemap.SetTile(new Vector3Int(j + 1, -i - 1, 1), rok);
                 else if (stageUnfolded[i, j] == 2)
-                {
-                    tempCoor = new Coordinate(j, i);
                     Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
+                else if (stageUnfolded[i, j] == 3)
+                {
+                    if (!playerMade)
+                    {
+                        playerManagerReference.GetComponent<PlayersManager>().makeNewPlayer(tempCoor);
+                        playerMade = true;
+                    }
+                    else
+                    {
+                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, isTeam);
+                        isTeam = !isTeam;
+                    }
                 }
 
             }
