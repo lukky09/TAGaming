@@ -22,25 +22,10 @@ public class PlayersManager : MonoBehaviour
     private void Start()
     {
         players = new GameObject[10];
-        //if (spawnPlayer)
-        //{
-        //    Coordinate coor = Coordinate.getRandomCoordinate();
-        //    makeNewPlayer(coor);
-        //    makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor), false);
-        //    for (int i = 1; i < 5; i++)
-        //    {
-        //        coor = Coordinate.getRandomCoordinate();
-        //        makeNewBot(coor, true);
-        //        makeNewBot(new Coordinate(SetObjects.getWidth() - coor.xCoor, coor.yCoor), false);
-        //    }
-        //}
-        //else
-        //{
-        //    for (int i = 0; i < playersContainer.transform.childCount; i++)
-        //    {
-        //        players[i] = playersContainer.transform.GetChild(i).gameObject;
-        //    }
-        //}
+        foreach (Transform item in playersContainer.transform)
+        {
+            players[getFirstNullPlayerIndex()] = item.gameObject;
+        }
     }
 
     public void makeNewPlayer(Coordinate c)
@@ -51,6 +36,7 @@ public class PlayersManager : MonoBehaviour
         players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
         levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i], false);
         players[i].GetComponent<SpriteRenderer>().material = new Material(m);
+        players[i].transform.SetParent(playersContainer.transform);
     }
 
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
@@ -67,6 +53,7 @@ public class PlayersManager : MonoBehaviour
         if (!isAIActive)
             tempEnemyPrefab.GetComponent<StateMachine>().enabled = false;
         players[i] = tempEnemyPrefab;
+        players[i].transform.SetParent(playersContainer.transform);
     }
 
     public GameObject getnearestPlayer(Transform player,bool includeCollision)

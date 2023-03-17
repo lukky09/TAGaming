@@ -12,6 +12,7 @@ public class BallMovement : MonoBehaviour
     Rigidbody2D thisRigid;
     Collider2D currentCollider;
     private int powerupId;
+    private GameObject thrower;
 
     // Start is called before the first frame update
     void Start()
@@ -19,18 +20,20 @@ public class BallMovement : MonoBehaviour
         thisRigid = this.GetComponent<Rigidbody2D>();
     }
 
-    public void initialize(float speed, Vector2 direction, bool isPlayerTeam,int ballScore,Collider2D you)
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower)
     {
         this.speed = speed;
         this.direction = direction;
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore = ballScore;
+        this.currentCollider = you;
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
+        this.thrower = thrower;
     }
 
-    public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you,int powerupId)
+    public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower, int powerupId)
     {
-        initialize(speed, direction, isPlayerTeam, ballScore, you);
+        initialize(speed, direction, isPlayerTeam, ballScore, you, thrower);
         this.powerupId = powerupId;
     }
     public bool getPlayerTeam()
@@ -38,9 +41,24 @@ public class BallMovement : MonoBehaviour
         return fromPlayerTeam;
     }
 
+    public int getBallPowerId()
+    {
+        return powerupId;
+    }
+
     public int getBallScore()
     {
         return ballScore;
+    }
+
+    public void setBallScore(int ballScore)
+    {
+        this.ballScore =  ballScore;
+    }
+
+    public Vector2 getDirection()
+    {
+        return direction;
     }
 
     public void addScore(int score)
@@ -48,14 +66,14 @@ public class BallMovement : MonoBehaviour
         ballScore += score;
     }
 
-    public void trySelfDestruct()
+    public void trySelfDestruct(GameObject collider)
     {
-        if (powerupId != 1)
+        if (powerupId == 0)
             Destroy(gameObject);
         else
         {
             Debug.Log(powerupId);
-            GetComponent<BallPowerUp>().modifyBall(powerupId);
+            GetComponent<BallPowerUp>().modifyBall(collider);
         }
     }
 
@@ -67,7 +85,13 @@ public class BallMovement : MonoBehaviour
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.tag == "Wall")
-            Destroy(gameObject);
+        {
+            if (powerupId == 5)
+                GetComponent<BallPowerUp>().modifyBall(collision.gameObject);
+            else
+                Destroy(gameObject);
+        }
+
     }
 
     public void ballIsCatched(bool isPlayerTeam, int addScore, float speed, Collider2D you)
@@ -75,14 +99,26 @@ public class BallMovement : MonoBehaviour
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore += addScore;
         this.speed += speed;
+        // Bisa kena pelempar sebelumnya
         if (currentCollider != null)
-            Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you, false);
+            Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), currentCollider, false);
+        //Ngga bisa kena pelempar baru
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
         currentCollider = you;
     }
 
     public void setDirection(Vector2 direction)
     {
-        this.direction = direction;
+        this.direction = direction.normalized;
+    }
+
+    public void setPowerUpID(int powerUpID)
+    {
+        this.powerupId = powerUpID;
+    }
+
+    public GameObject getThrower()
+    {
+        return thrower;
     }
 }

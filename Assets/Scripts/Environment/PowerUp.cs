@@ -4,18 +4,24 @@ using UnityEngine;
 
 public class PowerUp : MonoBehaviour
 {
-    [SerializeField]
-    float spawnTime;
-    float currentSpawnTime;
+    [SerializeField] float spawnTime;
+    [SerializeField] Material playerMaterial;
+    [SerializeField] Color materialColor;
+    [SerializeField] int startingValue;
+    [SerializeField] int ValueRange;
+    [SerializeField] bool randomPowerup;
+
+    int powerUpValue;
+    float currentSpawnTime; 
     GameObject ball;
-    [SerializeField]
-    Material playerMaterial;
-    [SerializeField]
-    Color materialColor;
 
     // Start is called before the first frame update
     void Start()
     {
+        if (startingValue > ValueRange || startingValue < 0)
+            powerUpValue = Random.Range(1, startingValue + 1);
+        else
+            powerUpValue = startingValue;
         Material m = new Material(playerMaterial);
         m.SetColor("_OutlineColor", materialColor);
         m.SetFloat("_OutlineThickness", 5);
@@ -28,8 +34,12 @@ public class PowerUp : MonoBehaviour
     {
         currentSpawnTime -= Time.deltaTime;
         if (currentSpawnTime <= 0)
+        {
             ball.SetActive(true);
-        
+            if(randomPowerup)
+                powerUpValue = Random.Range(1, startingValue + 1);
+        }
+
     }
 
     public bool isActive()
@@ -43,6 +53,6 @@ public class PowerUp : MonoBehaviour
         if (currentSpawnTime > 0)
             return 0;
         currentSpawnTime = spawnTime;
-        return 1; 
+        return powerUpValue;
     }
 }

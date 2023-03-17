@@ -193,6 +193,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 // Fitness Wall
                 if (map[i, j] == 1)
                 {
+                    //Cek Fitness Panjang Wall
                     if (includeWallFitness)
                     {
                         //Cek Horizontal
@@ -214,6 +215,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                             wScore[1] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
                         }
                     }
+                    //Cek Fitness Panjang Gap antar Wall
                     if (includeWallGapFitness)
                     {
                         //Cek Horizontal
@@ -248,6 +250,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     ischecked[i, j] = true;
                     q = new Queue<Coordinate>();
                     q.Enqueue(new Coordinate(j, i));
+                    //Ngambil Ukuran area 1 per 1
                     while (q.Count > 0)
                     {
                         c = q.Dequeue();
@@ -264,6 +267,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     }
                     areasSize.Add(size);
                 }
+                //Cek Apakah PowerUp bisa diakses
                 if (includePUPAccesibilityFitness)
                 {
                     if (map[i, j] == 2)
@@ -316,6 +320,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             for (int i = 0; i < lokasiPowerUp.Count; i++)
             {
                 biggest = 999;
+                //Ambil player terdekat biar Astar tidak terlalu lama
                 for (int j = 0; j < lokasiPlayer.Count; j++)
                 {
                     tempDistance = Coordinate.Distance((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]);
@@ -336,6 +341,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
+        if (useMirrorFitness)
+        {
+            objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
+        }
 
         //Debug.Log(String.Join(" - ", fitnessScores));
         return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3), 3);

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class SnowBrawler : MonoBehaviour
 {
-
     protected int ballAmount { get; set; }
     protected float currentBallCatchTimer { get; set; }
     protected GameObject caughtBall { get; set; }
@@ -61,7 +60,7 @@ public class SnowBrawler : MonoBehaviour
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam)
                     BarScoreManager.addscore(bol.getPlayerTeam(), bol.getBallScore());
-                bol.trySelfDestruct();
+                bol.trySelfDestruct(gameObject);
             }
         }
     }
@@ -92,7 +91,6 @@ public class SnowBrawler : MonoBehaviour
         if (caughtBall != null)
         {
             ballin = caughtBall;
-            ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
             ballin.GetComponent<BallMovement>().setDirection(direction);
             ballin.transform.position = this.transform.position;
             ballin.SetActive(true);
@@ -101,10 +99,10 @@ public class SnowBrawler : MonoBehaviour
         else
         {
             ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
-            ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
-            ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), ballPowerId);
+            ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), gameObject, ballPowerId);
             ballAmount--;
         }
+        ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
     }
 
     public void catchBall()
@@ -130,5 +128,18 @@ public class SnowBrawler : MonoBehaviour
     public GameObject getCaughtBall()
     {
         return caughtBall;
+    }
+
+    public void slowDown(float movementSpeedSlow, float slowTime)
+    {
+        StartCoroutine(slowDownNumerator(movementSpeedSlow, slowTime));
+    }
+
+    IEnumerator slowDownNumerator(float slowPower,float seconds)
+    {
+        float originalSpeed = runSpeed;
+        runSpeed = runSpeed * slowPower;
+        yield return new WaitForSeconds(seconds);
+        runSpeed = originalSpeed;
     }
 }

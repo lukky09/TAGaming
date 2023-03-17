@@ -15,6 +15,7 @@ public class SetObjects : MonoBehaviour
     //0 = Kosong, 1 = batu, 2 = powerup, 3 = character, 4 = snowball (khusus unfolded)
     Tilemap mapTilemap;
     public TileBase rok;
+    public GameObject powerUpContainer;
     public GameObject powerUp;
     [SerializeField]
     GameObject playerManagerReference;
@@ -97,6 +98,7 @@ public class SetObjects : MonoBehaviour
             mapTilemap.SetTile(new Vector3Int(width - 1, -i, 1), rok);
         }
         Coordinate tempCoor;
+        GameObject temp;
         bool playerMade = false, isTeam = false;
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
@@ -105,7 +107,10 @@ public class SetObjects : MonoBehaviour
                 if (stageUnfolded[i, j] == 1)
                     mapTilemap.SetTile(new Vector3Int(j + 1, -i - 1, 1), rok);
                 else if (stageUnfolded[i, j] == 2)
-                    Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
+                {
+                    temp = Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
+                    temp.transform.SetParent(powerUpContainer.transform);
+                }
                 else if (stageUnfolded[i, j] == 3)
                 {
                     if (!playerMade)

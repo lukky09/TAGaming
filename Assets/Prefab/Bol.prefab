@@ -151,3 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pierceScoreAdd: 5
+  explosionDelay: 1
+  explosionRadius: 2
+  movementSpeedSlow: 0.5
+  slowTime: 1
+  splitBalls: 3
+  splitRange: 90
