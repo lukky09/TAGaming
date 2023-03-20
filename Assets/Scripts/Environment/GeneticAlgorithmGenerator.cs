@@ -289,7 +289,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         if (maxRockFitness)
-            fitnessScores[5] /= rockGroupAmount * maxRockWeight;
+            fitnessScores[5] = fitnessScores[5] / rockGroupAmount * maxRockWeight;
 
         if (useMirrorFitness)
             objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
@@ -326,7 +326,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
             }
             float maxRockAmount = Mathf.RoundToInt(map.GetLength(0) * map.GetLength(1) * maxRockRatio);
-            return Mathf.Abs(maxRockAmount - size) / maxRockAmount * 1.0f;
+            return 1 - (Mathf.Abs(maxRockAmount - size) / maxRockAmount);
         }
         return 0;
     }

@@ -271,26 +271,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49c691221f5f4354180f74d0e91f8128, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  useMirrorFitness: 0
-  includeWallFitness: 1
+  useMirrorFitness: 1
+  includeWallFitness: 0
   PanjangWallWeight: 1
   PanjangWallVertikalAmt: 0
   PanjangWallHorizontalAmt: 0
-  includeAreaFitness: 1
+  includeAreaFitness: 0
   AreaWeight: 1
   includeWallGapFitness: 1
   WallGapLength: 2
   WallGapLengthMax: 4
   WallGapWeight: 1
-  includePUPAccesibilityFitness: 1
+  includePUPAccesibilityFitness: 0
   PUPAccesibilityWeight: 1
-  includePURatioFitness: 1
+  includePURatioFitness: 0
   PURatioAmt: 0.05
   PURatioWeight: 1
   StagnationTerminationAmt: 50
   maxRockFitness: 1
-  maxRockRatio: 0.1
-  maxRockWeight: 1
+  maxRockRatio: 0.05
+  maxRockWeight: 100
 --- !u!1 &563776447
 GameObject:
   m_ObjectHideFlags: 0
