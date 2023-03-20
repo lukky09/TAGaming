@@ -277,7 +277,7 @@ MonoBehaviour:
   PanjangWallVertikalAmt: 0
   PanjangWallHorizontalAmt: 0
   includeAreaFitness: 1
-  AreaWeight: 5
+  AreaWeight: 1
   includeWallGapFitness: 1
   WallGapLength: 2
   WallGapLengthMax: 4
@@ -288,6 +288,9 @@ MonoBehaviour:
   PURatioAmt: 0.05
   PURatioWeight: 1
   StagnationTerminationAmt: 50
+  maxRockFitness: 1
+  maxRockRatio: 0.1
+  maxRockWeight: 1
 --- !u!1 &563776447
 GameObject:
   m_ObjectHideFlags: 0

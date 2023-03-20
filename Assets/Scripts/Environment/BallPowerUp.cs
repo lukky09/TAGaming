@@ -94,6 +94,7 @@ public class BallPowerUp : MonoBehaviour
 
     private void FixedUpdate()
     {
+        //biar bom bisa lekat ke target
         if (bmRef.getBallPowerId() == 3 && collision != null)
             transform.position = (Vector2)collision.transform.position - distance;
     }

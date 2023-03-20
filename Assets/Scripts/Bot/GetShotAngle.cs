@@ -37,7 +37,7 @@ public class GetShotAngle :MonoBehaviour
         float B = Vector2.Distance(you.transform.position, pos2);
         float C = (float)prediksiFinal;
         float resultAngle = Mathf.Acos((Mathf.Pow(A, 2) + Mathf.Pow(B, 2) - Mathf.Pow(C, 2)) / (2 * A * B));
-        return 0;
+        return resultAngle * Mathf.Rad2Deg;
         
     }
 }

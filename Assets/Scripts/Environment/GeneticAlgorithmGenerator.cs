@@ -16,6 +16,8 @@ using GeneticSharp.Domain;
 using TMPro;
 using System.Threading.Tasks;
 using GeneticSharp.Infrastructure.Framework.Threading;
+using static UnityEditor.Progress;
+using System.Drawing;
 
 public class GameChromosome : ChromosomeBase
 {
@@ -84,6 +86,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] float PURatioAmt;
     [SerializeField] int PURatioWeight;
     [SerializeField] int StagnationTerminationAmt;
+    [SerializeField] bool maxRockFitness;
+    [SerializeField] float maxRockRatio;
+    [SerializeField] int maxRockWeight;
     TextMeshProUGUI tmpro;
     int mapWidth;
 
@@ -91,9 +96,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     void Start()
     {
         double fitness;
-       if(!useMirrorFitness)
+        if (!useMirrorFitness)
             mapWidth = (int)(SetObjects.getWidth() / 2);
-       else
+        else
             mapWidth = (int)SetObjects.getWidth();
         float[] tempfitness = new float[5];
         int length = SetObjects.getHeight() * mapWidth;
@@ -101,8 +106,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
             PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 4);
-        
-            
+
+
         tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
         //Multithreading
@@ -111,7 +116,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         taskExecutor.MaxThreads = 12;
 
         //Kromosom
-        var chromosome = new GameChromosome(length,Mathf.FloorToInt(PURatioAmt * length));
+        var chromosome = new GameChromosome(length, Mathf.FloorToInt(PURatioAmt * length));
         //Populasi
         var population = new Population(50, 100, chromosome);
         //Fitness
@@ -125,7 +130,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         });
         //Metode milih ortu
         var selection = new RouletteWheelSelection();
-        
+
         //Metode Crossover
         var crossover = new UniformCrossover();
         var mutation = new UniformMutation(false);
@@ -143,7 +148,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Start();
 
         var a = ga.BestChromosome.GetGenes();
-        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()),!useMirrorFitness);
+        SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()), !useMirrorFitness);
         MainMenuNavigation.nextScene();
     }
 
@@ -165,17 +170,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     double fitnessFunction(int[,] map)
     {
         int[] objAmt = new int[4];
-        double[] fitnessScores = new double[5];
+        double[] fitnessScores = new double[6];
+        Coordinate tempCoor;
+
+        //Utk jumlah batu
+        int rockGroupAmount = 0;
 
         //Utk Wall
-        int jtemp, itemp;
-        int[] wSize = new int[2]; //jumlah [horizontal - vertikal]
+        int[] wSize = new int[2]; //jumlah [horizontal , vertikal]
         float[] wScore = new float[2]; //skor total  
 
         //Utk Area
-        int size, totalSize = 0;
-        Queue<Coordinate> q;
-        Coordinate c, tempCoor;
+        int totalSize = 0;
         ArrayList areasSize = new ArrayList();
         bool[,] ischecked = new bool[SetObjects.getHeight(), mapWidth];
 
@@ -187,85 +193,25 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ArrayList lokasiPowerUp = new ArrayList();
 
         for (int i = 0; i < SetObjects.getHeight(); i++)
+        {
             for (int j = 0; j < mapWidth; j++)
             {
                 objAmt[map[i, j]]++;
+                tempCoor = new Coordinate(j, i);
                 // Fitness Wall
                 if (map[i, j] == 1)
                 {
                     //Cek Fitness Panjang Wall
-                    if (includeWallFitness)
-                    {
-                        //Cek Horizontal
-                        if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
-                        {
-                            wSize[0]++;
-                            jtemp = j;
-                            while (jtemp < mapWidth && map[i, jtemp] == 1)
-                                jtemp++;
-                            wScore[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
-                        }
-                        //Cek Vertikal
-                        if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
-                        {
-                            wSize[1]++;
-                            itemp = i;
-                            while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
-                                itemp++;
-                            wScore[1] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
-                        }
-                    }
+                    wallLengthFitness(map, tempCoor, ref wSize, ref wScore);
                     //Cek Fitness Panjang Gap antar Wall
-                    if (includeWallGapFitness)
-                    {
-                        //Cek Horizontal
-                        if (j + 1 < mapWidth && map[i, j + 1] != 1)
-                        {
-                            jtemp = j + 1;
-                            while (jtemp < mapWidth && map[i, jtemp] != 1 )
-                                jtemp++;
-                            if (jtemp - j < WallGapLengthMax)
-                            {
-                                jumlahGap++;
-                                fitnessScores[2] += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
-                            }
-                        }
-                        //Cek Vertikal
-                        if (i + 1 < SetObjects.getHeight() && map[i + 1, j] != 1)
-                        {
-                            itemp = i + 1;
-                            while (itemp < SetObjects.getHeight() && map[itemp, j] != 1)
-                                itemp++;
-                            if (itemp - i < WallGapLengthMax)
-                            {
-                                jumlahGap++;
-                                fitnessScores[2] += Mathf.Log10((itemp - i) * 10 / WallGapLength);
-                            }
-                        }
-                    }
+                    wallGapFitness(map, tempCoor, ref fitnessScores, ref jumlahGap);
+                    //Cek Jumlah batu dalam 1 kumpulan
+                    rockGroupAmount++;
+                    fitnessScores[5]+= rockAmountFitness(map,tempCoor,ref ischecked);
                 }
                 else if (map[i, j] != 1 && !ischecked[i, j])
                 {
-                    size = 1;
-                    ischecked[i, j] = true;
-                    q = new Queue<Coordinate>();
-                    q.Enqueue(new Coordinate(j, i));
-                    //Ngambil Ukuran area 1 per 1
-                    while (q.Count > 0)
-                    {
-                        c = q.Dequeue();
-                        for (int k = 0; k < 4; k++)
-                        {
-                            tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
-                            if (tempCoor.xCoor >= 0 && tempCoor.yCoor >= 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < mapWidth && map[tempCoor.yCoor, tempCoor.xCoor] != 1 && !ischecked[tempCoor.yCoor, tempCoor.xCoor])
-                            {
-                                ischecked[tempCoor.yCoor, tempCoor.xCoor] = true;
-                                q.Enqueue(tempCoor);
-                                size++;
-                            }
-                        }
-                    }
-                    areasSize.Add(size);
+                    areasSize.Add(getAreaSize(ref ischecked, map, tempCoor));
                 }
                 //Cek Apakah PowerUp bisa diakses
                 if (includePUPAccesibilityFitness)
@@ -276,6 +222,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         lokasiPlayer.Add(new Coordinate(j, i));
                 }
             }
+        }
 
         if (includeWallFitness)
         {
@@ -284,10 +231,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             if (wSize[1] > 0)
                 fitnessScores[0] += wScore[1] / wSize[1];
             fitnessScores[0] = (fitnessScores[0] / 2) * PanjangWallWeight;
-          
+
         }
 
-        fitnessScores[2]  = fitnessScores[2] * WallGapWeight / jumlahGap;
+        fitnessScores[2] = fitnessScores[2] * WallGapWeight / jumlahGap;
         float biggest = -999;
 
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
@@ -341,12 +288,135 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
-        if (useMirrorFitness)
-        {
-            objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
-        }
+        if (maxRockFitness)
+            fitnessScores[5] /= rockGroupAmount * maxRockWeight;
 
-        //Debug.Log(String.Join(" - ", fitnessScores));
+        if (useMirrorFitness)
+            objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
+
+        Debug.Log(String.Join(" - ", fitnessScores));
         return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3), 3);
     }
+
+    float rockAmountFitness(int[,] map, Coordinate coor,ref bool[,] ischecked )
+    {
+        if (maxRockFitness && !ischecked[coor.yCoor,coor.xCoor])
+        {
+            int size = 1, i = coor.yCoor, j = coor.xCoor;
+            ischecked[i, j] = true;
+            Queue<Coordinate> q = new Queue<Coordinate>();
+            Coordinate c, tempCoor;
+            q.Enqueue(new Coordinate(j, i));
+            //Ngambil Ukuran area 1 per 1
+            while (q.Count > 0)
+            {
+                c = q.Dequeue();
+                for (int k = -1; k < 2; k++)
+                {
+                    for (int l = -1; l < 2; l++)
+                    {
+                        tempCoor = new Coordinate(c.xCoor + l, c.yCoor + k);
+                        if (tempCoor.xCoor >= 0 && tempCoor.yCoor >= 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < mapWidth && map[tempCoor.yCoor, tempCoor.xCoor] == 1 && !ischecked[tempCoor.yCoor, tempCoor.xCoor])
+                        {
+                            ischecked[tempCoor.yCoor, tempCoor.xCoor] = true;
+                            q.Enqueue(tempCoor);
+                            size++;
+                        }
+                    }
+                }
+            }
+            float maxRockAmount = Mathf.RoundToInt(map.GetLength(0) * map.GetLength(1) * maxRockRatio);
+            return Mathf.Abs(maxRockAmount - size) / maxRockAmount * 1.0f;
+        }
+        return 0;
+    }
+
+    void wallLengthFitness(int[,] map, Coordinate coor, ref int[] wallSize, ref float[] wallScore)
+    {
+        int i = coor.yCoor, j = coor.xCoor;
+        int jtemp, itemp;
+
+        if (includeWallFitness)
+        {
+            //Cek Horizontal
+            if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
+            {
+                wallSize[0]++;
+                jtemp = j;
+                while (jtemp < mapWidth && map[i, jtemp] == 1)
+                    jtemp++;
+                wallScore[0] += Mathf.Log10((jtemp - j + 1) * 10 / PanjangWallHorizontalAmt);
+            }
+            //Cek Vertikal
+            if (i + 1 < SetObjects.getHeight() && map[i + 1, j] == 1 && (i == 0 || map[i - 1, j] != 1))
+            {
+                wallSize[1]++;
+                itemp = i;
+                while (itemp < SetObjects.getHeight() && map[itemp, j] == 1)
+                    itemp++;
+                wallScore[1] += Mathf.Log10((itemp - i + 1) * 10 / PanjangWallVertikalAmt);
+            }
+        }
+    }
+
+    void wallGapFitness(int[,] map, Coordinate coor, ref double[] fitnessScores, ref int gapAmount)
+    {
+        int i = coor.yCoor, j = coor.xCoor;
+        int jtemp, itemp;
+
+        if (includeWallGapFitness)
+        {
+            //Cek Horizontal
+            if (j + 1 < mapWidth && map[i, j + 1] != 1)
+            {
+                jtemp = j + 1;
+                while (jtemp < mapWidth && map[i, jtemp] != 1)
+                    jtemp++;
+                if (jtemp - j < WallGapLengthMax)
+                {
+                    gapAmount++;
+                    fitnessScores[2] += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
+                }
+            }
+            //Cek Vertikal
+            if (i + 1 < SetObjects.getHeight() && map[i + 1, j] != 1)
+            {
+                itemp = i + 1;
+                while (itemp < SetObjects.getHeight() && map[itemp, j] != 1)
+                    itemp++;
+                if (itemp - i < WallGapLengthMax)
+                {
+                    gapAmount++;
+                    fitnessScores[2] += Mathf.Log10((itemp - i) * 10 / WallGapLength);
+                }
+            }
+        }
+    }
+
+
+    int getAreaSize(ref bool[,] ischecked, int[,] map, Coordinate curr)
+    {
+        int size = 1, i = curr.yCoor, j = curr.xCoor;
+        ischecked[i, j] = true;
+        Queue<Coordinate> q = new Queue<Coordinate>();
+        Coordinate c,tempCoor;
+        q.Enqueue(new Coordinate(j, i));
+        //Ngambil Ukuran area 1 per 1
+        while (q.Count > 0)
+        {
+            c = q.Dequeue();
+            for (int k = 0; k < 4; k++)
+            {
+                tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
+                if (tempCoor.xCoor >= 0 && tempCoor.yCoor >= 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < mapWidth && map[tempCoor.yCoor, tempCoor.xCoor] != 1 && !ischecked[tempCoor.yCoor, tempCoor.xCoor])
+                {
+                    ischecked[tempCoor.yCoor, tempCoor.xCoor] = true;
+                    q.Enqueue(tempCoor);
+                    size++;
+                }
+            }
+        }
+        return size;
+    }
+
 }
