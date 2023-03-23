@@ -278,7 +278,7 @@ MonoBehaviour:
   PanjangWallHorizontalAmt: 0
   includeAreaFitness: 0
   AreaWeight: 1
-  includeWallGapFitness: 1
+  includeWallGapFitness: 0
   WallGapLength: 2
   WallGapLengthMax: 4
   WallGapWeight: 1

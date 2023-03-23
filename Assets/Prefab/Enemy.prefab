@@ -16,6 +16,7 @@ GameObject:
   - component: {fileID: 4099630322556672933}
   - component: {fileID: 2757911232447730074}
   - component: {fileID: 7557719664042537779}
+  - component: {fileID: 8281153577826895004}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Player
@@ -218,3 +219,15 @@ MonoBehaviour:
   ballCatchTimer: 0.5
   ballTakeRange: 1
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
+--- !u!114 &8281153577826895004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8190896904697680640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8f5150bea36e766429f5c65590e3f892, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

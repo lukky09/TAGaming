@@ -133,7 +133,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         //Metode Crossover
         var crossover = new UniformCrossover();
-        var mutation = new UniformMutation(false);
+        var mutation = new PartialShuffleMutation();
         var termination = new FitnessStagnationTermination(StagnationTerminationAmt);
 
         var ga = new GeneticAlgorithm(population, fitnessfunc, selection, crossover, mutation);
@@ -234,7 +234,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         }
 
-        fitnessScores[2] = fitnessScores[2] * WallGapWeight / jumlahGap;
+        if(jumlahGap>0)
+            fitnessScores[2] = fitnessScores[2] * WallGapWeight / jumlahGap;
         float biggest = -999;
 
         // Ini aku pakai area yang bisa diakses player, bukan panjang * lebar Arena
@@ -288,8 +289,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
-        if (maxRockFitness)
-            fitnessScores[5] = fitnessScores[5] / rockGroupAmount * maxRockWeight;
+        if (maxRockFitness && rockGroupAmount > 0)
+            fitnessScores[5] = (fitnessScores[5] / rockGroupAmount) * maxRockWeight;
 
         if (useMirrorFitness)
             objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
@@ -326,7 +327,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 }
             }
             float maxRockAmount = Mathf.RoundToInt(map.GetLength(0) * map.GetLength(1) * maxRockRatio);
-            return 1 - (Mathf.Abs(maxRockAmount - size) / maxRockAmount);
+            return 1 - Mathf.Log10((Mathf.Abs(maxRockAmount - size) + 1 * 10) / maxRockAmount + 1);
         }
         return 0;
     }

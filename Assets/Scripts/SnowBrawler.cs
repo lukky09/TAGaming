@@ -18,6 +18,7 @@ public class SnowBrawler : MonoBehaviour
     public float ballCatchTimer;
     public float ballTakeRange;
     public GameObject ball;
+    Sprite ballSprite;
 
 
     public void initializeBrawler(bool playerteam, float throwSpeed,float runSpeed,int ballScoreAdd, float ballSpeedAdd,float ballCatchTimer,float ballTakeRange)
@@ -69,7 +70,7 @@ public class SnowBrawler : MonoBehaviour
     {
         if (SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>())
         {
-            ballPowerId = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
+            (ballSprite,ballPowerId) = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
             if (ballPowerId > 0)
                 ballAmount = 1;
         }
@@ -101,6 +102,8 @@ public class SnowBrawler : MonoBehaviour
             ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), gameObject, ballPowerId);
             ballAmount--;
+            if (ballPowerId > 0)
+                ballin.GetComponent<SpriteRenderer>().sprite = ballSprite;
         }
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
     }

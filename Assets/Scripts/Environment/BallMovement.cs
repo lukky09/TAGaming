@@ -6,13 +6,13 @@ using UnityEngine.EventSystems;
 public class BallMovement : MonoBehaviour
 {
     [SerializeField] float speed;
-    private Vector2 direction;
-    private bool fromPlayerTeam;
-    private int ballScore;
+    [SerializeField] Vector2 direction;
+    [SerializeField] bool fromPlayerTeam;
+    [SerializeField] int ballScore;
     Rigidbody2D thisRigid;
     Collider2D currentCollider;
-    private int powerupId;
-    private GameObject thrower;
+    [SerializeField] int powerupId;
+    [SerializeField] GameObject thrower;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +22,7 @@ public class BallMovement : MonoBehaviour
 
     public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower)
     {
+        thisRigid = this.GetComponent<Rigidbody2D>();
         this.speed = speed;
         this.direction = direction;
         this.fromPlayerTeam = isPlayerTeam;
@@ -29,6 +30,7 @@ public class BallMovement : MonoBehaviour
         this.currentCollider = you;
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
         this.thrower = thrower;
+        thisRigid.rotation = - Vector2.SignedAngle(direction, Vector2.right);
     }
 
     public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower, int powerupId)
@@ -72,7 +74,6 @@ public class BallMovement : MonoBehaviour
             Destroy(gameObject);
         else
         {
-            Debug.Log(powerupId);
             GetComponent<BallPowerUp>().modifyBall(collider);
         }
     }

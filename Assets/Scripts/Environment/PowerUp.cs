@@ -10,6 +10,7 @@ public class PowerUp : MonoBehaviour
     [SerializeField] int startingValue;
     [SerializeField] int ValueRange;
     [SerializeField] bool randomPowerup;
+    [SerializeField] Sprite[] powerUpSprites;
 
     int powerUpValue;
     float currentSpawnTime; 
@@ -24,8 +25,9 @@ public class PowerUp : MonoBehaviour
             powerUpValue = startingValue;
         Material m = new Material(playerMaterial);
         m.SetColor("_OutlineColor", materialColor);
-        m.SetFloat("_OutlineThickness", 5);
+        m.SetFloat("_OutlineThickness", 1);
         ball = transform.GetChild(0).gameObject;
+        ball.GetComponent<SpriteRenderer>().sprite = powerUpSprites[powerUpValue-1];
         ball.GetComponent<SpriteRenderer>().material = m;
         currentSpawnTime = 0;
     }
@@ -35,9 +37,13 @@ public class PowerUp : MonoBehaviour
         currentSpawnTime -= Time.deltaTime;
         if (currentSpawnTime <= 0)
         {
+            GetComponent<Animator>().speed = 1;
             ball.SetActive(true);
-            if(randomPowerup)
+            if (randomPowerup)
+            {
                 powerUpValue = Random.Range(1, startingValue + 1);
+                ball.GetComponent<SpriteRenderer>().sprite = powerUpSprites[powerUpValue - 1];
+            }
         }
 
     }
@@ -47,12 +53,13 @@ public class PowerUp : MonoBehaviour
         return currentSpawnTime <= 0;
     }
 
-    public int getPowerupId()
+    public (Sprite,int) getPowerupId()
     {
-        ball.SetActive(false);
         if (currentSpawnTime > 0)
-            return 0;
+            return (null,0);
+        ball.SetActive(false);
         currentSpawnTime = spawnTime;
-        return powerUpValue;
+        GetComponent<Animator>().speed = 0;
+        return (powerUpSprites[powerUpValue - 1],powerUpValue);
     }
 }

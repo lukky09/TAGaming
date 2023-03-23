@@ -16,12 +16,11 @@ public class SnowBallManager : MonoBehaviour
     void Start()
     {
         snowballs = new ArrayList();
-        foreach (Transform ballz in snowballscontainer.GetComponentsInChildren<Transform>())
+        foreach (Transform ballz in snowballscontainer.transform)
         {
             snowballs.Add(ballz.gameObject);
+            Debug.Log(ballz.name);
         }
-        //Ini perlu karena parentnya termasuk dalam getComponentInChildren entah kenapa
-        snowballs.RemoveAt(0);
         currentrespawnTimer = respawnTime;
     }
 
@@ -79,7 +78,7 @@ public class SnowBallManager : MonoBehaviour
 
     static public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
     {
-        int index = getNearestBallIndex(objecttransform);
+        int index = getNearestBallIndex(objecttransform,rangetreshold);
         return (GameObject)snowballs[index];
     }
 

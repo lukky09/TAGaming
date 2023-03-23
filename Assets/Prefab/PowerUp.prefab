@@ -105,6 +105,12 @@ MonoBehaviour:
   startingValue: 5
   ValueRange: 5
   randomPowerup: 0
+  powerUpSprites:
+  - {fileID: 1889784171, guid: 8a871698032713544a21511719e82502, type: 3}
+  - {fileID: -1454232623, guid: 8a871698032713544a21511719e82502, type: 3}
+  - {fileID: 133530519, guid: 8a871698032713544a21511719e82502, type: 3}
+  - {fileID: 1962154867, guid: 8a871698032713544a21511719e82502, type: 3}
+  - {fileID: -477051674, guid: 8a871698032713544a21511719e82502, type: 3}
 --- !u!95 &4817993415544264658
 Animator:
   serializedVersion: 4
@@ -198,7 +204,7 @@ SpriteRenderer:
   m_SortingLayerID: 1019056049
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 668bf47d4a2ce4e4d838afc894e9cc8d, type: 3}
+  m_Sprite: {fileID: 1789153793, guid: 8a871698032713544a21511719e82502, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0

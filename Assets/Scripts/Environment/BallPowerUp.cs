@@ -6,13 +6,16 @@ using UnityEngine.UIElements;
 
 public class BallPowerUp : MonoBehaviour
 {
+    [SerializeField] GameObject ballReference;
     [SerializeField] int pierceScoreAdd;
+    [SerializeField] Sprite normalBallSprite;
     [SerializeField] float explosionDelay;
     [SerializeField] float explosionRadius;
     [SerializeField] float movementSpeedSlow;
     [SerializeField] float slowTime;
     [SerializeField] int splitBalls;
     [SerializeField] float splitRange;
+
 
     BallMovement bmRef;
     //Utk Powerup Sticky Bomb
@@ -48,7 +51,6 @@ public class BallPowerUp : MonoBehaviour
                 GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
                 collision = collider;
                 distance = collider.transform.position - transform.position;
-                Debug.Log("BeforeWait");
                 StartCoroutine(TimedExplode(explosionDelay));
                 break;
             //Hu dingin
@@ -75,9 +77,11 @@ public class BallPowerUp : MonoBehaviour
                     for (int i = 0; i < splitBalls; i++)
                     {
                         balls[i] = Instantiate(gameObject, backPos, Quaternion.identity);
+                        //balls[i].GetComponent<BallMovement>().initialize();
                         balls[i].GetComponent<BallMovement>().setDirection(Quaternion.Euler(0, 0, initialAngle + i * (splitRange / (splitBalls - 1))) * bmRef.getDirection());
                         balls[i].GetComponent<BallMovement>().setBallScore(Mathf.CeilToInt(bmRef.getBallScore() / splitBalls));
                         balls[i].GetComponent<BallMovement>().setPowerUpID(0);
+                        balls[i].GetComponent<SpriteRenderer>().sprite = normalBallSprite;
                         balls[i].transform.localScale = new Vector3(0.7f, 0.7f, 1);
                         for (int j = 0; j < i; j++)
                             Physics2D.IgnoreCollision(balls[i].GetComponent<CircleCollider2D>(), balls[j].GetComponent<CircleCollider2D>());
