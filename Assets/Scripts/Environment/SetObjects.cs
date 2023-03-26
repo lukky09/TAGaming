@@ -99,7 +99,7 @@ public class SetObjects : MonoBehaviour
         }
         Coordinate tempCoor;
         GameObject temp;
-        bool playerMade = false, isTeam = false;
+        bool playerMade = false;
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {
@@ -119,10 +119,7 @@ public class SetObjects : MonoBehaviour
                         playerMade = true;
                     }
                     else
-                    {
-                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, isTeam);
-                        isTeam = !isTeam;
-                    }
+                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
                 }
 
             }

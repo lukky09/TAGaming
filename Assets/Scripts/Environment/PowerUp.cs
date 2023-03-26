@@ -19,7 +19,7 @@ public class PowerUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (startingValue > ValueRange || startingValue < 0)
+        if (startingValue > ValueRange || startingValue < 0 || randomPowerup)
             powerUpValue = Random.Range(1, startingValue + 1);
         else
             powerUpValue = startingValue;
@@ -35,7 +35,7 @@ public class PowerUp : MonoBehaviour
     private void Update()
     {
         currentSpawnTime -= Time.deltaTime;
-        if (currentSpawnTime <= 0)
+        if (currentSpawnTime <= 0 && !ball.activeSelf)
         {
             GetComponent<Animator>().speed = 1;
             ball.SetActive(true);

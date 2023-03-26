@@ -5,14 +5,35 @@ using UnityEngine;
 
 public class BotActions : MonoBehaviour
 {
-    [SerializeField] float timeLimit;
+    public int mapSegmentid;
+    public bool debug;
+    Rigidbody2D thisRigid;
+    PlayersManager playerManagerRef;
     GameObject target;
-    Vector2 lastpos;
+    Vector2 lastpos, walkLocation, direction;
     float timeDelay = 0.5f, currentTimeDelay = 0;
+    SnowBrawler snowBrawlerRef;
+
+    private void Start()
+    {
+        thisRigid = GetComponent<Rigidbody2D>();
+        snowBrawlerRef = GetComponent<SnowBrawler>();
+    }
 
     public void setTarget(GameObject target)
     {
         this.target = target;
+    }
+
+    public void setWalkLocation(Coordinate walkLocation)
+    {
+        this.walkLocation = walkLocation.returnAsVector();
+    }
+
+    public void setMapSegmentID(int mapSegmentid, PlayersManager playerManagerRef)
+    {
+        this.mapSegmentid = mapSegmentid;
+        this.playerManagerRef = playerManagerRef;
     }
 
     private void Update()
@@ -26,28 +47,45 @@ public class BotActions : MonoBehaviour
         }
     }
 
+    private void FixedUpdate()
+    {
+        // koding sini lebih rapi ketimbang di Visual Script
+        if (!walkLocation.Equals(Vector2.zero))
+        {
+            direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
+            thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed));
+        }
+    }
+
+
     public Vector2 GetAngle(GameObject them, float ballspeed)
     {
         //HUKUM COSINEE!!!!!!!!!
         Vector2 pos1 = lastpos;
         Vector2 pos2 = them.transform.position;
         float targetSpeed = Vector2.Distance(pos1, pos2) / (timeDelay - currentTimeDelay);
-        float angleBallandTarget = Vector2.SignedAngle(Vector3.Normalize((Vector2)transform.position - pos1),Vector3.Normalize(pos2 - pos1));
-        float initTargetandBallDistance = Vector2.Distance(pos2,transform.position);
-        Debug.Log("Speed,Angle dan Jarak Awal : "+targetSpeed + "," + angleBallandTarget + "," + initTargetandBallDistance);
-        Debug.DrawLine((Vector2)transform.position,pos1,Color.red,5);
-        Debug.DrawLine(pos2, pos1, Color.red, 5);
+        float angleBallandTarget = Vector2.SignedAngle(Vector3.Normalize((Vector2)transform.position - pos1), Vector3.Normalize(pos2 - pos1));
+        float initTargetandBallDistance = Vector2.Distance(pos2, transform.position);
+
         float r = targetSpeed / ballspeed;
         //Ini dapat 2 posibilitas jarak antara asal bola menuju muka target
-        float a = 1 - Mathf.Pow(r,2);
+        float a = 1 - Mathf.Pow(r, 2);
         float b = 2 * Mathf.Cos(angleBallandTarget * Mathf.Deg2Rad) * r;
-        float c = - Mathf.Pow(initTargetandBallDistance,2);
-        Debug.Log("abc : " + a + "," + b + "," + c);
+        float c = -Mathf.Pow(initTargetandBallDistance, 2);
+       
         double isiAkar = Mathf.Pow(b, 2) - 4 * a * c;
         isiAkar = Mathf.Sqrt((float)isiAkar);
         double prediksi1 = (-b + isiAkar) / (2 * a);
         double prediksi2 = (-b - isiAkar) / (2 * a);
-        Debug.Log("Prediksi Jarak 1 & 2 : " + prediksi1 + "," + prediksi2);
+        if (debug)
+        {
+            Debug.Log("Speed,Angle dan Jarak Awal : " + targetSpeed + "," + angleBallandTarget + "," + initTargetandBallDistance);
+            Debug.DrawLine((Vector2)transform.position, pos1, Color.red, 5);
+            Debug.DrawLine(pos2, pos1, Color.red, 5);
+            Debug.Log("abc : " + a + "," + b + "," + c);
+            Debug.Log("Prediksi Jarak 1 & 2 : " + prediksi1 + "," + prediksi2);
+        }
+     
         //Dari jarak diatas ambil yang jarake lebih pendek
         double prediksiFinal;
         if (double.IsNaN(prediksi1) && double.IsNaN(prediksi2))
@@ -73,22 +111,24 @@ public class BotActions : MonoBehaviour
         // Dari jarak yang didapat diambil waktu
         double time = prediksiFinal / ballspeed;
         return Vector3.Normalize((float)time * targetSpeed * (Vector2)Vector3.Normalize(pos2 - pos1) + pos2 - (Vector2)transform.position);
-        
-        //Debug.Log("prediksiFinal : " + prediksiFinal);
-        //// Dari waktu bisa didapat Jarak antara Posisi awal target dan posisi akhir
-        //double TargetDistance = time * targetSpeed;
-        ////Dan terakhir dari situ pakai rumus cos lagi untuk dapet jumlah sudut yang diperlukan
-        //float I = (float)TargetDistance;
-        //float J = initTargetandBallDistance;
-        //float K = (float)prediksiFinal;
-        //Debug.Log("IJK : " + I + "," + J + "," + K);
-        //float resultAngle = Mathf.Acos((Mathf.Pow(K, 2) + Mathf.Pow(J, 2) - Mathf.Pow(I, 2)) / (2 * K * J)) * Mathf.Rad2Deg;
-        //if (resultAngle == float.NaN)
-        //{
-        //    Debug.Log("Result NAN");
-        //    return Vector3.Normalize(pos2 - (Vector2)transform.position);
-        //}
-        //Debug.Log($"{Vector3.Normalize(pos2 - (Vector2)transform.position)} jadi {Quaternion.Euler(0, 0, resultAngle) * Vector3.Normalize(pos2 - (Vector2)transform.position)} , ({resultAngle})");
-        //return Quaternion.Euler(0, 0, resultAngle) * Vector3.Normalize(pos2 - (Vector2)transform.position);
+    }
+
+    public Coordinate[] getWaytoRandomCoordinate()
+    {
+        Coordinate target;
+        if (mapSegmentid > 0)
+        {
+            target = playerManagerRef.getRandomSpot(mapSegmentid - 1);
+        }
+        else
+        {
+            do
+            {
+                target = new Coordinate(Random.Range(0, SetObjects.getWidth()+1), Random.Range(0, SetObjects.getHeight()+1));
+            } while (AStarAlgorithm.doAstarAlgo(Coordinate.returnAsCoordinate(transform.position), target, SetObjects.getMap(false)) == null);
+        }
+
+        Debug.Log(target.ToString());
+        return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
     }
 }

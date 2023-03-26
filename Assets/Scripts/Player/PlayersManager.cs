@@ -1,8 +1,9 @@
-using System.Collections;
+using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
+using Random = UnityEngine.Random;
 
 public class PlayersManager : MonoBehaviour
 {
@@ -19,6 +20,9 @@ public class PlayersManager : MonoBehaviour
 
     [SerializeField] GameObject levelCamera;
 
+    List<bool[,]> accesibleAreas;
+    List<int[]> areaCorners;
+
     private void Start()
     {
         players = new GameObject[10];
@@ -26,6 +30,53 @@ public class PlayersManager : MonoBehaviour
         {
             players[getFirstNullPlayerIndex()] = item.gameObject;
         }
+
+        if (SetObjects.getMap(false) != null)
+        {
+            Queue<Coordinate> q = new Queue<Coordinate>();
+            Coordinate c,tempCoor;
+            accesibleAreas = new List<bool[,]>();
+            areaCorners = new List<int[]>();
+            int[,] currmap = SetObjects.getMap(false);
+            int[] coors;
+            bool[,] isChecked = new bool[currmap.GetLength(0), currmap.GetLength(1)],map;
+            for (int i = 0; i < currmap.GetLength(0); i++)
+            {
+                for (int j = 0; j < currmap.GetLength(1); j++)
+                {
+                    if (!isChecked[i,j] && currmap[i,j] != 1)
+                    {
+                        coors = new int[4] { j,i,-1,-1}; // x1,y1 (kiri atas),x2,y2 (kanan bawah)
+                        map = new bool[currmap.GetLength(0), currmap.GetLength(1)];
+                        isChecked[i,j] = true;
+                        map[i, j] = true;
+                        q.Enqueue(new Coordinate(j, i));
+                        while (q.Count > 0)
+                        {
+                            c = q.Dequeue();
+                            if (c.xCoor < coors[0]) coors[0] = c.xCoor;
+                            else if (c.xCoor >= coors[2]) coors[2] = c.xCoor;
+                            if (c.yCoor < coors[1]) coors[1] = c.yCoor;
+                            else if (c.yCoor >= coors[3]) coors[3] = c.yCoor;
+                            for (int k = 0; k < 4; k++)
+                            {
+                                tempCoor = new Coordinate(c.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), c.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
+                                if (tempCoor.xCoor >= 0 && tempCoor.yCoor >= 0 && tempCoor.yCoor < SetObjects.getHeight() && tempCoor.xCoor < currmap.GetLength(1) && currmap[tempCoor.yCoor, tempCoor.xCoor] != 1 && !isChecked[tempCoor.yCoor, tempCoor.xCoor])
+                                {
+                                    isChecked[tempCoor.yCoor, tempCoor.xCoor] = true;
+                                    map[tempCoor.yCoor, tempCoor.xCoor] = true;
+                                    q.Enqueue(tempCoor);
+                                }
+                            }
+                        }
+                        accesibleAreas.Add(map);
+                        areaCorners.Add(coors);
+                    }
+                }
+            }
+            Debug.Log(accesibleAreas.Count);
+        }
+
     }
 
     public void makeNewPlayer(Coordinate c)
@@ -50,6 +101,13 @@ public class PlayersManager : MonoBehaviour
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
         tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(isPlayerTeam, 7.5f, 15, 2, 1, 1, 0.5f);
         tempEnemyPrefab.GetComponent<SpriteRenderer>().material = new Material(m);
+        for (int j = 0; j < accesibleAreas.Count; j++)
+        {
+            if (accesibleAreas[j][c.yCoor,c.xCoor]) {
+                tempEnemyPrefab.GetComponent<BotActions>().setMapSegmentID(j+1, this);
+                break;
+            }
+        }
         if (!isAIActive)
             tempEnemyPrefab.GetComponent<StateMachine>().enabled = false;
         players[i] = tempEnemyPrefab;
@@ -79,6 +137,18 @@ public class PlayersManager : MonoBehaviour
             return players[index];
         else
             return null;
+    }
+
+    public Coordinate getRandomSpot(int mapIndex)
+    {
+        bool[,] currAccesibleAreaa = accesibleAreas[mapIndex];
+        int[] currAreaCorners = areaCorners[mapIndex];
+        Coordinate tempCoor;
+        do
+        {
+            tempCoor = new Coordinate(Random.Range(currAreaCorners[0], currAreaCorners[2]+1), Random.Range(currAreaCorners[1], currAreaCorners[3]+1));
+        } while (!currAccesibleAreaa[tempCoor.yCoor, tempCoor.xCoor]);
+        return tempCoor;
     }
 
     int getFirstNullPlayerIndex()

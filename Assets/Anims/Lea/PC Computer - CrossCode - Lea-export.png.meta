@@ -49,7 +49,7 @@ TextureImporter:
   spritePivot: {x: 0.5, y: 0.5}
   spritePixelsToUnits: 64
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
-  spriteGenerateFallbackPhysicsShape: 1
+  spriteGenerateFallbackPhysicsShape: 0
   alphaUsage: 1
   alphaIsTransparency: 1
   spriteTessellationDetail: -1
@@ -14732,8 +14732,8 @@ TextureImporter:
       PC Computer - CrossCode - Lea-export_538: -1747456956
       PC Computer - CrossCode - Lea-export_507: 1663116073
       PC Computer - CrossCode - Lea-export_24: -178169879
-      PC Computer - CrossCode - Lea-export_325: -1705717738
       PC Computer - CrossCode - Lea-export_99: -1458389168
+      PC Computer - CrossCode - Lea-export_325: -1705717738
       PC Computer - CrossCode - Lea-export_134: 1189103627
       PC Computer - CrossCode - Lea-export_511: -847172889
       PC Computer - CrossCode - Lea-export_574: -1153738774

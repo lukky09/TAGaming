@@ -19,7 +19,6 @@ public class SnowBallManager : MonoBehaviour
         foreach (Transform ballz in snowballscontainer.transform)
         {
             snowballs.Add(ballz.gameObject);
-            Debug.Log(ballz.name);
         }
         currentrespawnTimer = respawnTime;
     }
@@ -36,7 +35,7 @@ public class SnowBallManager : MonoBehaviour
 
     public void Update()
     {
-        if(currentrespawnTimer <= 0)
+        if (currentrespawnTimer <= 0)
         {
             currentrespawnTimer = respawnTime;
             putballs();
@@ -51,15 +50,15 @@ public class SnowBallManager : MonoBehaviour
         GameObject ballz;
         for (int i = 0; i < respawnAmount; i++)
         {
-            x = Mathf.RoundToInt(Random.Range(0,SetObjects.getWidth()-2));
-            y = Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight()-2));
-            if (SetObjects.getMap(false)[y,x] == 0)
+            x = Mathf.RoundToInt(Random.Range(0, SetObjects.getWidth() - 2));
+            y = Mathf.RoundToInt(Random.Range(0, SetObjects.getHeight() - 2));
+            if (SetObjects.getMap(false)[y, x] == 0)
             {
                 ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 0.5f), Quaternion.identity);
                 ballz.transform.SetParent(snowballscontainer.transform, true);
                 snowballs.Add(ballz);
                 //Debug.Log("Bola ke-" + i + " = " + x + " " + y);
-                SetObjects.setMap(y,x,4);
+                SetObjects.setMap(y, x, 4);
             }
         }
     }
@@ -78,7 +77,7 @@ public class SnowBallManager : MonoBehaviour
 
     static public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
     {
-        int index = getNearestBallIndex(objecttransform,rangetreshold);
+        int index = getNearestBallIndex(objecttransform, rangetreshold);
         return (GameObject)snowballs[index];
     }
 
@@ -89,7 +88,7 @@ public class SnowBallManager : MonoBehaviour
         foreach (GameObject ballz in snowballs)
         {
             range = Vector2.Distance(ballz.transform.position, objectTracked.position);
-            if (range < closestrange)
+            if (range < closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
             {
                 closestrange = range;
                 index = i;
@@ -110,6 +109,13 @@ public class SnowBallManager : MonoBehaviour
 
     public static GameObject getBallfromIndex(int index)
     {
-        return (GameObject)snowballs[index];
+        if (snowballs.Count > 0)
+            return (GameObject)snowballs[index];
+        return null;
+    }
+
+    public static int getBallAmount()
+    {
+        return snowballs.Count;
     }
 }

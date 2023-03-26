@@ -87,7 +87,7 @@ public class BallMovement : MonoBehaviour
     {
         if (collision.tag == "Wall")
         {
-            if (powerupId == 5)
+            if (powerupId == 5 || powerupId == 4)
                 GetComponent<BallPowerUp>().modifyBall(collision.gameObject);
             else
                 Destroy(gameObject);

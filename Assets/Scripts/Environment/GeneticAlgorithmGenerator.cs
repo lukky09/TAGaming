@@ -16,8 +16,6 @@ using GeneticSharp.Domain;
 using TMPro;
 using System.Threading.Tasks;
 using GeneticSharp.Infrastructure.Framework.Threading;
-using static UnityEditor.Progress;
-using System.Drawing;
 
 public class GameChromosome : ChromosomeBase
 {
@@ -295,7 +293,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         if (useMirrorFitness)
             objAmt[3] = Mathf.RoundToInt(objAmt[3] / 2);
 
-        Debug.Log(String.Join(" - ", fitnessScores));
+        //Debug.Log(String.Join(" - ", fitnessScores));
         return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3), 3);
     }
 
