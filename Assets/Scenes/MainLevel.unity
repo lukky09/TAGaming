@@ -847,6 +847,7 @@ MonoBehaviour:
   powerUpContainer: {fileID: 1070962874}
   powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
   playerManagerReference: {fileID: 69075703}
+  only1BotActive: 1
 --- !u!114 &728283040
 MonoBehaviour:
   m_ObjectHideFlags: 0

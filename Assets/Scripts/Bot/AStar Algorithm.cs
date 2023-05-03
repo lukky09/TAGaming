@@ -45,6 +45,8 @@ public class AStarAlgorithm : MonoBehaviour
         else
         {
             AstarNode result = doAstarAlgo(character, ball,SetObjects.getMap(false));
+            if (result == null)
+                return null;
             ArrayList coordinates = new ArrayList();
             while (result.parentNode != null)
             {
@@ -99,7 +101,7 @@ public class AStarAlgorithm : MonoBehaviour
         bool[,] isChecked = new bool[map.GetLength(0), map.GetLength(1)];
         ArrayList listNode = new ArrayList();
         listNode.Add(new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null));
-        AstarNode currentnode, tempnode, resultnode = null;
+        AstarNode currentnode, tempnode;
         float distance;
         bool isput,inBounds;
         int mapheight = map.GetLength(0), maplength = map.GetLength(1);
@@ -111,8 +113,7 @@ public class AStarAlgorithm : MonoBehaviour
             listNode.RemoveAt(0);
             if (currentnode.coordinate.xCoor == posisibola.xCoor && currentnode.coordinate.yCoor == posisibola.yCoor)
             {
-                resultnode = currentnode;
-                break;
+                return currentnode;
             }
             for (int i = 0; i < 4; i++)
             {
@@ -139,12 +140,8 @@ public class AStarAlgorithm : MonoBehaviour
                 }
             }
         }
-        if (listNode.Count == 0)
-        {
-            return null;
-        }
-        else
-            return resultnode;
+        Debug.Log("Null : " + posisikarakter + " ke " + posisibola);
+        return null;
     }
 
         public static Coordinate vectorToCoordinate(Vector2 vent)

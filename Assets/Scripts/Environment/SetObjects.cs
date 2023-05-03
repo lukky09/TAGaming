@@ -17,8 +17,8 @@ public class SetObjects : MonoBehaviour
     public TileBase rok;
     public GameObject powerUpContainer;
     public GameObject powerUp;
-    [SerializeField]
-    GameObject playerManagerReference;
+    [SerializeField] GameObject playerManagerReference;
+    [SerializeField] bool only1BotActive;
 
     public static void initializeSize(int w, int h)
     {
@@ -99,7 +99,7 @@ public class SetObjects : MonoBehaviour
         }
         Coordinate tempCoor;
         GameObject temp;
-        bool playerMade = false;
+        bool playerMade = false, oneBotAI = false;
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {
@@ -118,8 +118,11 @@ public class SetObjects : MonoBehaviour
                         playerManagerReference.GetComponent<PlayersManager>().makeNewPlayer(tempCoor);
                         playerMade = true;
                     }
-                    else
+                    else if (only1BotActive && !oneBotAI)
+                    {
                         playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
+                        oneBotAI = true;
+                    }
                 }
 
             }

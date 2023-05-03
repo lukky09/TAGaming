@@ -21,7 +21,7 @@ public class BallPowerUp : MonoBehaviour
     //Utk Powerup Sticky Bomb
     Vector2 distance;
     GameObject collision;
-    private void Start()
+    private void Awake()
     {
         bmRef = GetComponent<BallMovement>();
     }

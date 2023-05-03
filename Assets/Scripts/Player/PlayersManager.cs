@@ -99,7 +99,6 @@ public class PlayersManager : MonoBehaviour
             m.SetColor("_OutlineColor", enemyColor);
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
-        tempEnemyPrefab.GetComponent<SnowBrawler>().initializeBrawler(isPlayerTeam, 7.5f, 15, 2, 1, 1, 0.5f);
         tempEnemyPrefab.GetComponent<SpriteRenderer>().material = new Material(m);
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
@@ -119,13 +118,15 @@ public class PlayersManager : MonoBehaviour
         float closestrange = 999, range;
         int i = 0, index = -1;
         RaycastHit2D cekKolisi;
+        bool isEnemy;
         foreach (GameObject currplayer in players)
         {
             if (currplayer != null)
             {
+                isEnemy = currplayer.GetComponent<SnowBrawler>().getplayerteam() != player.GetComponent<SnowBrawler>().getplayerteam();
                 cekKolisi = Physics2D.Linecast(player.position, currplayer.transform.position, 64);
                 range = Vector2.Distance(player.transform.position, currplayer.transform.position);
-                if (range < closestrange && range > 0 && !(includeCollision && cekKolisi))
+                if (range < closestrange && range > 0 && !(includeCollision && cekKolisi) && isEnemy)
                 {
                     closestrange = range;
                     index = i;

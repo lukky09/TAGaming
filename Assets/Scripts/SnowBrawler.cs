@@ -68,13 +68,14 @@ public class SnowBrawler : MonoBehaviour
 
     public void getBall()
     {
-        if (SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>())
+        int ballindex = SnowBallManager.getNearestBallIndex(transform);
+        if (ballindex>= 0 && SnowBallManager.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
             (ballSprite,ballPowerId) = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
             if (ballPowerId > 0)
                 ballAmount = 1;
         }
-        else
+        else if (ballindex >= 0)
         {
             int deletedIndex = SnowBallManager.getNearestBallIndex(transform, ballTakeRange);
             if (deletedIndex >= 0)
@@ -115,7 +116,7 @@ public class SnowBrawler : MonoBehaviour
 
     public int getBallAmount()
     {
-        return ballAmount;
+        return ballAmount + ((caughtBall == null) ? 0 : 1);
     }
 
     public bool getplayerteam()

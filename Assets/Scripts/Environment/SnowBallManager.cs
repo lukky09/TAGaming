@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class SnowBallManager : MonoBehaviour
 {
-    public static ArrayList snowballs;
+    public static List<GameObject> snowballs;
     public GameObject snowballscontainer;
 
     [SerializeField] GameObject snowball;
@@ -15,7 +15,7 @@ public class SnowBallManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        snowballs = new ArrayList();
+        snowballs = new List<GameObject>();
         foreach (Transform ballz in snowballscontainer.transform)
         {
             snowballs.Add(ballz.gameObject);
@@ -25,12 +25,11 @@ public class SnowBallManager : MonoBehaviour
 
     public static void destroyball(int index)
     {
-        GameObject ball = (GameObject)snowballs[index];
+        GameObject ball = snowballs[index];
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
         SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
         Destroy(ball);
         snowballs.RemoveAt(index);
-        snowballs.TrimToSize();
     }
 
     public void Update()
@@ -78,12 +77,12 @@ public class SnowBallManager : MonoBehaviour
     static public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
     {
         int index = getNearestBallIndex(objecttransform, rangetreshold);
-        return (GameObject)snowballs[index];
+        return snowballs[index];
     }
 
     public static int getNearestBallIndex(Transform objectTracked)
     {
-        float closestrange = 999, range = 0;
+        float closestrange = 999,range;
         int i = 0, index = -1;
         foreach (GameObject ballz in snowballs)
         {
@@ -100,8 +99,19 @@ public class SnowBallManager : MonoBehaviour
 
     public static int getNearestBallIndex(Transform objectTracked, float range)
     {
-        int index = getNearestBallIndex(objectTracked);
-        if (index > -1 && Vector2.Distance(((GameObject)snowballs[index]).transform.position, objectTracked.position) < range)
+        float closestrange = 999, currrange;
+        int i = 0, index = -1;
+        foreach (GameObject ballz in snowballs)
+        {
+            currrange = Vector2.Distance(ballz.transform.position, objectTracked.position);
+            if (currrange < range && currrange<closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
+            {
+                closestrange = currrange;
+                index = i;
+            }
+            i++;
+        }
+        if (index > -1 && Vector2.Distance((snowballs[index]).transform.position, objectTracked.position) < range)
             return index;
         else
             return -1;
@@ -110,7 +120,7 @@ public class SnowBallManager : MonoBehaviour
     public static GameObject getBallfromIndex(int index)
     {
         if (snowballs.Count > 0)
-            return (GameObject)snowballs[index];
+            return snowballs[index];
         return null;
     }
 

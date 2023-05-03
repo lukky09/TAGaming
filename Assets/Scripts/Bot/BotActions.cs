@@ -6,18 +6,33 @@ using UnityEngine;
 public class BotActions : MonoBehaviour
 {
     public int mapSegmentid;
+    public float sidewaysAngle, aimSpeedPercentage;
     public bool debug;
+    public Vector2 walkLocation;
+
+    bool isAiming;
     Rigidbody2D thisRigid;
     PlayersManager playerManagerRef;
     GameObject target;
-    Vector2 lastpos, walkLocation, direction;
+    Vector2 lastpos, direction;
     float timeDelay = 0.5f, currentTimeDelay = 0;
     SnowBrawler snowBrawlerRef;
 
     private void Start()
     {
+        isAiming = false;
         thisRigid = GetComponent<Rigidbody2D>();
         snowBrawlerRef = GetComponent<SnowBrawler>();
+    }
+
+    public void forgetTarget()
+    {
+        target = null;
+    }
+
+    public void setIsAiming(bool isAiming)
+    {
+        this.isAiming = isAiming;
     }
 
     public void setTarget(GameObject target)
@@ -53,10 +68,16 @@ public class BotActions : MonoBehaviour
         if (!walkLocation.Equals(Vector2.zero))
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
-            thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed));
+            thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (isAiming ? aimSpeedPercentage : 1)));
         }
     }
 
+    public void walkSideways()
+    {
+        float angleOfChoice = ((Random.Range(0, 2) * 2) - 1) * 90;
+        angleOfChoice = angleOfChoice + Random.Range(-sidewaysAngle, sidewaysAngle + 1);
+        walkLocation = Quaternion.Euler(0, 0, angleOfChoice) * (Vector2)(target.transform.position - transform.position);
+    }
 
     public Vector2 GetAngle(GameObject them, float ballspeed)
     {
@@ -117,8 +138,10 @@ public class BotActions : MonoBehaviour
     {
         Coordinate target;
         if (mapSegmentid > 0)
-        {
+        {         
             target = playerManagerRef.getRandomSpot(mapSegmentid - 1);
+            Debug.Log("Chosen " + (mapSegmentid - 1)+","+ target.ToString());
+            return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
         }
         else
         {
@@ -127,8 +150,6 @@ public class BotActions : MonoBehaviour
                 target = new Coordinate(Random.Range(0, SetObjects.getWidth()+1), Random.Range(0, SetObjects.getHeight()+1));
             } while (AStarAlgorithm.doAstarAlgo(Coordinate.returnAsCoordinate(transform.position), target, SetObjects.getMap(false)) == null);
         }
-
-        Debug.Log(target.ToString());
         return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
     }
 }
