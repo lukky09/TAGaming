@@ -106,11 +106,11 @@ MonoBehaviour:
   ValueRange: 5
   randomPowerup: 1
   powerUpSprites:
-  - {fileID: 1889784171, guid: 8a871698032713544a21511719e82502, type: 3}
-  - {fileID: -1454232623, guid: 8a871698032713544a21511719e82502, type: 3}
-  - {fileID: 133530519, guid: 8a871698032713544a21511719e82502, type: 3}
-  - {fileID: 1962154867, guid: 8a871698032713544a21511719e82502, type: 3}
-  - {fileID: -477051674, guid: 8a871698032713544a21511719e82502, type: 3}
+  - {fileID: 479318119, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
+  - {fileID: -1431301879, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
+  - {fileID: 1001844901, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
+  - {fileID: -1836180995, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
+  - {fileID: 1551921613, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
 --- !u!95 &4817993415544264658
 Animator:
   serializedVersion: 4

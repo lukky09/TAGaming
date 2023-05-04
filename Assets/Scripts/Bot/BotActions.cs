@@ -152,4 +152,12 @@ public class BotActions : MonoBehaviour
         }
         return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
     }
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.black;
+        Gizmos.DrawWireSphere(transform.position, 0.33f);
+    }
+
+
 }

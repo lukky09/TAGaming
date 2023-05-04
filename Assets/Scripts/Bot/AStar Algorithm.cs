@@ -2,41 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.VisualScripting;
-using System.Linq;
-using System;
 using Random = UnityEngine.Random;
+using UnityEngine.TextCore.Text;
 
 public class AStarAlgorithm : MonoBehaviour
 {
     public static Coordinate[] makeWay(Transform character, Transform ball)
     {
-        // layermask bukan integer tapi biner ternyata
-        if (!Physics2D.Linecast(character.position, ball.position,64))
-        {
-            Coordinate ints = vectorToCoordinate(ball.localPosition);
-            Debug.Log("Shortcut");
-            return new Coordinate[] { ints };
-        }
-        else
-        {
-            AstarNode result = doAstarAlgo(character, ball);
-            ArrayList coordinates = new ArrayList();
-            while (result.parentNode != null)
-            {
-                coordinates.Add(result.coordinate);
-                result = result.parentNode;
-            }
-            coordinates.Reverse();
-            //Debug.Log("Panjang : "+coordinates.Count);
-            Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
-            //Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
-            return finalcoordinates;
-        }
+        return makeWay(Coordinate.returnAsCoordinate(character.position), Coordinate.returnAsCoordinate(ball.position));
     }
     public static Coordinate[] makeWay(Coordinate character, Coordinate ball)
     {
         // layermask bukan integer tapi biner ternyata
-        if (!Physics2D.Linecast(character.returnAsVector(), ball.returnAsVector(), 64))
+        Vector2 arah = (Vector2)(ball.returnAsVector() - character.returnAsVector());
+        arah = arah.normalized;
+        float dist = Vector3.Distance(ball.returnAsVector(), character.returnAsVector());
+        if (!Physics2D.CircleCast(character.returnAsVector(), 0.35f, arah, dist, 64))
         {
             Coordinate ints = vectorToCoordinate(ball.returnAsVector());
             Debug.Log("Shortcut");
@@ -54,9 +35,17 @@ public class AStarAlgorithm : MonoBehaviour
                 result = result.parentNode;
             }
             coordinates.Reverse();
-            //Debug.Log("Panjang : "+coordinates.Count);
+            Debug.Log("Panjang : "+coordinates.Count);
+            //foreach (Coordinate item in coordinates)
+            //{
+            //    Debug.Log(item.ToString());
+            //}
             Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
-            //Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            //foreach (Coordinate item in finalcoordinates)
+            //{
+            //    Debug.Log(item.ToString());
+            //}
             return finalcoordinates;
         }
     }
@@ -66,9 +55,13 @@ public class AStarAlgorithm : MonoBehaviour
         ArrayList resultAL = new ArrayList();
         Coordinate currentpoint = path[0];
         int tempindex = 1;
+        Vector2 arah ;
+        float dist;
         while (tempindex <= path.Length - 1)
         {
-            if (!isStraight(currentpoint, path[tempindex]) && Physics2D.Linecast(currentpoint.returnAsVector(), path[tempindex].returnAsVector(),64))
+            arah = ((Vector2)(path[tempindex].returnAsVector() - currentpoint.returnAsVector())).normalized;
+            dist = Vector2.Distance(path[tempindex].returnAsVector(), currentpoint.returnAsVector());
+            if (!isStraight(currentpoint, path[tempindex]) && Physics2D.CircleCast(currentpoint.returnAsVector(), 0.35f, arah, dist, 64))
             {
                 resultAL.Add(path[tempindex - 1]);
                 currentpoint = path[tempindex - 1];
@@ -99,13 +92,16 @@ public class AStarAlgorithm : MonoBehaviour
     {
 
         bool[,] isChecked = new bool[map.GetLength(0), map.GetLength(1)];
-        ArrayList listNode = new ArrayList();
-        listNode.Add(new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null));
+        ArrayList listNode = new ArrayList
+        {
+            new AstarNode(posisikarakter, 0, Coordinate.Distance(posisikarakter, posisibola), null)
+        };
         AstarNode currentnode, tempnode;
         float distance;
         bool isput,inBounds;
         int mapheight = map.GetLength(0), maplength = map.GetLength(1);
         Coordinate newcoor;
+        Debug.Log("Mulai debug Astar");
         while (listNode.Count > 0)
         {
             currentnode = (AstarNode)listNode[0];
@@ -118,7 +114,7 @@ public class AStarAlgorithm : MonoBehaviour
             for (int i = 0; i < 4; i++)
             {
                 newcoor = new Coordinate(currentnode.coordinate.xCoor + Mathf.RoundToInt(Mathf.Sin(i * Mathf.PI / 2)), currentnode.coordinate.yCoor + Mathf.RoundToInt(Mathf.Cos(i * Mathf.PI / 2)));
-                inBounds = newcoor.yCoor > 0 && newcoor.yCoor < mapheight && newcoor.xCoor > 0 && newcoor.xCoor < maplength;
+                inBounds = newcoor.yCoor >= 0 && newcoor.yCoor < mapheight && newcoor.xCoor >= 0 && newcoor.xCoor < maplength;
                 if (inBounds && map[newcoor.yCoor, newcoor.xCoor] != 1 && !isChecked[newcoor.yCoor, newcoor.xCoor])
                 {
                     distance = Coordinate.Distance(newcoor, posisibola);

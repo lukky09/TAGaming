@@ -774,28 +774,28 @@ Tilemap:
     m_Data:
       e00: 0
       e01: 0
-      e02: -1.5585427e-19
-      e03: -1.5585427e-19
+      e02: 1.1020282e-38
+      e03: 1.1020282e-38
       e10: 0
       e11: 0
-      e12: 6.14e-43
-      e13: 6.14e-43
-      e20: 3.982997e+21
+      e12: 7.05e-43
+      e13: 7.05e-43
+      e20: -6.7381596e-23
       e21: 1e-45
-      e22: 3.3538307e-19
-      e23: 2.09612e-40
-      e30: 4.5905e-41
+      e22: -1.2819904e-19
+      e23: 2.7715095e-29
+      e30: 4.5904e-41
       e31: 0
-      e32: 6.15e-43
-      e33: 6.18e-43
+      e32: 7.05e-43
+      e33: 7.09e-43
   m_TileColorArray:
   - m_RefCount: 0
-    m_Data: {r: 5.6484e-41, g: 5.6484e-41, b: 5.6484e-41, a: 5.6484e-41}
+    m_Data: {r: 5.5315e-41, g: 5.5315e-41, b: 5.5315e-41, a: 5.5315e-41}
   m_TileObjectToInstantiateArray: []
   m_AnimationFrameRate: 1
   m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_Origin: {x: -14, y: -7, z: 0}
-  m_Size: {x: 28, y: 13, z: 1}
+  m_Origin: {x: -15, y: -7, z: 0}
+  m_Size: {x: 29, y: 13, z: 1}
   m_TileAnchor: {x: 0.5, y: 0.5, z: 0}
   m_TileOrientation: 0
   m_TileOrientationMatrix:
@@ -1047,7 +1047,7 @@ TilemapRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 862d45e69b6b586489d906f0ec76b368, type: 2}
+  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
