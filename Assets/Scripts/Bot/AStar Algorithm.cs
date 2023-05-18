@@ -4,9 +4,12 @@ using UnityEngine;
 using Unity.VisualScripting;
 using Random = UnityEngine.Random;
 using UnityEngine.TextCore.Text;
+using System.Linq;
 
 public class AStarAlgorithm : MonoBehaviour
 {
+    public static float circleSize = 0.4f;
+
     public static Coordinate[] makeWay(Transform character, Transform ball)
     {
         return makeWay(Coordinate.returnAsCoordinate(character.position), Coordinate.returnAsCoordinate(ball.position));
@@ -14,10 +17,10 @@ public class AStarAlgorithm : MonoBehaviour
     public static Coordinate[] makeWay(Coordinate character, Coordinate ball)
     {
         // layermask bukan integer tapi biner ternyata
-        Vector2 arah = (Vector2)(ball.returnAsVector() - character.returnAsVector());
+        Vector2 arah = (ball.returnAsVector() - character.returnAsVector());
         arah = arah.normalized;
         float dist = Vector3.Distance(ball.returnAsVector(), character.returnAsVector());
-        if (!Physics2D.CircleCast(character.returnAsVector(), 0.35f, arah, dist, 64))
+        if (!Physics2D.CircleCast(character.returnAsVector(), circleSize, arah, dist, 64))
         {
             Coordinate ints = vectorToCoordinate(ball.returnAsVector());
             Debug.Log("Shortcut");
@@ -25,7 +28,7 @@ public class AStarAlgorithm : MonoBehaviour
         }
         else
         {
-            AstarNode result = doAstarAlgo(character, ball,SetObjects.getMap(false));
+            AstarNode result = doAstarAlgo(character, ball, SetObjects.getMap(false));
             if (result == null)
                 return null;
             ArrayList coordinates = new ArrayList();
@@ -35,47 +38,47 @@ public class AStarAlgorithm : MonoBehaviour
                 result = result.parentNode;
             }
             coordinates.Reverse();
-            Debug.Log("Panjang : "+coordinates.Count);
+            //Debug.Log("Panjang : " + coordinates.Count);
+            //string tes1 = "";
             //foreach (Coordinate item in coordinates)
             //{
-            //    Debug.Log(item.ToString());
+            //    tes1 += item.ToString() + "\n";
             //}
+            //Debug.Log(tes1);
             Coordinate[] finalcoordinates = optimizePath((Coordinate[])coordinates.ToArray(typeof(Coordinate)));
-            Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            //Debug.Log("Panjang Optimized : " + finalcoordinates.Length);
+            //tes1 = "";
             //foreach (Coordinate item in finalcoordinates)
             //{
-            //    Debug.Log(item.ToString());
+            //    tes1 += item.ToString() + "\n";
             //}
+            //Debug.Log(tes1);
             return finalcoordinates;
         }
     }
 
     static Coordinate[] optimizePath(Coordinate[] path)
     {
-        ArrayList resultAL = new ArrayList();
-        Coordinate currentpoint = path[0];
-        int tempindex = 1;
+        List<Coordinate> resultAL = new List<Coordinate>();
+        Coordinate currentPoint = path[0],checkedPoint = path[0];
+        int pathIndex = 1;
         Vector2 arah ;
         float dist;
-        while (tempindex <= path.Length - 1)
+        resultAL.Add(currentPoint);
+        while (pathIndex < path.Length - 1)
         {
-            arah = ((Vector2)(path[tempindex].returnAsVector() - currentpoint.returnAsVector())).normalized;
-            dist = Vector2.Distance(path[tempindex].returnAsVector(), currentpoint.returnAsVector());
-            if (!isStraight(currentpoint, path[tempindex]) && Physics2D.CircleCast(currentpoint.returnAsVector(), 0.35f, arah, dist, 64))
+            arah = (path[pathIndex].returnAsVector() - currentPoint.returnAsVector()).normalized;
+            dist = Vector2.Distance(path[pathIndex].returnAsVector(), currentPoint.returnAsVector());
+            if (Physics2D.CircleCast(currentPoint.returnAsVector(), circleSize, arah, dist, 64))
             {
-                resultAL.Add(path[tempindex - 1]);
-                currentpoint = path[tempindex - 1];
-                tempindex--;
+                resultAL.Add(path[pathIndex-1]);
+                currentPoint = checkedPoint;
             }
-            tempindex++;
+            checkedPoint = path[pathIndex];
+            pathIndex++;
         }
         resultAL.Add(path[path.Length - 1]);
-        return (Coordinate[])resultAL.ToArray(typeof(Coordinate));
-    }
-
-    static bool isStraight(Coordinate c1, Coordinate c2)
-    {
-        return ((c1.xCoor - c2.xCoor) * (c1.yCoor - c2.yCoor) == 0);
+        return resultAL.ToArray();
     }
 
     //Fix bisa
@@ -101,7 +104,7 @@ public class AStarAlgorithm : MonoBehaviour
         bool isput,inBounds;
         int mapheight = map.GetLength(0), maplength = map.GetLength(1);
         Coordinate newcoor;
-        Debug.Log("Mulai debug Astar");
+        //Debug.Log($"Mulai debug Astar dari {posisikarakter} ke {posisibola}");
         while (listNode.Count > 0)
         {
             currentnode = (AstarNode)listNode[0];

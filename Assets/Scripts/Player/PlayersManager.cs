@@ -126,6 +126,7 @@ public class PlayersManager : MonoBehaviour
                 isEnemy = currplayer.GetComponent<SnowBrawler>().getplayerteam() != player.GetComponent<SnowBrawler>().getplayerteam();
                 cekKolisi = Physics2D.Linecast(player.position, currplayer.transform.position, 64);
                 range = Vector2.Distance(player.transform.position, currplayer.transform.position);
+                //Debug.Log($"{currplayer.name} + {isEnemy} + {cekKolisi.collider == null} + {range > 0}");
                 if (range < closestrange && range > 0 && !(includeCollision && cekKolisi) && isEnemy)
                 {
                     closestrange = range;
@@ -134,7 +135,7 @@ public class PlayersManager : MonoBehaviour
                 i++;
             }
         }
-        if (index > 0)
+        if (index >= 0)
             return players[index];
         else
             return null;

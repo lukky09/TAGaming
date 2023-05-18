@@ -140,7 +140,7 @@ public class BotActions : MonoBehaviour
         if (mapSegmentid > 0)
         {         
             target = playerManagerRef.getRandomSpot(mapSegmentid - 1);
-            Debug.Log("Chosen " + (mapSegmentid - 1)+","+ target.ToString());
+            //Debug.Log("Chosen " + (mapSegmentid - 1)+","+ target.ToString());
             return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
         }
         else
@@ -156,7 +156,7 @@ public class BotActions : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(transform.position, 0.33f);
+        Gizmos.DrawWireSphere(transform.position, AStarAlgorithm.circleSize);
     }
 
 
