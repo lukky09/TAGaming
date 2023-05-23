@@ -6,7 +6,6 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     Vector2 moveDirection;
-    Animator animator;
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
     SnowBrawler SBReference;
@@ -15,7 +14,6 @@ public class PlayerMovement : MonoBehaviour
     void Start()
     {
         moveDirection = new Vector2(0,0);
-        animator = this.GetComponent<Animator>();
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
         SBReference = this.GetComponent<SnowBrawler>();
@@ -34,8 +32,6 @@ public class PlayerMovement : MonoBehaviour
             moveDirection *= SMReference.aimMovementSpeedPerc;
         if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused)
             transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1, 1);
-        animator.SetInteger("yMove", (int)Input.GetAxisRaw("Vertical"));
-        animator.SetBool("xMove", Input.GetAxisRaw("Horizontal") != 0);
     }
 
     private void FixedUpdate()

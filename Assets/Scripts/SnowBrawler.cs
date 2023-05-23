@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using static UnityEngine.GraphicsBuffer;
 
 public class SnowBrawler : MonoBehaviour
 {
@@ -18,8 +19,19 @@ public class SnowBrawler : MonoBehaviour
     public float ballCatchTimer;
     public float ballTakeRange;
     public GameObject ball;
+    public bool isAiming;
     Sprite ballSprite;
+    Animator animator;
 
+    Vector2 lastpos;
+    public float timeDelay = 0.1f;
+    float currentTimeDelay = 0;
+
+    public void Start()
+    {
+        animator = GetComponent<Animator>();
+        isAiming = false;
+    }
 
     public void initializeBrawler(bool playerteam, float throwSpeed,float runSpeed,int ballScoreAdd, float ballSpeedAdd,float ballCatchTimer,float ballTakeRange)
     {
@@ -42,6 +54,16 @@ public class SnowBrawler : MonoBehaviour
     public void Update()
     {
         currentBallCatchTimer -= Time.deltaTime;
+        currentTimeDelay -= Time.deltaTime;
+        //update posisi sebelumnya target untuk prediksi
+        if (currentTimeDelay <= 0)
+        {
+            animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
+            lastpos = transform.position;
+            currentTimeDelay = timeDelay;
+        }
+        animator.SetBool("IsAiming", isAiming);
+        animator.SetFloat("catchTimer", currentBallCatchTimer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

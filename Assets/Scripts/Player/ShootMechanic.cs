@@ -9,7 +9,6 @@ public class ShootMechanic : SnowBrawler
     [SerializeField] float aimTime;
     public float aimMovementSpeedPerc;
 
-    public bool isAiming;
     private float currentaimangle;
     private float currentAimTime;
     private LineRenderer linemanager;
@@ -21,6 +20,7 @@ public class ShootMechanic : SnowBrawler
         linemanager = line.GetComponent<LineRenderer>();
         currentAimTime = 0;
         isAiming = false;
+        base.Start();
     }
 
     // Update is called once per frame

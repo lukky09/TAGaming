@@ -10,7 +10,6 @@ public class BotActions : MonoBehaviour
     public bool debug;
     public Vector2 walkLocation;
 
-    bool isAiming;
     Rigidbody2D thisRigid;
     PlayersManager playerManagerRef;
     GameObject target;
@@ -20,7 +19,6 @@ public class BotActions : MonoBehaviour
 
     private void Start()
     {
-        isAiming = false;
         thisRigid = GetComponent<Rigidbody2D>();
         snowBrawlerRef = GetComponent<SnowBrawler>();
     }
@@ -32,7 +30,7 @@ public class BotActions : MonoBehaviour
 
     public void setIsAiming(bool isAiming)
     {
-        this.isAiming = isAiming;
+        snowBrawlerRef.isAiming = isAiming;
     }
 
     public void setTarget(GameObject target)
@@ -68,7 +66,7 @@ public class BotActions : MonoBehaviour
         if (!walkLocation.Equals(Vector2.zero))
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
-            thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (isAiming ? aimSpeedPercentage : 1)));
+            thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
     }
 
