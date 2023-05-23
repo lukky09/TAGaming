@@ -12,6 +12,7 @@ public class SnowBrawler : MonoBehaviour
 
     public bool playerteam;
     public float throwSpeed;
+    public float originalRunSpeed;
     public float runSpeed;
     public int ballScoreInitial;
     public int ballScoreAdd;
@@ -22,6 +23,7 @@ public class SnowBrawler : MonoBehaviour
     public bool isAiming;
     Sprite ballSprite;
     Animator animator;
+    bool canMove;
 
     Vector2 lastpos;
     public float timeDelay = 0.1f;
@@ -31,6 +33,8 @@ public class SnowBrawler : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         isAiming = false;
+        canMove = true;
+        runSpeed = originalRunSpeed;
     }
 
     public void initializeBrawler(bool playerteam, float throwSpeed,float runSpeed,int ballScoreAdd, float ballSpeedAdd,float ballCatchTimer,float ballTakeRange)
@@ -58,12 +62,12 @@ public class SnowBrawler : MonoBehaviour
         //update posisi sebelumnya target untuk prediksi
         if (currentTimeDelay <= 0)
         {
-            animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
+            //animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
             lastpos = transform.position;
             currentTimeDelay = timeDelay;
         }
-        animator.SetBool("IsAiming", isAiming);
-        animator.SetFloat("catchTimer", currentBallCatchTimer);
+        //animator.SetBool("IsAiming", isAiming);
+        //animator.SetFloat("catchTimer", currentBallCatchTimer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -163,9 +167,20 @@ public class SnowBrawler : MonoBehaviour
 
     IEnumerator slowDownNumerator(float slowPower,float seconds)
     {
-        float originalSpeed = runSpeed;
-        runSpeed = runSpeed * slowPower;
+        runSpeed = originalRunSpeed * slowPower;
         yield return new WaitForSeconds(seconds);
-        runSpeed = originalSpeed;
+        runSpeed = originalRunSpeed;
+    }
+
+    public void shartShooting()
+    {
+        animator.SetBool("isShooting",true);
+        runSpeed = 0;
+    }
+
+    public void stopShooting()
+    {
+        runSpeed = originalRunSpeed;
+        animator.SetBool("isShooting", false);
     }
 }

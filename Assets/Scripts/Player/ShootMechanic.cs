@@ -45,6 +45,7 @@ public class ShootMechanic : SnowBrawler
             shootBall(direction);
             isAiming = false;
             line.SetActive(false);
+            shartShooting();
         }
         if (isAiming)
         {

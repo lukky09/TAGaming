@@ -1,7 +1,10 @@
 1 Pendahuluan
-2. Algo Gen. + Implementasi Unity
+2. Algo Gen. + Implementasi Unity V
 3. Njelasin Unity + Cara Kerjanya
-4. Analisa Game
+-Apa itu unity
+-Histori
+-Cara Kerja
+4. Analisa Game V
 5. Desain + Implementasi Game
 6. Uji Coba
 7. Penututp

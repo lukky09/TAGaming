@@ -210,13 +210,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerteam: 0
   throwSpeed: 15
-  runSpeed: 7.5
+  originalRunSpeed: 7.5
+  runSpeed: 0
   ballScoreInitial: 10
   ballScoreAdd: 2
   ballSpeedAdd: 1
   ballCatchTimer: 0.5
   ballTakeRange: 1
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
+  isAiming: 0
+  timeDelay: 0.1
 --- !u!114 &8281153577826895004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -230,4 +233,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mapSegmentid: 0
+  sidewaysAngle: 0
+  aimSpeedPercentage: 0
   debug: 0
+  walkLocation: {x: 0, y: 0}
