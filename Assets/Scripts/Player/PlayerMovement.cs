@@ -30,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
             moveDirection /= diagonalCheck;
         if (SMReference.isAiming)
             moveDirection *= SMReference.aimMovementSpeedPerc;
-        if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused)
+        if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused && !SMReference.isAiming)
             transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1, 1);
     }
 

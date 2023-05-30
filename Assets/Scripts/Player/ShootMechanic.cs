@@ -50,6 +50,8 @@ public class ShootMechanic : SnowBrawler
         if (isAiming)
         {
             Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
+            float x = pos.x - transform.position.x;
+            transform.localScale = new Vector3(Mathf.RoundToInt(x / Mathf.Abs(x)), 1, 1);
             if (transform.localScale.x == -1)
                 pos = Vector3.Reflect(pos, Vector3.right);
             currentAimTime -= Time.deltaTime;

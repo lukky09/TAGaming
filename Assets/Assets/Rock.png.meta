@@ -326,9 +326,9 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -14, y: 16}
-        - {x: -14, y: -11}
-        - {x: -11, y: -13}
-        - {x: 16, y: -13}
+        - {x: -14, y: -3}
+        - {x: -11, y: -6}
+        - {x: 16, y: -6}
         - {x: 16, y: 16}
       tessellationDetail: 0
       bones: []
@@ -352,8 +352,8 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -16, y: 16}
-        - {x: -16, y: -13}
-        - {x: 16, y: -13}
+        - {x: -16, y: -6}
+        - {x: 16, y: -6}
         - {x: 16, y: 16}
       tessellationDetail: 0
       bones: []
@@ -377,9 +377,9 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -16, y: 16}
-        - {x: -16, y: -13}
-        - {x: 11, y: -13}
-        - {x: 14, y: -11}
+        - {x: -16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 14, y: -3}
         - {x: 14, y: 16}
       tessellationDetail: 0
       bones: []
@@ -403,10 +403,10 @@ TextureImporter:
       outline: []
       physicsShape:
       - - {x: -14, y: 16}
-        - {x: -14, y: -11}
-        - {x: -11, y: -13}
-        - {x: 11, y: -13}
-        - {x: 14, y: -11}
+        - {x: -14, y: -3}
+        - {x: -11, y: -6}
+        - {x: 11, y: -6}
+        - {x: 14, y: -3}
         - {x: 14, y: 16}
       tessellationDetail: 1
       bones: []
@@ -431,9 +431,9 @@ TextureImporter:
       physicsShape:
       - - {x: -11, y: 13}
         - {x: -14, y: 10}
-        - {x: -14, y: -11}
-        - {x: -11, y: -13}
-        - {x: 16, y: -13}
+        - {x: -14, y: -3}
+        - {x: -11, y: -6}
+        - {x: 16, y: -6}
         - {x: 16, y: 13}
       tessellationDetail: 0
       bones: []
@@ -456,8 +456,8 @@ TextureImporter:
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape:
-      - - {x: -16, y: -14}
-        - {x: 16, y: -14}
+      - - {x: -16, y: -6}
+        - {x: 16, y: -6}
         - {x: 16, y: 14}
         - {x: -16, y: 14}
       tessellationDetail: 0
@@ -483,9 +483,9 @@ TextureImporter:
       physicsShape:
       - - {x: 8, y: 13}
         - {x: -16, y: 13}
-        - {x: -16, y: -13}
-        - {x: 11, y: -13}
-        - {x: 14, y: -11}
+        - {x: -16, y: -6}
+        - {x: 11, y: -6}
+        - {x: 14, y: -3}
         - {x: 14, y: 10}
         - {x: 8, y: 13}
       tessellationDetail: 1
@@ -512,15 +512,127 @@ TextureImporter:
       - - {x: 11, y: 13}
         - {x: -11, y: 13}
         - {x: -14, y: 10}
-        - {x: -14, y: -11}
-        - {x: -11, y: -13}
-        - {x: 11, y: -13}
-        - {x: 14, y: -11}
+        - {x: -14, y: -3}
+        - {x: -11, y: -6}
+        - {x: 11, y: -6}
+        - {x: 14, y: -3}
         - {x: 14, y: 10}
       tessellationDetail: 0
       bones: []
       spriteID: f0d4f276ceaab0646879455285ac7b48
       internalID: -1507452039
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_16
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 96
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -11, y: 12}
+        - {x: -14, y: 10}
+        - {x: -14, y: -16}
+        - {x: 14, y: -16}
+        - {x: 14, y: -6}
+        - {x: 16, y: -6}
+        - {x: 16, y: 12}
+      tessellationDetail: 1
+      bones: []
+      spriteID: fae4d8ccafc64a94db80dfd97177334d
+      internalID: 1943188879
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_17
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -14, y: 16}
+        - {x: -14, y: -3}
+        - {x: -11, y: -6}
+        - {x: 16, y: -6}
+        - {x: 16, y: 14}
+        - {x: 14, y: 14}
+        - {x: 14, y: 16}
+      tessellationDetail: 0
+      bones: []
+      spriteID: 8333377a28285b746951a41b1948586b
+      internalID: -1006763611
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_18
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 32
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -16, y: 13}
+        - {x: -16, y: -6}
+        - {x: -14, y: -6}
+        - {x: -14, y: -16}
+        - {x: 14, y: -16}
+        - {x: 14, y: 10}
+        - {x: 11, y: 13}
+      tessellationDetail: 0
+      bones: []
+      spriteID: b917abcef5f031a499f02fa97e9fe7fa
+      internalID: -671193182
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Rock_19
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 0
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape:
+      - - {x: -14, y: 16}
+        - {x: -14, y: 14}
+        - {x: -16, y: 14}
+        - {x: -16, y: -7}
+        - {x: 11, y: -6}
+        - {x: 14, y: -3}
+        - {x: 14, y: 16}
+      tessellationDetail: 0
+      bones: []
+      spriteID: e06750dde478c694ab610e6d65f2bde4
+      internalID: 1626354156
       vertices: []
       indices: 
       edges: []
@@ -537,9 +649,12 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       Rock_3: -1877907589
-      Rock_10: -446001078
+      Rock_13: 122909546
+      Rock_19: 1626354156
       Rock_15: -1507452039
       Rock_9: -29879736
+      Rock_17: -1006763611
+      Rock_18: -671193182
       Rock_6: 1270129130
       Rock_2: 1849921652
       Rock_5: 1936676815
@@ -551,7 +666,8 @@ TextureImporter:
       Rock_14: -500260422
       Rock_8: -1434598895
       Rock_1: -1011209113
-      Rock_13: 122909546
+      Rock_16: 1943188879
+      Rock_10: -446001078
   spritePackingTag: 
   pSDRemoveMatte: 0
   pSDShowRemoveMatteOption: 0

@@ -6,6 +6,21 @@ using TMPro;
 
 public class MainMenuNavigation : MonoBehaviour
 {
+    public static void lastScene()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
+    }
+
+    public static void changeSceneIndex(int index)
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + index);
+    }
+
+    public static void goToSettingScene()
+    {
+        SceneManager.LoadScene("LevelSettingUser");
+    }
+
     public static void nextScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
