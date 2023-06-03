@@ -10,11 +10,15 @@ public class SnowBallManager : MonoBehaviour
     [SerializeField] GameObject snowball;
     [SerializeField] float respawnTime;
     [SerializeField] int respawnAmount;
+    [SerializeField] ColorManager colManager;
     float currentrespawnTimer;
 
     // Start is called before the first frame update
     void Start()
     {
+        Material m = new Material(snowball.GetComponent<SpriteRenderer>().sharedMaterial);
+        m.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
+        snowball.GetComponent<SpriteRenderer>().material = new Material(m);
         snowballs = new List<GameObject>();
         foreach (Transform ballz in snowballscontainer.transform)
         {
@@ -82,7 +86,7 @@ public class SnowBallManager : MonoBehaviour
 
     public static int getNearestBallIndex(Transform objectTracked)
     {
-        float closestrange = 999,range;
+        float closestrange = 999, range;
         int i = 0, index = -1;
         foreach (GameObject ballz in snowballs)
         {
@@ -104,7 +108,7 @@ public class SnowBallManager : MonoBehaviour
         foreach (GameObject ballz in snowballs)
         {
             currrange = Vector2.Distance(ballz.transform.position, objectTracked.position);
-            if (currrange < range && currrange<closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
+            if (currrange < range && currrange < closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
             {
                 closestrange = currrange;
                 index = i;

@@ -12,7 +12,7 @@ public class ColorManager : MonoBehaviour
     public int[] dropdownChoices = new int[4];
     public  Material shaderMaterial;
 
-    private void Start()
+    private void Awake()
     {
         if (listWarna[0] == null)
             initializeColors();
@@ -23,7 +23,6 @@ public class ColorManager : MonoBehaviour
         {
             item.setColorManager(this, colors);
         }
-
         register();
     }
 
@@ -36,12 +35,20 @@ public class ColorManager : MonoBehaviour
         listWarna[4] = new Warna("Purple", Color.magenta);
     }
 
+    public static void mainGameDefault()
+    {
+        PlayerPrefs.SetInt("DD0", 4);
+        PlayerPrefs.SetInt("DD1", 2);
+        PlayerPrefs.SetInt("DD2", 0);
+        PlayerPrefs.SetInt("DD3", 1);
+        PlayerPrefs.Save();
+    }
+
     public void register()
     {
         if (PlayerPrefs.HasKey("DD0"))
         {
             Debug.Log("Ada");
-            PlayerPrefs.DeleteAll();
             dropdownChoices[0] = PlayerPrefs.GetInt("DD0");
             dropdownChoices[1] = PlayerPrefs.GetInt("DD1");
             dropdownChoices[2] = PlayerPrefs.GetInt("DD2");
@@ -53,6 +60,7 @@ public class ColorManager : MonoBehaviour
             dropdownChoices[1] = 2;
             dropdownChoices[2] = 0;
             dropdownChoices[3] = 1;
+            saveSetting();
         }
         refreshChoices();
     }

@@ -10,13 +10,14 @@ public class PlayersManager : MonoBehaviour
     GameObject[] players;
     [SerializeField] Material material;
     [SerializeField] GameObject playerPrefab;
-    [SerializeField] Color playerColor;
     [SerializeField] bool isAIActive;
-    [SerializeField] Color teamColor;
     [SerializeField] GameObject enemyPrefab;
-    [SerializeField] Color enemyColor;
     [SerializeField] bool spawnPlayer;
     [SerializeField] GameObject playersContainer;
+    Color playerColor;
+    Color teamColor;
+    Color enemyColor;
+    ColorManager colManager;
 
     [SerializeField] GameObject levelCamera;
 
@@ -25,6 +26,10 @@ public class PlayersManager : MonoBehaviour
 
     private void Start()
     {
+        colManager = this.GetComponent<ColorManager>();
+        playerColor = colManager.listWarna[PlayerPrefs.GetInt("DD0")].getColor();
+        teamColor = colManager.listWarna[PlayerPrefs.GetInt("DD1")].getColor();
+        enemyColor = colManager.listWarna[PlayerPrefs.GetInt("DD2")].getColor();
         players = new GameObject[10];
         foreach (Transform item in playersContainer.transform)
         {
