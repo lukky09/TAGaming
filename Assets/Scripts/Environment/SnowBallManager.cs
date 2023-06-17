@@ -16,9 +16,7 @@ public class SnowBallManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Material m = new Material(snowball.GetComponent<SpriteRenderer>().sharedMaterial);
-        m.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
-        snowball.GetComponent<SpriteRenderer>().material = new Material(m);
+        snowball.GetComponent<SpriteRenderer>().sharedMaterial.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
         snowballs = new List<GameObject>();
         foreach (Transform ballz in snowballscontainer.transform)
         {
@@ -31,7 +29,8 @@ public class SnowBallManager : MonoBehaviour
     {
         GameObject ball = snowballs[index];
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
-        SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
+       if(SetObjects.getMap(true) != null)
+            SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
         Destroy(ball);
         snowballs.RemoveAt(index);
     }
@@ -64,6 +63,14 @@ public class SnowBallManager : MonoBehaviour
                 SetObjects.setMap(y, x, 4);
             }
         }
+    }
+
+     public void addBallinVector(Vector2 v)
+    {
+        GameObject ballz;
+        ballz = Instantiate(snowball,snowballscontainer.transform );
+        ballz.transform.position = v;
+        snowballs.Add(ballz);
     }
 
     static public bool deleteclosestball(Transform objecttransform, float rangetreshold)

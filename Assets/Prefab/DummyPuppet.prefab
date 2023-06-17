@@ -11,7 +11,11 @@ GameObject:
   - component: {fileID: 8748381368748245379}
   - component: {fileID: 8748381368748245378}
   - component: {fileID: 8748381368748245380}
-  m_Layer: 0
+  - component: {fileID: 6759704540052368778}
+  - component: {fileID: 4975152431852153115}
+  - component: {fileID: 2874051975351781368}
+  - component: {fileID: 1141613620955628417}
+  m_Layer: 3
   m_Name: DummyPuppet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -106,6 +110,80 @@ Animator:
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &6759704540052368778
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748381368748245377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1ff4d6f743c9f9549b02d498b6eb60a6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerteam: 0
+  throwSpeed: 0
+  originalRunSpeed: 0
+  runSpeed: 0
+  ballScoreInitial: 0
+  ballScoreAdd: 0
+  ballSpeedAdd: 0
+  ballCatchTimer: 0
+  ballTakeRange: 0
+  ball: {fileID: 0}
+  isAiming: 0
+  timeDelay: 0.1
+--- !u!114 &4975152431852153115
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748381368748245377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83aa93da5e8be6a4fbbe4ccfa7984baf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  objectToDelete: {fileID: 0}
+--- !u!70 &2874051975351781368
+CapsuleCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748381368748245377}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: 0, y: 0}
+  m_Size: {x: 1, y: 1}
+  m_Direction: 0
+--- !u!50 &1141613620955628417
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748381368748245377}
+  m_BodyType: 0
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 7
 --- !u!1 &8748381369098941222
 GameObject:
   m_ObjectHideFlags: 0
@@ -116,7 +194,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8748381369098941223}
   - component: {fileID: 8748381369098941240}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Pivot
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -169,7 +247,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8748381370364247221}
   - component: {fileID: 8748381370364247222}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: DummyPuppet_1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -211,7 +289,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -231,7 +309,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1790865707
   m_SortingLayer: 2
-  m_SortingOrder: 0
+  m_SortingOrder: -1
   m_Sprite: {fileID: 561773481, guid: 2a086d02d0365184ea5abcdb35775b6a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0

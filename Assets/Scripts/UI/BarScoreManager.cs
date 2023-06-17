@@ -20,6 +20,8 @@ public class BarScoreManager : MonoBehaviour
 
     public static void addscore(bool forPlayerTeam, float amount)
     {
+        if (playerTeamBar == null)
+            return;
         if (forPlayerTeam)
             playerTeamBar.value += amount;
         else

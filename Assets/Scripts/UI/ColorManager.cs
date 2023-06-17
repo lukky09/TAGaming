@@ -14,6 +14,8 @@ public class ColorManager : MonoBehaviour
 
     private void Awake()
     {
+        if (listWarna.Length == 0)
+            return;
         if (listWarna[0] == null)
             initializeColors();
         List<string> colors = new List<string>();

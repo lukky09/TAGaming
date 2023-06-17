@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class SnowBrawler : MonoBehaviour
 {
@@ -62,12 +61,12 @@ public class SnowBrawler : MonoBehaviour
         //update posisi sebelumnya target untuk prediksi
         if (currentTimeDelay <= 0)
         {
-            //animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
+            animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
             lastpos = transform.position;
             currentTimeDelay = timeDelay;
         }
-        //animator.SetBool("IsAiming", isAiming);
-        //animator.SetFloat("catchTimer", currentBallCatchTimer);
+        animator.SetBool("IsAiming", isAiming);
+        animator.SetFloat("catchTimer", currentBallCatchTimer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

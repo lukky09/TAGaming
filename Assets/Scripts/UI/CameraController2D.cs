@@ -10,14 +10,13 @@ public class CameraController2D : MonoBehaviour
     [SerializeField] bool freeFollow;
 
     //Tilemap FloorTilemapReference;
-    float[] tilesize; // width, height
+    float[] camSize; // width, height
     Transform followedObjetTransform;
     // Start is called before the first frame update
     void Start()
     {
-        //FloorTilemapReference = FloorTilemapObject.GetComponent<Tilemap>();
-        tilesize = new float[2] { 0, Camera.main.orthographicSize };
-        tilesize[0] = tilesize[1] * Camera.main.aspect;
+        camSize = new float[2] { 0, Camera.main.orthographicSize };
+        camSize[0] = camSize[1] * Camera.main.aspect;
         followedObjetTransform = ObjectToFollow.transform;
     }
 
@@ -33,8 +32,8 @@ public class CameraController2D : MonoBehaviour
         if (!freeFollow)
         {
             //ini harus ada ukuran levelnya biar g glitchy
-            float x = Mathf.Clamp(followedObjetTransform.position.x, tilesize[0], SetObjects.getWidth() + 2 - tilesize[0]);
-            float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() - 2 + tilesize[1] + 1, -tilesize[1] + 1);
+            float x = Mathf.Clamp(followedObjetTransform.position.x, camSize[0], SetObjects.getWidth() + 2 - camSize[0]);
+            float y = Mathf.Clamp(followedObjetTransform.position.y, -SetObjects.getHeight() - 2 + camSize[1] + 1, -camSize[1] + 1);
             transform.position = new Vector3(x, y, -10);
         }
         else

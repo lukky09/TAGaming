@@ -28,6 +28,7 @@ public class BallMovement : MonoBehaviour
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore = ballScore;
         this.currentCollider = you;
+        if (you != null)
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
         this.thrower = thrower;
         thisRigid.rotation = - Vector2.SignedAngle(direction, Vector2.right);
