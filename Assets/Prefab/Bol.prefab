@@ -157,6 +157,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   ballReference: {fileID: 0}
   pierceScoreAdd: 5
+  normalBallSprite: {fileID: 1186420128, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
   explosionDelay: 1
   explosionRadius: 2
   movementSpeedSlow: 0.5

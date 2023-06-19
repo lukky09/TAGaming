@@ -6,7 +6,6 @@ using UnityEngine.UIElements;
 
 public class BallPowerUp : MonoBehaviour
 {
-    [SerializeField] GameObject ballReference;
     [SerializeField] int pierceScoreAdd;
     [SerializeField] Sprite normalBallSprite;
     [SerializeField] float explosionDelay;
@@ -60,7 +59,7 @@ public class BallPowerUp : MonoBehaviour
                 break;
             //Tembok?
             case 5:
-                Vector2 backPos = (Vector2)transform.position + bmRef.getDirection() * 1.1f;
+                Vector2 backPos = (Vector2)transform.position + bmRef.getDirection() * 2f;
                 float angle = Vector2.SignedAngle((Vector2)transform.position, backPos);
                 float dist = Mathf.Sqrt(1 + Mathf.Pow(Mathf.Sin(Mathf.Deg2Rad * angle * 2), 2));
                 backPos = (Vector2)transform.position + bmRef.getDirection() *  dist * 1.1f;

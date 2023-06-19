@@ -11,8 +11,9 @@ public class PowerUp : MonoBehaviour
     [SerializeField] int ValueRange;
     [SerializeField] bool randomPowerup;
     [SerializeField] Sprite[] powerUpSprites;
+    [SerializeField] ColorManager colManager;
 
-    ColorManager colManager;
+
     int powerUpValue;
     float currentSpawnTime; 
     GameObject ball;
@@ -20,7 +21,7 @@ public class PowerUp : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if (PlayerPrefs.HasKey("DD0"))
+        if (PlayerPrefs.HasKey("DD0") && colManager!=null)
             materialColor = colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor();
         if (startingValue > ValueRange || startingValue < 0 || randomPowerup)
             powerUpValue = Random.Range(1, startingValue + 1);

@@ -13,8 +13,8 @@ GameObject:
   - component: {fileID: 8748381368748245380}
   - component: {fileID: 6759704540052368778}
   - component: {fileID: 4975152431852153115}
-  - component: {fileID: 2874051975351781368}
   - component: {fileID: 1141613620955628417}
+  - component: {fileID: 9146532609620643559}
   m_Layer: 3
   m_Name: DummyPuppet
   m_TagString: Untagged
@@ -147,22 +147,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   objectToDelete: {fileID: 0}
---- !u!70 &2874051975351781368
-CapsuleCollider2D:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8748381368748245377}
-  m_Enabled: 1
-  m_Density: 1
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_UsedByEffector: 0
-  m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 1, y: 1}
-  m_Direction: 0
 --- !u!50 &1141613620955628417
 Rigidbody2D:
   serializedVersion: 4
@@ -184,6 +168,32 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 7
+--- !u!61 &9146532609620643559
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8748381368748245377}
+  m_Enabled: 1
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_UsedByEffector: 0
+  m_UsedByComposite: 0
+  m_Offset: {x: -0.0027720332, y: 0.07900086}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0.5, y: 0.5}
+    oldSize: {x: 1, y: 1}
+    newSize: {x: 1, y: 1}
+    adaptiveTilingThreshold: 0.5
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  serializedVersion: 2
+  m_Size: {x: 0.31255424, y: 0.6535054}
+  m_EdgeRadius: 0
 --- !u!1 &8748381369098941222
 GameObject:
   m_ObjectHideFlags: 0

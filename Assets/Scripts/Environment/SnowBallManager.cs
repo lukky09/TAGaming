@@ -16,13 +16,15 @@ public class SnowBallManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        snowball.GetComponent<SpriteRenderer>().sharedMaterial.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
+       
         snowballs = new List<GameObject>();
         foreach (Transform ballz in snowballscontainer.transform)
         {
             snowballs.Add(ballz.gameObject);
         }
         currentrespawnTimer = respawnTime;
+        if (colManager != null)
+        snowball.GetComponent<SpriteRenderer>().sharedMaterial.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
     }
 
     public static void destroyball(int index)
