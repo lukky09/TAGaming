@@ -8,6 +8,7 @@ public class TutorialTrigger : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        MainMenuNavigation.nextScene();
+        if(collision.CompareTag("Player"))
+            MainMenuNavigation.nextScene();
     }
 }
