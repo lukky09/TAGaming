@@ -22,10 +22,16 @@ public class TurretShoot : MonoBehaviour
         if (shootTimer <= 0)
         {
             shootTimer = shootDelay;
-            GameObject tempBall = Instantiate(snowBall, transform.position, Quaternion.identity);
-            tempBall.GetComponent<BallMovement>().initialize(10,Vector3.Normalize(direction),false,1,null,gameObject);
+            GetComponent<Animator>().Play("Base Layer.TurretShoot");
         }
         shootTimer -= Time.deltaTime;
         
+    }
+
+    public void createBall()
+    {
+        GameObject tempBall = Instantiate(snowBall, transform.position, Quaternion.identity);
+        tempBall.GetComponent<BallMovement>().initialize(10, Vector3.Normalize(direction), false, 1, null, gameObject);
+        tempBall.GetComponent<ColorTaker>().id = 2;
     }
 }

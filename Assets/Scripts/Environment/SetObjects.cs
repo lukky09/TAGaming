@@ -111,7 +111,6 @@ public class SetObjects : MonoBehaviour
                 {
                     temp = Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
                     temp.transform.SetParent(powerUpContainer.transform);
-                    temp.GetComponent<PowerUp>().setColorManager(colManager);
                 }
                 else if (stageUnfolded[i, j] == 3)
                 {

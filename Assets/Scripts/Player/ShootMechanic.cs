@@ -49,16 +49,19 @@ public class ShootMechanic : SnowBrawler
         }
         if (isAiming)
         {
-            Vector3 pos = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
-            float x = pos.x - transform.position.x;
+            Vector3 throwDir = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
+            float x = throwDir.x;
             transform.localScale = new Vector3(Mathf.RoundToInt(x / Mathf.Abs(x)), 1, 1);
             if (transform.localScale.x == -1)
-                pos = Vector3.Reflect(pos, Vector3.right);
+                throwDir = Vector3.Reflect(throwDir, Vector3.right);
             currentAimTime -= Time.deltaTime;
             currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
-            linemanager.SetPosition(0, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * pos * 20);
+            linemanager.SetPosition(0, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * throwDir * 20);
             linemanager.SetPosition(1, Vector3.zero);
-            linemanager.SetPosition(2, Quaternion.Euler(0, 0, currentaimangle / 2) * pos * 20);
+            linemanager.SetPosition(2, Quaternion.Euler(0, 0, currentaimangle / 2) * throwDir * 20);
+            //transform.localScale = new Vector3(Mathf.CeilToInt(pos.x), 1, 1);
+            //if (transform.localScale.x == -1)
+            //    pos = Vector3.Reflect(pos, Vector3.right);
         }
     }
 

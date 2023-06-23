@@ -11,6 +11,8 @@ GameObject:
   - component: {fileID: 3552861968279902760}
   - component: {fileID: 7769193099027100442}
   - component: {fileID: 852703444006231310}
+  - component: {fileID: 4838665558242772188}
+  - component: {fileID: 2052529986319884854}
   m_Layer: 0
   m_Name: Turret
   m_TagString: Untagged
@@ -100,3 +102,36 @@ MonoBehaviour:
   direction: {x: -1, y: 0}
   snowBall: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   shootDelay: 2
+--- !u!95 &4838665558242772188
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3045640123323006113}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: c0fea790e7db37c4ea523707a421e8df, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
+--- !u!114 &2052529986319884854
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3045640123323006113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2

@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 2757911232447730074}
   - component: {fileID: 7557719664042537779}
   - component: {fileID: 8281153577826895004}
+  - component: {fileID: -7552636650116446034}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: Player
@@ -237,3 +238,16 @@ MonoBehaviour:
   aimSpeedPercentage: 0
   debug: 0
   walkLocation: {x: 0, y: 0}
+--- !u!114 &-7552636650116446034
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8190896904697680640}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 2

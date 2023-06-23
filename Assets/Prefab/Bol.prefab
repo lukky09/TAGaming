@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1842336168261054960}
   - component: {fileID: 275797149061839128}
   - component: {fileID: 4140358004628356765}
+  - component: {fileID: 1072674215094427600}
   m_Layer: 6
   m_Name: Bol
   m_TagString: Projectile
@@ -56,7 +57,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 524289
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -155,7 +156,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 997961d072347e549905d223cff89f1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ballReference: {fileID: 0}
   pierceScoreAdd: 5
   normalBallSprite: {fileID: 1186420128, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
   explosionDelay: 1
@@ -164,3 +164,16 @@ MonoBehaviour:
   slowTime: 1
   splitBalls: 3
   splitRange: 90
+--- !u!114 &1072674215094427600
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1284263136227948241}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 0

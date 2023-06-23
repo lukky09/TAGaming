@@ -7,34 +7,22 @@ using UnityEngine.UI;
 
 public class ColorManager : MonoBehaviour
 {
-    public Warna[] listWarna = new Warna[5];
     public DropdownAuto[] dropdowns = new DropdownAuto[4];
     public int[] dropdownChoices = new int[4];
     public  Material shaderMaterial;
 
     private void Awake()
     {
-        if (listWarna.Length == 0)
-            return;
-        if (listWarna[0] == null)
-            initializeColors();
         List<string> colors = new List<string>();
-        foreach (Warna w in listWarna)
-            colors.Add(w.getName());
+        for (int i = 0; i < 5; i++)
+        {
+            colors.Add(pilihanWarna.getWarna(i).getName());
+        }
         foreach (DropdownAuto item in dropdowns)
         {
             item.setColorManager(this, colors);
         }
         register();
-    }
-
-    public void initializeColors()
-    {
-        listWarna[0] = new Warna("Red", Color.red);
-        listWarna[1] = new Warna("Green", Color.green);
-        listWarna[2] = new Warna("Blue", Color.blue);
-        listWarna[3] = new Warna("Black", Color.black);
-        listWarna[4] = new Warna("Purple", Color.magenta);
     }
 
     public static void mainGameDefault()
@@ -50,7 +38,6 @@ public class ColorManager : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("DD0"))
         {
-            Debug.Log("Ada");
             dropdownChoices[0] = PlayerPrefs.GetInt("DD0");
             dropdownChoices[1] = PlayerPrefs.GetInt("DD1");
             dropdownChoices[2] = PlayerPrefs.GetInt("DD2");
@@ -123,4 +110,20 @@ public class Warna{
         return color;
     }
 
+}
+
+public static class pilihanWarna
+{
+    public static Warna getWarna(int id)
+    {
+        switch (id)
+        {
+            case 0: return new Warna("Red", Color.red);
+            case 1: return new Warna("Green", Color.green);
+            case 2: return new Warna("Blue", Color.blue);
+            case 3: return new Warna("Black", Color.black);
+            case 4: return new Warna("Purple", Color.magenta);
+            default: return new Warna("White", Color.white);
+        }
+    }
 }

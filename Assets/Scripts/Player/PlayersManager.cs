@@ -14,10 +14,6 @@ public class PlayersManager : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] bool spawnPlayer;
     [SerializeField] GameObject playersContainer;
-    Color playerColor;
-    Color teamColor;
-    Color enemyColor;
-    ColorManager colManager;
 
     [SerializeField] GameObject levelCamera;
 
@@ -26,10 +22,6 @@ public class PlayersManager : MonoBehaviour
 
     private void Start()
     {
-        colManager = this.GetComponent<ColorManager>();
-        playerColor = colManager.listWarna[PlayerPrefs.GetInt("DD0")].getColor();
-        teamColor = colManager.listWarna[PlayerPrefs.GetInt("DD1")].getColor();
-        enemyColor = colManager.listWarna[PlayerPrefs.GetInt("DD2")].getColor();
         players = new GameObject[10];
         foreach (Transform item in playersContainer.transform)
         {
@@ -86,25 +78,22 @@ public class PlayersManager : MonoBehaviour
 
     public void makeNewPlayer(Coordinate c)
     {
-        Material m = new Material(material);
-        m.SetColor("_OutlineColor", playerColor);
         int i = getFirstNullPlayerIndex();
         players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
         levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i], false);
-        players[i].GetComponent<SpriteRenderer>().material = new Material(m);
         players[i].transform.SetParent(playersContainer.transform);
     }
 
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
     {
         Material m = new Material(material);
-        if (isPlayerTeam)
-            m.SetColor("_OutlineColor", teamColor);
-        else
-            m.SetColor("_OutlineColor", enemyColor);
+  
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
-        tempEnemyPrefab.GetComponent<SpriteRenderer>().material = new Material(m);
+        if (isPlayerTeam)
+            players[i].GetComponent<ColorTaker>().id = 1;
+        else
+            players[i].GetComponent<ColorTaker>().id = 2;
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
             if (accesibleAreas[j][c.yCoor,c.xCoor]) {

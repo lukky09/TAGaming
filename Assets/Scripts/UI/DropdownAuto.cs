@@ -36,7 +36,7 @@ public class DropdownAuto : MonoBehaviour
     {
         dd.value = index;
         Material m = new Material(colorManager.shaderMaterial);
-        m.SetColor("_OutlineColor", colorManager.listWarna[index].getColor());
+        m.SetColor("_OutlineColor", pilihanWarna.getWarna(index).getColor());
         coloredObject.GetComponent<SpriteRenderer>().material = m;
     }
 
@@ -44,7 +44,7 @@ public class DropdownAuto : MonoBehaviour
     {
         colorManager.updateChanges(ddindex, dd.value);
         Material m = new Material(colorManager.shaderMaterial);
-        m.SetColor("_OutlineColor", colorManager.listWarna[dd.value].getColor());
+        m.SetColor("_OutlineColor", pilihanWarna.getWarna(dd.value).getColor());
         coloredObject.GetComponent<SpriteRenderer>().material = m;
     }
 

@@ -23,8 +23,6 @@ public class SnowBallManager : MonoBehaviour
             snowballs.Add(ballz.gameObject);
         }
         currentrespawnTimer = respawnTime;
-        if (colManager != null)
-        snowball.GetComponent<SpriteRenderer>().sharedMaterial.SetColor("_OutlineColor", colManager.listWarna[PlayerPrefs.GetInt("DD3")].getColor());
     }
 
     public static void destroyball(int index)

@@ -146,6 +146,27 @@ TextureImporter:
       indices: 
       edges: []
       weights: []
+    - serializedVersion: 2
+      name: MouseClick_2
+      rect:
+        serializedVersion: 2
+        x: 32
+        y: 0
+        width: 16
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd478431c37994c4fbf5a8b6ff2a77c4
+      internalID: -1996125220
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
     outline: []
     physicsShape: []
     bones: []
@@ -158,6 +179,7 @@ TextureImporter:
     secondaryTextures: []
     nameFileIdTable:
       MouseClick_0: 467289566
+      MouseClick_2: -1996125220
       MouseClick_1: 1956649489
   spritePackingTag: 
   pSDRemoveMatte: 0

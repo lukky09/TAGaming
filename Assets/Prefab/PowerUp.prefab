@@ -141,6 +141,7 @@ GameObject:
   m_Component:
   - component: {fileID: 982465808770180949}
   - component: {fileID: 4864109067098877446}
+  - component: {fileID: 4142810255520831715}
   m_Layer: 0
   m_Name: Snowball
   m_TagString: Untagged
@@ -183,7 +184,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a97c105638bdf8b4a8650670310a4cd3, type: 2}
+  - {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -215,3 +216,16 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
+--- !u!114 &4142810255520831715
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8850936494231672364}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  id: 3
