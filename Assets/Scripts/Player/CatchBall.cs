@@ -14,9 +14,9 @@ public class CatchBall : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse1) && brawlerReference.getCatchTimer() < 0)
+        if (Input.GetKeyDown(KeyCode.Mouse1))
         {
-            brawlerReference.catchBall();
+            brawlerReference.tryCatch();
         }
         
     }

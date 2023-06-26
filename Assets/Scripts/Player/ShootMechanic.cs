@@ -4,20 +4,19 @@ using UnityEngine;
 
 public class ShootMechanic : SnowBrawler
 {
-    [SerializeField] GameObject line;
+    [SerializeField] GameObject line1;
+    [SerializeField] GameObject line2;
     [SerializeField] float aimAngle;
     [SerializeField] float aimTime;
     public float aimMovementSpeedPerc;
 
     private float currentaimangle;
     private float currentAimTime;
-    private LineRenderer linemanager;
 
     // Start is called before the first frame update
     void Start()
     {
         playerteam = true;
-        linemanager = line.GetComponent<LineRenderer>();
         currentAimTime = 0;
         isAiming = false;
         base.Start();
@@ -35,7 +34,8 @@ public class ShootMechanic : SnowBrawler
         {
             currentAimTime = aimTime;
             isAiming = true;
-            line.SetActive(true);
+            line1.SetActive(true);
+            line2.SetActive(true);
         }
         if (Input.GetMouseButtonUp(0) && isAiming)
         {
@@ -44,7 +44,8 @@ public class ShootMechanic : SnowBrawler
             direction = Quaternion.AngleAxis(Random.Range(-(currentaimangle / 2), currentaimangle / 2), Vector3.forward) * direction.normalized;
             shootBall(direction);
             isAiming = false;
-            line.SetActive(false);
+            line1.SetActive(false);
+            line2.SetActive(false);
             shartShooting();
         }
         if (isAiming)
@@ -56,12 +57,10 @@ public class ShootMechanic : SnowBrawler
                 throwDir = Vector3.Reflect(throwDir, Vector3.right);
             currentAimTime -= Time.deltaTime;
             currentaimangle = (currentAimTime < 0) ? 0 : (currentAimTime / aimTime) * aimAngle;
-            linemanager.SetPosition(0, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * throwDir * 20);
-            linemanager.SetPosition(1, Vector3.zero);
-            linemanager.SetPosition(2, Quaternion.Euler(0, 0, currentaimangle / 2) * throwDir * 20);
-            //transform.localScale = new Vector3(Mathf.CeilToInt(pos.x), 1, 1);
-            //if (transform.localScale.x == -1)
-            //    pos = Vector3.Reflect(pos, Vector3.right);
+            line1.GetComponent<LineRenderer>().SetPosition(0, Vector3.zero);
+            line1.GetComponent<LineRenderer>().SetPosition(1, Quaternion.Euler(0, 0, currentaimangle * -1 / 2) * throwDir * 20);
+            line2.GetComponent<LineRenderer>().SetPosition(0, Vector3.zero);
+            line2.GetComponent<LineRenderer>().SetPosition(1, Quaternion.Euler(0, 0, currentaimangle / 2) * throwDir * 20);
         }
     }
 

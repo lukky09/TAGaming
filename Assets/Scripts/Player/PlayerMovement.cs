@@ -36,8 +36,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (GetComponent<SnowBrawler>().getCatchTimer() < 0)
-            thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
+        thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
     }
 
 }

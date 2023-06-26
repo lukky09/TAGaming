@@ -5,7 +5,6 @@ using UnityEngine;
 public class SnowBrawler : MonoBehaviour
 {
     protected int ballAmount { get; set; }
-    protected float currentBallCatchTimer { get; set; }
     protected GameObject caughtBall { get; set; }
     protected int ballPowerId { get; set; }
 
@@ -20,6 +19,7 @@ public class SnowBrawler : MonoBehaviour
     public float ballTakeRange;
     public GameObject ball;
     public bool isAiming;
+    bool iscatching;
     Sprite ballSprite;
     Animator animator;
     bool canMove;
@@ -51,12 +51,10 @@ public class SnowBrawler : MonoBehaviour
         this.ballCatchTimer = ballCatchTimer;
         this.ballScoreAdd = ballScoreAdd;
         this.ballSpeedAdd = ballSpeedAdd;
-        currentBallCatchTimer = 0;
     }
 
     public void Update()
     {
-        currentBallCatchTimer -= Time.deltaTime;
         currentTimeDelay -= Time.deltaTime;
         //update posisi sebelumnya target untuk prediksi
         if (currentTimeDelay <= 0)
@@ -66,14 +64,13 @@ public class SnowBrawler : MonoBehaviour
             currentTimeDelay = timeDelay;
         }
         animator.SetBool("IsAiming", isAiming);
-        animator.SetFloat("catchTimer", currentBallCatchTimer);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.gameObject.tag == "Projectile")
         {
-            if (currentBallCatchTimer > 0)
+            if (iscatching)
             {
                 if (caughtBall != null)
                     Destroy(caughtBall);
@@ -134,11 +131,6 @@ public class SnowBrawler : MonoBehaviour
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
     }
 
-    public void catchBall()
-    {
-        currentBallCatchTimer = ballCatchTimer;
-    }
-
     public int getBallAmount()
     {
         return ballAmount + ((caughtBall == null) ? 0 : 1);
@@ -147,11 +139,6 @@ public class SnowBrawler : MonoBehaviour
     public bool getplayerteam()
     {
         return playerteam;
-    }
-
-    public float getCatchTimer()
-    {
-        return currentBallCatchTimer;
     }
 
     public GameObject getCaughtBall()
@@ -170,6 +157,16 @@ public class SnowBrawler : MonoBehaviour
         yield return new WaitForSeconds(seconds);
         runSpeed = originalRunSpeed;
     }
+    IEnumerator catchBall()
+    {
+        runSpeed = 0;
+        iscatching = true;
+        animator.SetBool("IsCatching", true);
+        yield return new WaitForSeconds(ballCatchTimer);
+        animator.SetBool("IsCatching", false);
+        runSpeed = originalRunSpeed;
+        iscatching = false;
+    }
 
     public void shartShooting()
     {
@@ -181,5 +178,11 @@ public class SnowBrawler : MonoBehaviour
     {
         runSpeed = originalRunSpeed;
         animator.SetBool("isShooting", false);
+    }
+
+    public void tryCatch()
+    {
+        if (!iscatching)
+            StartCoroutine(catchBall());
     }
 }
