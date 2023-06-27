@@ -3,9 +3,19 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using System;
 
 public class MainMenuNavigation : MonoBehaviour
 {
+    public static void mainMenuPressed()
+    {
+        if (PlayerPrefs.HasKey("DD0"))
+            ColorManager.mainGameDefault();
+        if (PlayerPrefs.HasKey("TutorialDone"))
+            SceneManager.LoadScene(1);
+        SceneManager.LoadScene(2);
+    }
+
     public static void lastScene()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
@@ -13,7 +23,7 @@ public class MainMenuNavigation : MonoBehaviour
 
     public static void changeSceneIndex(int index)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + index);
+        SceneManager.LoadScene(index);
     }
 
     public static void goToSettingScene()

@@ -27,6 +27,7 @@ public class DropdownAuto : MonoBehaviour
 
     public void setColorManager(ColorManager colorManager, List<string> colors)
     {
+        dd = GetComponent<TMP_Dropdown>();
         this.colorManager = colorManager;
         dd.ClearOptions();
         dd.AddOptions(colors);
