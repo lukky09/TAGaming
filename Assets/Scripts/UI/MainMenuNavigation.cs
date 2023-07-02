@@ -9,11 +9,13 @@ public class MainMenuNavigation : MonoBehaviour
 {
     public static void mainMenuPressed()
     {
-        if (PlayerPrefs.HasKey("DD0"))
+        if (!PlayerPrefs.HasKey("DD0"))
             ColorManager.mainGameDefault();
-        if (PlayerPrefs.HasKey("TutorialDone"))
+        if (!PlayerPrefs.HasKey("TutorialDone")) {
+            TutorialTrigger.mandatoryTutorial = true;
             SceneManager.LoadScene(1);
-        SceneManager.LoadScene(2);
+        }
+        SceneManager.LoadScene(3);
     }
 
     public static void lastScene()
@@ -28,7 +30,7 @@ public class MainMenuNavigation : MonoBehaviour
 
     public static void goToSettingScene()
     {
-        SceneManager.LoadScene("LevelSettingUser");
+        SceneManager.LoadScene("SettingsMenu");
     }
 
     public static void nextScene()

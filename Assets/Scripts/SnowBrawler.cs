@@ -153,8 +153,10 @@ public class SnowBrawler : MonoBehaviour
 
     IEnumerator slowDownNumerator(float slowPower,float seconds)
     {
+        GetComponent<SpriteRenderer>().color = new Color(11 / 255, 211 / 255, 1);
         runSpeed = originalRunSpeed * slowPower;
         yield return new WaitForSeconds(seconds);
+        GetComponent<SpriteRenderer>().color = Color.white;
         runSpeed = originalRunSpeed;
     }
     IEnumerator catchBall()
