@@ -26,6 +26,11 @@ public class ShootMechanic : SnowBrawler
     void Update()
     {
         base.Update();
+        if (!canAct)
+        {
+            isAiming = false;
+            return;
+        }
         if (Input.GetKeyDown(KeyCode.E))
         {
             getBall();

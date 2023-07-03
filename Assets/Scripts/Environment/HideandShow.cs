@@ -9,7 +9,6 @@ public class HideandShow : MonoBehaviour
 
     private void OnDestroy()
     {
-        Debug.Log("Huh");
         if (itemToDisable != null)
         itemToDisable.SetActive(false);
         if (itemToEnable != null)

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SnowBrawler : MonoBehaviour
@@ -8,6 +9,7 @@ public class SnowBrawler : MonoBehaviour
     protected GameObject caughtBall { get; set; }
     protected int ballPowerId { get; set; }
 
+    [SerializeField] GameObject displayedBall;
     public bool playerteam;
     public float throwSpeed;
     public float originalRunSpeed;
@@ -22,7 +24,7 @@ public class SnowBrawler : MonoBehaviour
     bool iscatching;
     Sprite ballSprite;
     Animator animator;
-    bool canMove;
+    public bool canAct;
 
     Vector2 lastpos;
     public float timeDelay = 0.1f;
@@ -32,11 +34,11 @@ public class SnowBrawler : MonoBehaviour
     {
         animator = GetComponent<Animator>();
         isAiming = false;
-        canMove = true;
+        canAct = true;
         runSpeed = originalRunSpeed;
     }
 
-    public void initializeBrawler(bool playerteam, float throwSpeed,float runSpeed,int ballScoreAdd, float ballSpeedAdd,float ballCatchTimer,float ballTakeRange)
+    public void initializeBrawler(bool playerteam, float throwSpeed, float runSpeed, int ballScoreAdd, float ballSpeedAdd, float ballCatchTimer, float ballTakeRange)
     {
         this.ballTakeRange = ballTakeRange;
         this.runSpeed = runSpeed;
@@ -59,11 +61,12 @@ public class SnowBrawler : MonoBehaviour
         //update posisi sebelumnya target untuk prediksi
         if (currentTimeDelay <= 0)
         {
-            animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos,transform.position));
+            animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos, transform.position));
             lastpos = transform.position;
             currentTimeDelay = timeDelay;
         }
         animator.SetBool("IsAiming", isAiming);
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -77,6 +80,7 @@ public class SnowBrawler : MonoBehaviour
                 caughtBall = collision.gameObject;
                 caughtBall.SetActive(false);
                 caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>());
+                updateHoldedBallVisuals();
             }
             else
             {
@@ -84,6 +88,7 @@ public class SnowBrawler : MonoBehaviour
                 if (bol.getPlayerTeam() != playerteam)
                     BarScoreManager.addscore(bol.getPlayerTeam(), bol.getBallScore());
                 bol.trySelfDestruct(gameObject);
+                StartCoroutine(getHitNumerator(0.5f));
             }
         }
     }
@@ -91,13 +96,18 @@ public class SnowBrawler : MonoBehaviour
     public void getBall()
     {
         int ballindex = SnowBallManager.getNearestBallIndex(transform);
-        if (ballindex>= 0 && SnowBallManager.getBallfromIndex(ballindex).GetComponent<PowerUp>())
+        if (ballindex < 0)
+            return;
+        if (SnowBallManager.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
-            (ballSprite,ballPowerId) = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
+            (ballSprite, ballPowerId) = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
             if (ballPowerId > 0)
+            {
+                displayedBall.GetComponent<SpriteRenderer>().sprite = ballSprite;
                 ballAmount = 1;
+            }
         }
-        else if (ballindex >= 0)
+        else
         {
             int deletedIndex = SnowBallManager.getNearestBallIndex(transform, ballTakeRange);
             if (deletedIndex >= 0)
@@ -105,8 +115,10 @@ public class SnowBrawler : MonoBehaviour
                 ballPowerId = 0;
                 SnowBallManager.deleteclosestball(transform, ballTakeRange);
                 ballAmount = 3;
+                ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
             }
         }
+        updateHoldedBallVisuals();
     }
 
     public void shootBall(Vector2 direction)
@@ -129,6 +141,7 @@ public class SnowBrawler : MonoBehaviour
                 ballin.GetComponent<SpriteRenderer>().sprite = ballSprite;
         }
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
+        updateHoldedBallVisuals();
     }
 
     public int getBallAmount()
@@ -151,7 +164,7 @@ public class SnowBrawler : MonoBehaviour
         StartCoroutine(slowDownNumerator(movementSpeedSlow, slowTime));
     }
 
-    IEnumerator slowDownNumerator(float slowPower,float seconds)
+    IEnumerator slowDownNumerator(float slowPower, float seconds)
     {
         GetComponent<SpriteRenderer>().color = new Color(11 / 255, 211 / 255, 1);
         runSpeed = originalRunSpeed * slowPower;
@@ -159,6 +172,18 @@ public class SnowBrawler : MonoBehaviour
         GetComponent<SpriteRenderer>().color = Color.white;
         runSpeed = originalRunSpeed;
     }
+
+    IEnumerator getHitNumerator(float seconds)
+    {
+        runSpeed = originalRunSpeed;
+        canAct = false;
+        animator.SetBool("IsHit", true);
+        yield return new WaitForSeconds(seconds);
+        canAct = true;
+        animator.SetBool("IsHit", false);
+        runSpeed = originalRunSpeed;
+    }
+
     IEnumerator catchBall()
     {
         runSpeed = 0;
@@ -172,13 +197,16 @@ public class SnowBrawler : MonoBehaviour
 
     public void shartShooting()
     {
-        animator.SetBool("isShooting",true);
+        animator.SetBool("isShooting", true);
+        canAct = false;
         runSpeed = 0;
     }
 
     public void stopShooting()
     {
         runSpeed = originalRunSpeed;
+        canAct = true;
+        updateHoldedBallVisuals();
         animator.SetBool("isShooting", false);
     }
 
@@ -186,5 +214,23 @@ public class SnowBrawler : MonoBehaviour
     {
         if (!iscatching)
             StartCoroutine(catchBall());
+    }
+
+    void updateHoldedBallVisuals()
+    {
+        if (caughtBall == null && ballAmount == 0)
+        {
+            displayedBall.SetActive(false);
+            return;
+        }
+        GetComponent<Animator>().enabled = false;
+        displayedBall.SetActive(true);
+        GetComponent<Animator>().enabled = true;
+        if (caughtBall != null)
+        {
+            displayedBall.GetComponent<SpriteRenderer>().sprite = caughtBall.GetComponent<SpriteRenderer>().sprite;
+            return;
+        }
+        displayedBall.GetComponent<SpriteRenderer>().sprite = ballSprite;
     }
 }

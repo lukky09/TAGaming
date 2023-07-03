@@ -129,8 +129,8 @@ TextureImporter:
       name: CharacterSheet_1
       rect:
         serializedVersion: 2
-        x: 0
-        y: 96
+        x: 32
+        y: 128
         width: 32
         height: 32
       alignment: 0
@@ -150,7 +150,7 @@ TextureImporter:
       name: CharacterSheet_2
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 96
         width: 32
         height: 32
@@ -171,7 +171,7 @@ TextureImporter:
       name: CharacterSheet_3
       rect:
         serializedVersion: 2
-        x: 64
+        x: 32
         y: 96
         width: 32
         height: 32
@@ -192,7 +192,7 @@ TextureImporter:
       name: CharacterSheet_4
       rect:
         serializedVersion: 2
-        x: 96
+        x: 64
         y: 96
         width: 32
         height: 32
@@ -213,8 +213,8 @@ TextureImporter:
       name: CharacterSheet_5
       rect:
         serializedVersion: 2
-        x: 0
-        y: 64
+        x: 96
+        y: 96
         width: 32
         height: 32
       alignment: 0
@@ -234,7 +234,7 @@ TextureImporter:
       name: CharacterSheet_6
       rect:
         serializedVersion: 2
-        x: 32
+        x: 0
         y: 64
         width: 32
         height: 32
@@ -255,7 +255,7 @@ TextureImporter:
       name: CharacterSheet_7
       rect:
         serializedVersion: 2
-        x: 64
+        x: 32
         y: 64
         width: 32
         height: 32
@@ -276,7 +276,7 @@ TextureImporter:
       name: CharacterSheet_8
       rect:
         serializedVersion: 2
-        x: 96
+        x: 64
         y: 64
         width: 32
         height: 32
@@ -297,7 +297,7 @@ TextureImporter:
       name: CharacterSheet_9
       rect:
         serializedVersion: 2
-        x: 128
+        x: 96
         y: 64
         width: 32
         height: 32
@@ -310,6 +310,27 @@ TextureImporter:
       bones: []
       spriteID: 0ce4bbde1852f0f4aa5eba8c17a929b3
       internalID: -1686131510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: CharacterSheet_10
+      rect:
+        serializedVersion: 2
+        x: 128
+        y: 64
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 7b5d21ee00ce3814ea9534d4296afa29
+      internalID: 1732328447
       vertices: []
       indices: 
       edges: []
@@ -333,6 +354,7 @@ TextureImporter:
       CharacterSheet_7: 1978862748
       CharacterSheet_6: 297102730
       CharacterSheet_9: -1686131510
+      CharacterSheet_10: 1732328447
       CharacterSheet_2: -356991546
       CharacterSheet_5: 1504793395
   spritePackingTag: 

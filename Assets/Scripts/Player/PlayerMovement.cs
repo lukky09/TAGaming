@@ -23,6 +23,11 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!SBReference.canAct)
+        {
+            moveDirection = new Vector2(0, 0);
+            return;
+        }
         float diagonalCheck = Mathf.Sqrt(Mathf.Pow(Input.GetAxisRaw("Horizontal"), 2) + Mathf.Pow(Input.GetAxisRaw("Vertical"), 2));
         moveDirection.x = Input.GetAxisRaw("Horizontal") * SBReference.runSpeed ;
         moveDirection.y = Input.GetAxisRaw("Vertical") * SBReference.runSpeed;
