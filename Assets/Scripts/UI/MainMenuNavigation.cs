@@ -13,6 +13,7 @@ public class MainMenuNavigation : MonoBehaviour
             ColorManager.mainGameDefault();
         if (!PlayerPrefs.HasKey("TutorialDone")) {
             TutorialTrigger.mandatoryTutorial = true;
+            Debug.Log("Harus Tutorial");
             SceneManager.LoadScene(1);
         }
         SceneManager.LoadScene(3);

@@ -29,6 +29,8 @@ public class ShootMechanic : SnowBrawler
         if (!canAct)
         {
             isAiming = false;
+            line1.SetActive(false);
+            line2.SetActive(false);
             return;
         }
         if (Input.GetKeyDown(KeyCode.E))

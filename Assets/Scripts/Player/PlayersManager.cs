@@ -90,10 +90,6 @@ public class PlayersManager : MonoBehaviour
   
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
-        if (isPlayerTeam)
-            players[i].GetComponent<ColorTaker>().id = 1;
-        else
-            players[i].GetComponent<ColorTaker>().id = 2;
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
             if (accesibleAreas[j][c.yCoor,c.xCoor]) {
