@@ -10,6 +10,8 @@ public class BarScoreManager : MonoBehaviour
 {
     static protected Slider playerTeamBar;
     static protected Slider enemyTeamBar;
+    static protected TextMeshProUGUI textLeft;
+    static protected TextMeshProUGUI textRight;
     [SerializeField] int maxScore;
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] float fightLength;
@@ -20,17 +22,21 @@ public class BarScoreManager : MonoBehaviour
     void Start()
     {
         playerTeamBar = transform.GetChild(1).GetComponent<Slider>();
+        textLeft = transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>();
         enemyTeamBar = transform.GetChild(2).GetComponent<Slider>();
+        textRight = transform.GetChild(2).GetChild(2).GetComponent<TextMeshProUGUI>();
         playerTeamBar.maxValue = maxScore;
         enemyTeamBar.maxValue = maxScore;
         playerTeamBar.value = 0;
         enemyTeamBar.value = 0;
+        textLeft.text = "0";
+        textRight.text = "0";
     }
 
     private void Update()
     {
         fightLength -= Time.deltaTime;
-        timerText.text = Mathf.CeilToInt(fightLength).ToString();
+        timerText.text = Mathf.CeilToInt(fightLength).ToString().PadLeft(3,'0');
         if ((fightLength <= 0|| playerTeamBar.value>= maxScore || enemyTeamBar.value>= maxScore) && itemToAnimate !=null)
             StartCoroutine(victoryAnimation());
     }
@@ -43,6 +49,13 @@ public class BarScoreManager : MonoBehaviour
             playerTeamBar.value += amount;
         else
             enemyTeamBar.value += amount;
+        updateScoreText();
+    }
+
+    static void updateScoreText()
+    {
+        textLeft.text = playerTeamBar.value.ToString();
+        textRight.text = enemyTeamBar.value.ToString();
     }
 
     IEnumerator victoryAnimation()
