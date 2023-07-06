@@ -269,7 +269,6 @@ GameObject:
   - component: {fileID: 69075705}
   - component: {fileID: 69075704}
   - component: {fileID: 69075706}
-  - component: {fileID: 69075707}
   m_Layer: 6
   m_Name: LevelGrid
   m_TagString: Untagged
@@ -325,25 +324,6 @@ MonoBehaviour:
   spawnPlayer: 1
   playersContainer: {fileID: 2075824792}
   levelCamera: {fileID: 519420028}
---- !u!114 &69075707
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 69075703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e39beb2e5cbdd88478bcebbabe2fb3ec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dropdowns:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  dropdownChoices: 00000000000000000000000000000000
-  shaderMaterial: {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
 --- !u!1 &169458152
 GameObject:
   m_ObjectHideFlags: 0
@@ -1313,7 +1293,7 @@ MonoBehaviour:
   powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
   playerManagerReference: {fileID: 69075703}
   only1BotActive: 1
-  colManager: {fileID: 69075707}
+  colManager: {fileID: 0}
 --- !u!114 &728283040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1330,7 +1310,7 @@ MonoBehaviour:
   snowball: {fileID: 8116715311126598154, guid: 61af0f86775c2284082ff6188235a03a, type: 3}
   respawnTime: 3
   respawnAmount: 3
-  colManager: {fileID: 69075707}
+  colManager: {fileID: 0}
 --- !u!1 &954215225
 GameObject:
   m_ObjectHideFlags: 0

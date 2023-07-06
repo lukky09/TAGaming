@@ -27,25 +27,24 @@ public class PlayersManager : MonoBehaviour
         {
             players[getFirstNullPlayerIndex()] = item.gameObject;
         }
-
         if (SetObjects.getMap(false) != null)
         {
             Queue<Coordinate> q = new Queue<Coordinate>();
-            Coordinate c,tempCoor;
+            Coordinate c, tempCoor;
             accesibleAreas = new List<bool[,]>();
             areaCorners = new List<int[]>();
             int[,] currmap = SetObjects.getMap(false);
             int[] coors;
-            bool[,] isChecked = new bool[currmap.GetLength(0), currmap.GetLength(1)],map;
+            bool[,] isChecked = new bool[currmap.GetLength(0), currmap.GetLength(1)], map;
             for (int i = 0; i < currmap.GetLength(0); i++)
             {
                 for (int j = 0; j < currmap.GetLength(1); j++)
                 {
-                    if (!isChecked[i,j] && currmap[i,j] != 1)
+                    if (!isChecked[i, j] && currmap[i, j] != 1)
                     {
-                        coors = new int[4] { j,i,-1,-1}; // x1,y1 (kiri atas),x2,y2 (kanan bawah)
+                        coors = new int[4] { j, i, -1, -1 }; // x1,y1 (kiri atas),x2,y2 (kanan bawah)
                         map = new bool[currmap.GetLength(0), currmap.GetLength(1)];
-                        isChecked[i,j] = true;
+                        isChecked[i, j] = true;
                         map[i, j] = true;
                         q.Enqueue(new Coordinate(j, i));
                         while (q.Count > 0)
@@ -86,14 +85,13 @@ public class PlayersManager : MonoBehaviour
 
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
     {
-        Material m = new Material(material);
-  
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
-            if (accesibleAreas[j][c.yCoor,c.xCoor]) {
-                tempEnemyPrefab.GetComponent<BotActions>().setMapSegmentID(j+1, this);
+            if (accesibleAreas[j][c.yCoor, c.xCoor])
+            {
+                tempEnemyPrefab.GetComponent<BotActions>().setMapSegmentID(j + 1, this);
                 break;
             }
         }
@@ -103,7 +101,7 @@ public class PlayersManager : MonoBehaviour
         players[i].transform.SetParent(playersContainer.transform);
     }
 
-    public GameObject getnearestPlayer(Transform player,bool includeCollision)
+    public GameObject getnearestPlayer(Transform player, bool includeCollision)
     {
         float closestrange = 999, range;
         int i = 0, index = -1;
@@ -138,7 +136,7 @@ public class PlayersManager : MonoBehaviour
         Coordinate tempCoor;
         do
         {
-            tempCoor = new Coordinate(Random.Range(currAreaCorners[0], currAreaCorners[2]+1), Random.Range(currAreaCorners[1], currAreaCorners[3]+1));
+            tempCoor = new Coordinate(Random.Range(currAreaCorners[0], currAreaCorners[2] + 1), Random.Range(currAreaCorners[1], currAreaCorners[3] + 1));
         } while (!currAccesibleAreaa[tempCoor.yCoor, tempCoor.xCoor]);
         return tempCoor;
     }

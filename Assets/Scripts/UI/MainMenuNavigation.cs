@@ -7,6 +7,8 @@ using System;
 
 public class MainMenuNavigation : MonoBehaviour
 {
+    public static bool isTemplate;
+
     public static void mainMenuPressed()
     {
         if (!PlayerPrefs.HasKey("DD0"))
@@ -15,6 +17,7 @@ public class MainMenuNavigation : MonoBehaviour
             TutorialTrigger.mandatoryTutorial = true;
             Debug.Log("Harus Tutorial");
             SceneManager.LoadScene(1);
+            return;
         }
         SceneManager.LoadScene(3);
     }
@@ -62,6 +65,11 @@ public class MainMenuNavigation : MonoBehaviour
         {
             gameObject.GetComponent<TMP_InputField>().text = (intinput - 1).ToString();
         }
+    }
+
+    public void changeTemplate(bool currValue)
+    {
+        isTemplate = currValue;
     }
 
     

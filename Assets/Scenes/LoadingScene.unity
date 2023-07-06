@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   useMirrorFitness: 1
+  useTemplatedGeneration: 1
   includeWallFitness: 0
   PanjangWallWeight: 1
   PanjangWallVertikalAmt: 0
@@ -287,10 +288,10 @@ MonoBehaviour:
   includePURatioFitness: 0
   PURatioAmt: 0.05
   PURatioWeight: 1
-  StagnationTerminationAmt: 50
+  StagnationTerminationAmt: 100
   maxRockFitness: 1
-  maxRockRatio: 0.05
-  maxRockWeight: 100
+  maxRockRatio: 0.1
+  maxRockWeight: 1
 --- !u!1 &665380111
 GameObject:
   m_ObjectHideFlags: 0

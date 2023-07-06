@@ -31,8 +31,20 @@ public class SetObjects : MonoBehaviour
 
     public static void setMap(int[,] stagearray, bool isFolded)
     {
+        //mapFolded itu asumsikan di kiri
         if (isFolded)
+        {
             stageFolded = stagearray;
+            stageUnfolded = new int[height - 2, width - 2];
+            for (int i = 0; i < height - 2; i++)
+            {
+                for (int j = 0; j < (int)((width - 2) / 2); j++)
+                {
+                    stageUnfolded[i, j] = stageFolded[i, j];
+                    stageUnfolded[i, width - 3 - j] = stageFolded[i, j];
+                }
+            }
+        }
         else
         {
             stageUnfolded = stagearray;
@@ -68,19 +80,6 @@ public class SetObjects : MonoBehaviour
     void Start()
     {
         mapTilemap = this.GetComponent<Tilemap>();
-        //mapFolded itu asumsikan di kiri
-        if (stageFolded != null)
-        {
-            stageUnfolded = new int[height - 2, width - 2];
-            for (int i = 0; i < height - 2; i++)
-            {
-                for (int j = 0; j < (int)((width - 2) / 2); j++)
-                {
-                    stageUnfolded[i, j] = stageFolded[i, j];
-                    stageUnfolded[i, width - 3 - j] = stageFolded[i, j];
-                }
-            }
-        }
         fillMap();
     }
 
