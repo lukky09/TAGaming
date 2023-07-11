@@ -82,6 +82,10 @@ public class BallMovement : MonoBehaviour
     private void FixedUpdate()
     {
         thisRigid.MovePosition((Vector2)this.transform.position + direction * Time.deltaTime * speed);
+        if (powerupId != 2)
+            return;
+        Vector3 Rotation = new Vector3(0, 0, Time.deltaTime * speed);
+        transform.Rotate(Rotation * 25);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)

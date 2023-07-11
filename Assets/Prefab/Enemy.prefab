@@ -103,7 +103,7 @@ GameObject:
   - component: {fileID: 989328970205459513}
   - component: {fileID: 307614600252962186}
   m_Layer: 3
-  m_Name: Enemy1
+  m_Name: Enemy
   m_TagString: EnemyTeam
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -278,7 +278,8 @@ MonoBehaviour:
       UnityEngine.Physics2DModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"CatchChance","value":{"$content":100,"$type":"System.Int32"},"typeHandle":{"Identification":"System.Int32,
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"CaughtSnowball","value":null,"typeHandle":{"Identification":"UnityEngine.GameObject,
       UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"PlayerTarget","value":null,"typeHandle":{"Identification":"UnityEngine.GameObject,
-      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
+      UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null","$version":"A"},"$version":"A"},{"name":"WantToShoot","value":{"$content":false,"$type":"System.Boolean"},"typeHandle":{"Identification":"System.Boolean,
+      mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
     _objectReferences: []
 --- !u!114 &4751214091012988773
 MonoBehaviour:
@@ -308,7 +309,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1ff4d6f743c9f9549b02d498b6eb60a6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  displayedBall: {fileID: 0}
+  displayedBall: {fileID: 8094063347812486162}
   playerteam: 0
   throwSpeed: 15
   originalRunSpeed: 7.5
@@ -334,11 +335,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8f5150bea36e766429f5c65590e3f892, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapSegmentid: 0
-  sidewaysAngle: 0
-  aimSpeedPercentage: 0
-  debug: 0
-  walkLocation: {x: 0, y: 0}
+  linecastAmount: 10
+  linecastAngle: 45
+  castingLength: 10
+  sphereCastRadius: 0
 --- !u!1 &4550136698602446182
 GameObject:
   m_ObjectHideFlags: 0
@@ -451,5 +451,10 @@ PrefabInstance:
 --- !u!4 &5350317618498787981 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3152898767691440206, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
+  m_PrefabInstance: {fileID: 7026034606082210499}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &8094063347812486162 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   m_PrefabInstance: {fileID: 7026034606082210499}
   m_PrefabAsset: {fileID: 0}

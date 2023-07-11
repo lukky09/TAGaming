@@ -197,7 +197,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         else
         {
             SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
-            Debug.Log(print2DArray(deflatten(a, mapWidth, SetObjects.getHeight())));
         }
         MainMenuNavigation.changeSceneIndex(5);
     }

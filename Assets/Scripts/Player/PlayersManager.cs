@@ -101,7 +101,7 @@ public class PlayersManager : MonoBehaviour
         players[i].transform.SetParent(playersContainer.transform);
     }
 
-    public GameObject getnearestPlayer(Transform player, bool includeCollision)
+    public GameObject getnearestPlayer(Transform player, bool includeCollision, float visionRange)
     {
         float closestrange = 999, range;
         int i = 0, index = -1;
@@ -112,9 +112,10 @@ public class PlayersManager : MonoBehaviour
             if (currplayer != null)
             {
                 isEnemy = currplayer.GetComponent<SnowBrawler>().getplayerteam() != player.GetComponent<SnowBrawler>().getplayerteam();
-                cekKolisi = Physics2D.Linecast(player.position, currplayer.transform.position, 64);
+                Vector2 direction = Vector3.Normalize(currplayer.transform.position - player.transform.position);
+                cekKolisi = Physics2D.CircleCast(player.position,0.4f, direction, visionRange, 64);
+                //Physics2D.CircleCast(currentPoint.returnAsVector(), circleSize, arah, dist, 64);
                 range = Vector2.Distance(player.transform.position, currplayer.transform.position);
-                //Debug.Log($"{currplayer.name} + {isEnemy} + {cekKolisi.collider == null} + {range > 0}");
                 if (range < closestrange && range > 0 && !(includeCollision && cekKolisi) && isEnemy)
                 {
                     closestrange = range;

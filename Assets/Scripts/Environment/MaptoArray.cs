@@ -21,7 +21,7 @@ public class MaptoArray : MonoBehaviour
             for (int y = 1; y < bounds.size.y - 1; y++)
             {
                 TileBase tile = allTiles[x + y * bounds.size.x];
-                if (tile != null && tile.name == "rok")
+                if (tile != null)
                 {
                     map[bounds.size.y - 2 - y , x - 1] = 1;
                 }

@@ -1,14 +1,26 @@
-using System.Collections;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 public class BotActions : MonoBehaviour
 {
-    public int mapSegmentid;
-    public float sidewaysAngle, aimSpeedPercentage;
-    public bool debug;
-    public Vector2 walkLocation;
+    int mapSegmentid;
+    float sidewaysAngle, aimSpeedPercentage;
+    bool debug;
+    Vector2 walkLocation;
+    float searchTimer,catchTimer;
+
+    //untuk vision dan nembak
+    [SerializeField] int linecastAmount;
+    [SerializeField] float linecastAngle;
+    [SerializeField] float castingLength;
+    [SerializeField] float sphereCastRadius;
+    [SerializeField] float catchTimerDelay;
+    [SerializeField] float catchChance;
+    bool sawBall, sawEnemy;
+    GameObject sawBallGO, sawEnemyGO ;
+
 
     Rigidbody2D thisRigid;
     PlayersManager playerManagerRef;
@@ -19,6 +31,8 @@ public class BotActions : MonoBehaviour
 
     private void Start()
     {
+        searchTimer = 0;
+        catchTimer = 0;
         thisRigid = GetComponent<Rigidbody2D>();
         snowBrawlerRef = GetComponent<SnowBrawler>();
     }
@@ -31,6 +45,16 @@ public class BotActions : MonoBehaviour
     public void setIsAiming(bool isAiming)
     {
         snowBrawlerRef.isAiming = isAiming;
+    }
+
+    public void setSearchTimer(float searchTimer)
+    {
+        this.searchTimer = searchTimer;
+    }
+
+    public GameObject getTarget()
+    {
+        return target;
     }
 
     public void setTarget(GameObject target)
@@ -51,21 +75,68 @@ public class BotActions : MonoBehaviour
 
     private void Update()
     {
+        searchTimer -= Time.deltaTime;
         currentTimeDelay -= Time.deltaTime;
+        catchTimer -= Time.deltaTime;
         //update posisi sebelumnya target untuk prediksi
         if (target != null && currentTimeDelay <= 0)
         {
             lastpos = target.transform.position;
             currentTimeDelay = timeDelay;
         }
+
     }
 
     private void FixedUpdate()
     {
+        sawBallGO = null; sawEnemyGO = null;
+        sawBall = false; sawEnemy = false;
+        RaycastHit2D currentHitObject;
+        float initialAngle = -linecastAngle / 2;
+        Vector2 currentDirection;
+        float shortestBallDist = 999, shortestEnemyDist = 999;
+        float currDistance;
+        for (int i = 0; i < linecastAmount; i++)
+        {
+            currentDirection = Quaternion.Euler(0, 0, initialAngle + i * (linecastAngle / (linecastAmount - 1))) * direction;
+            currentHitObject = Physics2D.Linecast((Vector2)transform.position + currentDirection, (Vector2)transform.position + currentDirection * castingLength);
+
+            //Kalau keliatan objek
+            if (currentHitObject)
+            {
+                currDistance = Vector2.Distance(transform.position, currentHitObject.collider.transform.position);
+                if (currentHitObject.collider.CompareTag("BallPile") && currDistance < shortestBallDist)
+                {
+                    shortestBallDist = currDistance;
+                    sawBallGO = currentHitObject.collider.gameObject;
+                    sawBall = true;
+                }else if(currentHitObject.collider.CompareTag("Player") && currDistance < shortestEnemyDist)
+                {
+                    if(currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
+                    {
+                        shortestEnemyDist = currDistance;
+                        sawEnemyGO = currentHitObject.collider.gameObject;
+                        sawEnemy = true;
+                    }
+                }else if (currentHitObject.collider.CompareTag("Projectile"))
+                {
+                    if (Random.Range(1, 101) < catchChance)
+                        StartCoroutine(snowBrawlerRef.catchBall());
+                    catchTimer = catchTimerDelay;
+                    Debug.Log("Coba Tangkap Bola");
+                }
+            }
+            Debug.DrawLine((Vector2)transform.position + currentDirection, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
+        }
+
+        if (searchTimer > 0)
+            return;
         // koding sini lebih rapi ketimbang di Visual Script
         if (!walkLocation.Equals(Vector2.zero))
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
+            float x = direction.x;
+            transform.localScale = new Vector3(x / Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
             thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
     }
@@ -91,7 +162,7 @@ public class BotActions : MonoBehaviour
         float a = 1 - Mathf.Pow(r, 2);
         float b = 2 * Mathf.Cos(angleBallandTarget * Mathf.Deg2Rad) * r;
         float c = -Mathf.Pow(initTargetandBallDistance, 2);
-       
+
         double isiAkar = Mathf.Pow(b, 2) - 4 * a * c;
         isiAkar = Mathf.Sqrt((float)isiAkar);
         double prediksi1 = (-b + isiAkar) / (2 * a);
@@ -104,7 +175,7 @@ public class BotActions : MonoBehaviour
             Debug.Log("abc : " + a + "," + b + "," + c);
             Debug.Log("Prediksi Jarak 1 & 2 : " + prediksi1 + "," + prediksi2);
         }
-     
+
         //Dari jarak diatas ambil yang jarake lebih pendek
         double prediksiFinal;
         if (double.IsNaN(prediksi1) && double.IsNaN(prediksi2))
@@ -136,7 +207,7 @@ public class BotActions : MonoBehaviour
     {
         Coordinate target;
         if (mapSegmentid > 0)
-        {         
+        {
             target = playerManagerRef.getRandomSpot(mapSegmentid - 1);
             //Debug.Log("Chosen " + (mapSegmentid - 1)+","+ target.ToString());
             return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
@@ -145,10 +216,17 @@ public class BotActions : MonoBehaviour
         {
             do
             {
-                target = new Coordinate(Random.Range(0, SetObjects.getWidth()+1), Random.Range(0, SetObjects.getHeight()+1));
+                target = new Coordinate(Random.Range(0, SetObjects.getWidth() + 1), Random.Range(0, SetObjects.getHeight() + 1));
             } while (AStarAlgorithm.doAstarAlgo(Coordinate.returnAsCoordinate(transform.position), target, SetObjects.getMap(false)) == null);
         }
         return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
+    }
+
+    public bool stillCanSeeTarget()
+    {
+        Vector2 direction = target.transform.position - transform.position;
+        RaycastHit2D seenObject = Physics2D.Linecast((Vector2)transform.position + direction, target.transform.position);
+        return (seenObject.collider.gameObject == target);
     }
 
     private void OnDrawGizmos()
@@ -158,4 +236,23 @@ public class BotActions : MonoBehaviour
     }
 
 
+    public bool canSeeBall()
+    {
+        return sawBall;
+    }
+
+    public bool canSeePerson()
+    {
+        return sawEnemy;
+    }
+
+    public GameObject getSeenBall()
+    {
+        return sawBallGO;
+    }
+
+    public GameObject getSeenEnemy()
+    {
+        return sawEnemyGO;
+    }
 }

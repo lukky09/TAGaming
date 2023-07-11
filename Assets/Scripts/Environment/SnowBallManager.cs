@@ -128,6 +128,18 @@ public class SnowBallManager : MonoBehaviour
             return -1;
     }
 
+    public static int getIndexfromSnowball(GameObject go)
+    {
+        int i = 0;
+        foreach (GameObject item in snowballs)
+        {
+            if (item == go)
+                return i;
+            i++;
+        }
+        return -1 ;
+    }
+
     public static GameObject getBallfromIndex(int index)
     {
         if (snowballs.Count > 0)

@@ -184,7 +184,7 @@ public class SnowBrawler : MonoBehaviour
         runSpeed = originalRunSpeed;
     }
 
-    IEnumerator catchBall()
+    public IEnumerator catchBall()
     {
         runSpeed = 0;
         iscatching = true;

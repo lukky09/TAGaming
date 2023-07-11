@@ -23,7 +23,7 @@ public class AStarAlgorithm : MonoBehaviour
         if (!Physics2D.CircleCast(character.returnAsVector(), circleSize, arah, dist, 64))
         {
             Coordinate ints = vectorToCoordinate(ball.returnAsVector());
-            Debug.Log("Shortcut");
+            //Debug.Log("Shortcut");
             return new Coordinate[] { ints };
         }
         else
