@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,10 +7,11 @@ using UnityEngine.UIElements;
 public class BotActions : MonoBehaviour
 {
     int mapSegmentid;
-    float sidewaysAngle, aimSpeedPercentage;
+    float sidewaysAngle;
     bool debug;
     Vector2 walkLocation;
-    float searchTimer,catchTimer;
+    float searchTimer, catchTimer;
+    [SerializeField] float aimSpeedPercentage;
 
     //untuk vision dan nembak
     [SerializeField] int linecastAmount;
@@ -18,10 +20,9 @@ public class BotActions : MonoBehaviour
     [SerializeField] float sphereCastRadius;
     [SerializeField] float catchTimerDelay;
     [SerializeField] float catchChance;
-    bool sawBall, sawEnemy;
-    GameObject sawBallGO, sawEnemyGO ;
+    GameObject sawBallGO, sawEnemyGO, sawProjectileGO;
 
-
+    [SerializeField] GameObject noticeMark;
     Rigidbody2D thisRigid;
     PlayersManager playerManagerRef;
     GameObject target;
@@ -60,11 +61,17 @@ public class BotActions : MonoBehaviour
     public void setTarget(GameObject target)
     {
         this.target = target;
+        StartCoroutine(visualiseNotice());
     }
 
     public void setWalkLocation(Coordinate walkLocation)
     {
         this.walkLocation = walkLocation.returnAsVector();
+    }
+
+    public void setWalkLocation(Vector2 walkLocation)
+    {
+        this.walkLocation = walkLocation;
     }
 
     public void setMapSegmentID(int mapSegmentid, PlayersManager playerManagerRef)
@@ -89,8 +96,7 @@ public class BotActions : MonoBehaviour
 
     private void FixedUpdate()
     {
-        sawBallGO = null; sawEnemyGO = null;
-        sawBall = false; sawEnemy = false;
+        sawBallGO = null; sawEnemyGO = null; sawProjectileGO = null;
         RaycastHit2D currentHitObject;
         float initialAngle = -linecastAngle / 2;
         Vector2 currentDirection;
@@ -99,7 +105,7 @@ public class BotActions : MonoBehaviour
         for (int i = 0; i < linecastAmount; i++)
         {
             currentDirection = Quaternion.Euler(0, 0, initialAngle + i * (linecastAngle / (linecastAmount - 1))) * direction;
-            currentHitObject = Physics2D.Linecast((Vector2)transform.position + currentDirection, (Vector2)transform.position + currentDirection * castingLength);
+            currentHitObject = Physics2D.Linecast((Vector2)transform.position + currentDirection/2, (Vector2)transform.position + currentDirection * castingLength);
 
             //Kalau keliatan objek
             if (currentHitObject)
@@ -109,27 +115,24 @@ public class BotActions : MonoBehaviour
                 {
                     shortestBallDist = currDistance;
                     sawBallGO = currentHitObject.collider.gameObject;
-                    sawBall = true;
-                }else if(currentHitObject.collider.CompareTag("Player") && currDistance < shortestEnemyDist)
+                }
+                else if (currentHitObject.collider.CompareTag("Player") && currDistance < shortestEnemyDist)
                 {
-                    if(currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
+                    if (currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
                     {
                         shortestEnemyDist = currDistance;
                         sawEnemyGO = currentHitObject.collider.gameObject;
-                        sawEnemy = true;
                     }
-                }else if (currentHitObject.collider.CompareTag("Projectile"))
+                }
+                else if (currentHitObject.collider.CompareTag("Projectile"))
                 {
-                    if (Random.Range(1, 101) < catchChance)
-                        StartCoroutine(snowBrawlerRef.catchBall());
-                    catchTimer = catchTimerDelay;
-                    Debug.Log("Coba Tangkap Bola");
+                    sawProjectileGO = currentHitObject.collider.gameObject;
                 }
             }
-            Debug.DrawLine((Vector2)transform.position + currentDirection, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
+            Debug.DrawLine((Vector2)transform.position + currentDirection/2, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
         }
 
-        if (searchTimer > 0)
+        if (searchTimer > 0 || !snowBrawlerRef.canAct)
             return;
         // koding sini lebih rapi ketimbang di Visual Script
         if (!walkLocation.Equals(Vector2.zero))
@@ -229,21 +232,72 @@ public class BotActions : MonoBehaviour
         return (seenObject.collider.gameObject == target);
     }
 
+    public bool isThrowBlocked()
+    {
+        Vector2 direction = target.transform.position - transform.position;
+        RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, AStarAlgorithm.circleSize, direction, Vector2.Distance(target.transform.position, transform.position));
+        Debug.Log(seenObject.Length);
+        foreach (RaycastHit2D item in seenObject)
+        {
+            Debug.Log(item.collider.tag);
+            if (!item.collider.CompareTag("BallPile") && item.collider.gameObject != target && item.collider.gameObject != gameObject)
+                return true;
+        }
+        return false;
+    }
+
+    public void tryCatchBall()
+    {
+        if (Random.Range(1, 101) < catchChance)
+            StartCoroutine(snowBrawlerRef.catchBall());
+        catchTimer = catchTimerDelay;
+        Debug.Log("Coba Tangkap Bola");
+    }
+
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.black;
         Gizmos.DrawWireSphere(transform.position, AStarAlgorithm.circleSize);
     }
 
+    public bool predictProjectileWillHit()
+    {
+        if (sawProjectileGO == null)
+            return false;
+        Vector2 dir = Vector3.Normalize(transform.position - sawProjectileGO.transform.position);
+        RaycastHit2D[] objectsInWay = Physics2D.CircleCastAll(sawProjectileGO.transform.position, 1, dir, Vector2.Distance(transform.position, sawProjectileGO.transform.position));
+        foreach (RaycastHit2D item in objectsInWay)
+        {
+            if (item.collider.CompareTag("Wall"))
+                return false;
+            if (item.collider == gameObject)
+                return true;
+        }
+        return false;
+    }
+
+    IEnumerator visualiseNotice()
+    {
+        noticeMark.SetActive(true);
+        noticeMark.GetComponent<Animator>().Play("Base Layer.BotNotice");
+        yield return new WaitForSeconds(0.5f);
+        noticeMark.SetActive(false);
+    }
+
+    public bool canSeeProjectile()
+    {
+        return sawProjectileGO != null;
+    }
+
 
     public bool canSeeBall()
     {
-        return sawBall;
+        return sawBallGO != null;
     }
 
     public bool canSeePerson()
     {
-        return sawEnemy;
+        return sawEnemyGO != null;
     }
 
     public GameObject getSeenBall()
@@ -254,5 +308,10 @@ public class BotActions : MonoBehaviour
     public GameObject getSeenEnemy()
     {
         return sawEnemyGO;
+    }
+
+    public float getCatchTimer()
+    {
+        return catchTimer;
     }
 }

@@ -38,23 +38,6 @@ public class SnowBrawler : MonoBehaviour
         runSpeed = originalRunSpeed;
     }
 
-    public void initializeBrawler(bool playerteam, float throwSpeed, float runSpeed, int ballScoreAdd, float ballSpeedAdd, float ballCatchTimer, float ballTakeRange)
-    {
-        this.ballTakeRange = ballTakeRange;
-        this.runSpeed = runSpeed;
-        initializeBrawler(playerteam, throwSpeed, ballScoreAdd, ballSpeedAdd, ballCatchTimer);
-    }
-
-    public void initializeBrawler(bool playerteam, float throwSpeed, int ballScoreAdd, float ballSpeedAdd, float ballCatchTimer)
-    {
-        this.playerteam = playerteam;
-        ballAmount = 0;
-        this.throwSpeed = throwSpeed;
-        this.ballCatchTimer = ballCatchTimer;
-        this.ballScoreAdd = ballScoreAdd;
-        this.ballSpeedAdd = ballSpeedAdd;
-    }
-
     public void Update()
     {
         currentTimeDelay -= Time.deltaTime;
@@ -95,12 +78,12 @@ public class SnowBrawler : MonoBehaviour
 
     public void getBall()
     {
-        int ballindex = SnowBallManager.getNearestBallIndex(transform);
+        int ballindex = SnowBallManager.Instance.getNearestBallIndex(transform);
         if (ballindex < 0)
             return;
-        if (SnowBallManager.getBallfromIndex(ballindex).GetComponent<PowerUp>())
+        if (SnowBallManager.Instance.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
-            (ballSprite, ballPowerId) = SnowBallManager.getBallfromIndex(SnowBallManager.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
+            (ballSprite, ballPowerId) = SnowBallManager.Instance.getBallfromIndex(SnowBallManager.Instance.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
             if (ballPowerId > 0)
             {
                 displayedBall.GetComponent<SpriteRenderer>().sprite = ballSprite;
@@ -109,11 +92,11 @@ public class SnowBrawler : MonoBehaviour
         }
         else
         {
-            int deletedIndex = SnowBallManager.getNearestBallIndex(transform, ballTakeRange);
+            int deletedIndex = SnowBallManager.Instance.getNearestBallIndex(transform, ballTakeRange);
             if (deletedIndex >= 0)
             {
                 ballPowerId = 0;
-                SnowBallManager.deleteclosestball(transform, ballTakeRange);
+                SnowBallManager.Instance.deleteclosestball(transform, ballTakeRange);
                 ballAmount = 3;
                 ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
             }
@@ -167,6 +150,7 @@ public class SnowBrawler : MonoBehaviour
     IEnumerator slowDownNumerator(float slowPower, float seconds)
     {
         GetComponent<SpriteRenderer>().color = new Color(11 / 255, 211 / 255, 1);
+        Debug.Log(slowPower);
         runSpeed = originalRunSpeed * slowPower;
         yield return new WaitForSeconds(seconds);
         GetComponent<SpriteRenderer>().color = Color.white;
@@ -175,13 +159,11 @@ public class SnowBrawler : MonoBehaviour
 
     IEnumerator getHitNumerator(float seconds)
     {
-        runSpeed = originalRunSpeed;
         canAct = false;
         animator.SetBool("IsHit", true);
         yield return new WaitForSeconds(seconds);
         canAct = true;
         animator.SetBool("IsHit", false);
-        runSpeed = originalRunSpeed;
     }
 
     public IEnumerator catchBall()

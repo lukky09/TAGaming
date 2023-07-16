@@ -15,6 +15,7 @@ public class BallPowerUp : MonoBehaviour
     [SerializeField] int splitBalls;
     [SerializeField] float splitRange;
 
+    float particleTimer;
 
     BallMovement bmRef;
     //Utk Powerup Sticky Bomb
@@ -22,6 +23,7 @@ public class BallPowerUp : MonoBehaviour
     GameObject collision;
     private void Awake()
     {
+        particleTimer = explosionDelay;
         bmRef = GetComponent<BallMovement>();
     }
 
@@ -62,12 +64,12 @@ public class BallPowerUp : MonoBehaviour
                 Vector2 backPos = (Vector2)transform.position + bmRef.getDirection() * 2f;
                 float angle = Vector2.SignedAngle((Vector2)transform.position, backPos);
                 float dist = Mathf.Sqrt(1 + Mathf.Pow(Mathf.Sin(Mathf.Deg2Rad * angle * 2), 2));
-                backPos = (Vector2)transform.position + bmRef.getDirection() *  dist * 1.1f;
+                backPos = (Vector2)transform.position + bmRef.getDirection() * dist * 1.1f;
                 Debug.DrawLine(transform.position, backPos, Color.red, 5);
                 Collider2D[] explosiveCollision = Physics2D.OverlapCircleAll(backPos, 0.1f, 64);
                 foreach (Collider2D item in explosiveCollision)
                 {
-                    Debug.Log(item.name);   
+                    Debug.Log(item.name);
                 }
                 if (explosiveCollision.Length == 0)
                 {
@@ -88,10 +90,18 @@ public class BallPowerUp : MonoBehaviour
                 }
 
                 //Back Trace
-                RaycastHit2D line = Physics2D.Linecast(backPos,transform.position);
-                Debug.DrawLine(backPos, line.point,Color.black,5);
+                RaycastHit2D line = Physics2D.Linecast(backPos, transform.position);
+                Debug.DrawLine(backPos, line.point, Color.black, 5);
                 Destroy(gameObject);
                 break;
+        }
+    }
+
+    private void Update()
+    {
+        if (GetComponent<BallMovement>().getBallPowerId() == 3 && particleTimer <= 0.3f)
+        {
+            transform.GetChild(0).gameObject.SetActive(true);
         }
     }
 
@@ -99,7 +109,10 @@ public class BallPowerUp : MonoBehaviour
     {
         //biar bom bisa lekat ke target
         if (bmRef.getBallPowerId() == 3 && collision != null)
+        {
+            particleTimer -= Time.deltaTime;
             transform.position = (Vector2)collision.transform.position - distance;
+        }
     }
 
     IEnumerator TimedExplode(float seconds)

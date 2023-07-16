@@ -1651,7 +1651,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3380666572601521300, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.84
+      value: -4.85
       objectReference: {fileID: 0}
     - target: {fileID: 3380666572601521300, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -5185,6 +5185,7 @@ MonoBehaviour:
   currentCamera: {fileID: 519420028}
   roomWidth: 15
   roomsStart: -12.5
+  transitionLength: 1
 --- !u!1 &1052547707
 GameObject:
   m_ObjectHideFlags: 0

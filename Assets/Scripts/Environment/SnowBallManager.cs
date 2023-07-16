@@ -1,10 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class SnowBallManager : MonoBehaviour
 {
-    public static List<GameObject> snowballs;
+    public static SnowBallManager Instance;
+    public List<GameObject> snowballs;
     public GameObject snowballscontainer;
 
     [SerializeField] GameObject snowball;
@@ -13,10 +15,15 @@ public class SnowBallManager : MonoBehaviour
     [SerializeField] ColorManager colManager;
     float currentrespawnTimer;
 
+    private void Awake()
+    {
+        if (Instance == null)
+            Instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
-       
         snowballs = new List<GameObject>();
         foreach (Transform ballz in snowballscontainer.transform)
         {
@@ -25,7 +32,7 @@ public class SnowBallManager : MonoBehaviour
         currentrespawnTimer = respawnTime;
     }
 
-    public static void destroyball(int index)
+    public void destroyball(int index)
     {
         GameObject ball = snowballs[index];
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
@@ -73,7 +80,7 @@ public class SnowBallManager : MonoBehaviour
         snowballs.Add(ballz);
     }
 
-    static public bool deleteclosestball(Transform objecttransform, float rangetreshold)
+    public bool deleteclosestball(Transform objecttransform, float rangetreshold)
     {
         bool isdeleted = false;
         int index = getNearestBallIndex(objecttransform, rangetreshold);
@@ -85,13 +92,13 @@ public class SnowBallManager : MonoBehaviour
         return isdeleted;
     }
 
-    static public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
+    public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
     {
         int index = getNearestBallIndex(objecttransform, rangetreshold);
         return snowballs[index];
     }
 
-    public static int getNearestBallIndex(Transform objectTracked)
+    public int getNearestBallIndex(Transform objectTracked)
     {
         float closestrange = 999, range;
         int i = 0, index = -1;
@@ -108,7 +115,7 @@ public class SnowBallManager : MonoBehaviour
         return index;
     }
 
-    public static int getNearestBallIndex(Transform objectTracked, float range)
+    public int getNearestBallIndex(Transform objectTracked, float range)
     {
         float closestrange = 999, currrange;
         int i = 0, index = -1;
@@ -128,7 +135,7 @@ public class SnowBallManager : MonoBehaviour
             return -1;
     }
 
-    public static int getIndexfromSnowball(GameObject go)
+    public int getIndexfromSnowball(GameObject go)
     {
         int i = 0;
         foreach (GameObject item in snowballs)
@@ -140,14 +147,14 @@ public class SnowBallManager : MonoBehaviour
         return -1 ;
     }
 
-    public static GameObject getBallfromIndex(int index)
+    public GameObject getBallfromIndex(int index)
     {
         if (snowballs.Count > 0)
             return snowballs[index];
         return null;
     }
 
-    public static int getBallAmount()
+    public int getBallAmount()
     {
         return snowballs.Count;
     }
