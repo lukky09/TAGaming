@@ -159,8 +159,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -0.000015259, y: -436.36}
-  m_SizeDelta: {x: 577.657, y: 115.607}
+  m_AnchoredPosition: {x: 0, y: -540}
+  m_SizeDelta: {x: 1411.1631, y: 167.1921}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &181003102
 MonoBehaviour:
@@ -182,7 +182,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Loading...
+  m_text: Generating level...
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: cc12164779425fc4abe944cb63b65681, type: 2}
   m_sharedMaterial: {fileID: 1846910580699684151, guid: cc12164779425fc4abe944cb63b65681, type: 2}
@@ -209,7 +209,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 69.75
+  m_fontSize: 89.7
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -273,19 +273,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   useMirrorFitness: 1
   useTemplatedGeneration: 1
-  includeWallFitness: 0
+  includeWallFitness: 1
   PanjangWallWeight: 1
   PanjangWallVertikalAmt: 0
   PanjangWallHorizontalAmt: 0
-  includeAreaFitness: 0
+  includeAreaFitness: 1
   AreaWeight: 1
-  includeWallGapFitness: 0
+  includeWallGapFitness: 1
   WallGapLength: 2
   WallGapLengthMax: 4
   WallGapWeight: 1
-  includePUPAccesibilityFitness: 0
+  includePUPAccesibilityFitness: 1
   PUPAccesibilityWeight: 1
-  includePURatioFitness: 0
+  includePURatioFitness: 1
   PURatioAmt: 0.05
   PURatioWeight: 1
   StagnationTerminationAmt: 100

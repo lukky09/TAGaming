@@ -7,38 +7,8 @@ public static class PossibleTemplates
     //0 = Kosong
     //1 = Dinding
     //2 = Power Up
-    public static int[][,] Templates = new int[][,]
+    public static int[][,] oneWayTemplates = new int[][,]
     {
-         new int[,]
-        {{ 0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0}},
-         new int[,]
-        {{ 0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1}},
-         new int[,]
-        {{ 0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  0, 0, 0, 0, 1},
-        {  1, 1, 1, 1, 1}},
-         new int[,]
-        {{ 1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 1, 1, 1, 1}},
-        new int[,]
-        {{ 1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1},
-        {  1, 0, 0, 0, 1}},
         new int[,]
         {{ 1, 1, 0, 1, 1},
         {  1, 0, 0, 0, 1},
@@ -46,11 +16,89 @@ public static class PossibleTemplates
         {  1, 0, 0, 0, 1},
         {  1, 1, 0, 1, 1}},
         new int[,]
+        {{ 0, 0, 1, 0, 0},
+        {  0, 0, 1, 0, 0},
+        {  1, 1, 1, 1, 1},
+        {  0, 0, 1, 0, 0},
+        {  0, 0, 1, 0, 0}},
+        new int[,]
+        {{ 0, 0, 0, 0, 0},
+        {  0, 0, 1, 0, 0},
+        {  0, 1, 1, 1, 0},
+        {  0, 0, 1, 0, 0},
+        {  0, 0, 0, 0, 0}},
+    };
+    public static int[][,] twoWayTemplates = new int[][,]
+    {
+        new int[,]
+        {{ 1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1}},
+        new int[,]
         {{ 1, 1, 0, 0, 0},
         {  1, 0, 0, 0, 0},
         {  0, 0, 0, 0, 0},
         {  0, 0, 0, 0, 1},
         {  0, 0, 0, 1, 1}},
+        new int[,]
+        {{ 0, 0, 0, 0, 0},
+        {  0, 0, 0, 0, 0},
+        {  1, 1, 1, 1, 1},
+        {  0, 0, 0, 0, 0},
+        {  0, 0, 0, 0, 0}},
+        new int[,]
+        {{ 0, 0, 0, 0, 0},
+        {  0, 0, 1, 0, 0},
+        {  1, 1, 1, 1, 1},
+        {  0, 0, 1, 0, 0},
+        {  0, 0, 0, 0, 0}},
+        new int[,]
+        {{ 1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 1, 1, 1, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1}},
+        new int[,]
+        {{ 1, 1, 1, 1, 1},
+        {  1, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 0},
+        {  1, 0, 0, 0, 1},
+        {  1, 1, 1, 1, 1}},
+        new int[,]
+        {{ 1, 0, 1, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 0},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 1, 0, 1}},
+        new int[,]
+        {{ 1, 0, 0, 0, 0},
+        {  0, 1, 0, 0, 0},
+        {  0, 0, 1, 0, 0},
+        {  0, 0, 0, 1, 0},
+        {  0, 0, 0, 0, 1}},
+    };
+    public static int[][,] fourWayTemplates = new int[][,]
+    {
+        new int[,]
+        {{ 0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1}},
+        new int[,]
+        {{ 0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  1, 1, 1, 1, 1}},
+        new int[,]
+        {{ 1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 0, 0, 0, 1},
+        {  1, 1, 1, 1, 1}},
         new int[,]
         {{ 1, 1, 0, 1, 1},
         {  1, 0, 0, 0, 1},
@@ -58,18 +106,17 @@ public static class PossibleTemplates
         {  0, 0, 0, 0, 0},
         {  0, 0, 0, 0, 0}},
          new int[,]
-        {{ 0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0},
-        {  1, 1, 1, 1, 1},
-        {  0, 0, 0, 0, 0},
-        {  0, 0, 0, 0, 0}},
-          new int[,]
-        {{ 0, 0, 1, 0, 0},
-        {  0, 0, 1, 0, 0},
-        {  1, 1, 1, 1, 1},
-        {  0, 0, 1, 0, 0},
-        {  0, 0, 1, 0, 0}},
+        {{ 0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 1, 1, 1, 1},
+        {  0, 0, 0, 0, 1},
+        {  0, 0, 0, 0, 1}},
     };
+
+    public static int getTemplateAmount()
+    {
+        return oneWayTemplates.Length + twoWayTemplates.Length * 2 + fourWayTemplates.Length * 4;
+    }
 
     public static int[,] getTemplate(int id)
     {
@@ -78,8 +125,30 @@ public static class PossibleTemplates
         {
             tempID = -tempID - 1;
         }
-        int rotation = tempID % 4;
-        int[,] chosenTemplate = Templates[Mathf.FloorToInt(tempID / 4)];
+
+        int rotation;
+        int[,] chosenTemplate;
+
+        if (tempID < oneWayTemplates.Length)
+        {
+            rotation = 0;
+            chosenTemplate = oneWayTemplates[tempID];
+        }
+        else if (tempID < oneWayTemplates.Length + twoWayTemplates.Length * 2)
+        {
+            tempID -= oneWayTemplates.Length;
+            rotation = tempID % 2;
+            chosenTemplate = twoWayTemplates[Mathf.FloorToInt(tempID / 2)];
+        }
+        else
+        {
+            tempID = tempID - oneWayTemplates.Length - (twoWayTemplates.Length * 2);
+            rotation = tempID % 4;
+            chosenTemplate = fourWayTemplates[Mathf.FloorToInt(tempID / 4)];
+
+        }
+
+
         int[,] resultTemplate = new int[5, 5];
         if (rotation == 0)
             resultTemplate = (int[,])chosenTemplate.Clone();

@@ -105,7 +105,7 @@ public class BotActions : MonoBehaviour
         for (int i = 0; i < linecastAmount; i++)
         {
             currentDirection = Quaternion.Euler(0, 0, initialAngle + i * (linecastAngle / (linecastAmount - 1))) * direction;
-            currentHitObject = Physics2D.Linecast((Vector2)transform.position + currentDirection/2, (Vector2)transform.position + currentDirection * castingLength);
+            currentHitObject = Physics2D.Linecast((Vector2)transform.position + currentDirection / 2, (Vector2)transform.position + currentDirection * castingLength);
 
             //Kalau keliatan objek
             if (currentHitObject)
@@ -129,7 +129,7 @@ public class BotActions : MonoBehaviour
                     sawProjectileGO = currentHitObject.collider.gameObject;
                 }
             }
-            Debug.DrawLine((Vector2)transform.position + currentDirection/2, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
+            Debug.DrawLine((Vector2)transform.position + currentDirection / 2, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
         }
 
         if (searchTimer > 0 || !snowBrawlerRef.canAct)
@@ -138,7 +138,7 @@ public class BotActions : MonoBehaviour
         if (!walkLocation.Equals(Vector2.zero))
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
-            float x = direction.x;
+            float x = (direction.x == 0 ? 1 : direction.x);
             transform.localScale = new Vector3(x / Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
             thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
@@ -236,10 +236,8 @@ public class BotActions : MonoBehaviour
     {
         Vector2 direction = target.transform.position - transform.position;
         RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, AStarAlgorithm.circleSize, direction, Vector2.Distance(target.transform.position, transform.position));
-        Debug.Log(seenObject.Length);
         foreach (RaycastHit2D item in seenObject)
         {
-            Debug.Log(item.collider.tag);
             if (!item.collider.CompareTag("BallPile") && item.collider.gameObject != target && item.collider.gameObject != gameObject)
                 return true;
         }

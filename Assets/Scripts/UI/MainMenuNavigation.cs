@@ -8,6 +8,7 @@ using System;
 public class MainMenuNavigation : MonoBehaviour
 {
     public static bool isTemplate;
+    static string size;
 
     public static void mainMenuPressed()
     {
@@ -53,7 +54,6 @@ public class MainMenuNavigation : MonoBehaviour
         int width = int.Parse(split[0]) + 2;
         int height = int.Parse(split[1]) + 2;
         SetObjects.initializeSize(width, height);
-        nextScene();
         //SceneManager.LoadScene("MainLevel");
     }
 
@@ -65,6 +65,11 @@ public class MainMenuNavigation : MonoBehaviour
         {
             gameObject.GetComponent<TMP_InputField>().text = (intinput - 1).ToString();
         }
+    }
+
+    public void changeSize(string input)
+    {
+        size = input;
     }
 
     public void changeTemplate(bool currValue)

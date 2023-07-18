@@ -73,7 +73,7 @@ public class TemplatedMapChromosome : ChromosomeBase
     {
         int temp;
         m_ukuranMap = ukuranMap;
-        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, -(PossibleTemplates.Templates.Length * 4), (PossibleTemplates.Templates.Length * 4) - 1);
+        var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, -(PossibleTemplates.getTemplateAmount()), (PossibleTemplates.getTemplateAmount()) - 1);
 
         for (int i = 0; i < ukuranMap; i++)
         {
@@ -83,7 +83,7 @@ public class TemplatedMapChromosome : ChromosomeBase
 
     public override Gene GenerateGene(int geneIndex)
     {
-        return new Gene(RandomizationProvider.Current.GetInt(-(PossibleTemplates.Templates.Length * 4) , (PossibleTemplates.Templates.Length*4)-1));
+        return new Gene(RandomizationProvider.Current.GetInt(-(PossibleTemplates.getTemplateAmount()) , (PossibleTemplates.getTemplateAmount())-1));
     }
 
     public override IChromosome CreateNew()
@@ -119,26 +119,22 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int PURatioWeight;
     [SerializeField] int StagnationTerminationAmt;
     [SerializeField] bool maxRockFitness;
-    [SerializeField] float maxRockRatio;
+    [SerializeField] float maxRockRatio; //Template tidak pakai
     [SerializeField] int maxRockWeight;
-    TextMeshProUGUI tmpro;
     int mapWidth;
 
     // Start is called before the first frame update
     void Start()
     {
-        useTemplatedGeneration = MainMenuNavigation.isTemplate;
-        double fitness;
-            mapWidth = (int)(SetObjects.getWidth() / 2);
         float[] tempfitness = new float[5];
+        double fitness;
+        useTemplatedGeneration = MainMenuNavigation.isTemplate;
+        mapWidth = (int)(SetObjects.getWidth() / 2);
         int length = SetObjects.getHeight() * mapWidth;
         if (PanjangWallVertikalAmt == 0)
             PanjangWallVertikalAmt = Mathf.FloorToInt(SetObjects.getHeight() * 3 / 4);
         if (PanjangWallHorizontalAmt == 0)
             PanjangWallHorizontalAmt = Mathf.FloorToInt(SetObjects.getWidth() * 3 / 4);
-
-
-        tmpro = gameObject.GetComponent<TextMeshProUGUI>();
 
         //Multithreading
         var taskExecutor = new ParallelTaskExecutor();
@@ -149,12 +145,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         //Kromosom
         if (useTemplatedGeneration)
         {
-             chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(length / 25));
+            chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(length / 25));
         }
         else
         {
             Debug.Log(length);
-             chromosome = new GameChromosome(length, Mathf.FloorToInt(PURatioAmt * length));
+            chromosome = new GameChromosome(length, Mathf.FloorToInt(PURatioAmt * length));
         }
 
         //Populasi
@@ -163,9 +159,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         var fitnessfunc = new FuncFitness((c) =>
         {
             var fc = c.GetGenes();
-            int[,] map ;
+            int[,] map;
             if (useTemplatedGeneration)
-                map = templateDeflatten(fc, mapWidth, SetObjects.getHeight());
+                map = putPlayerinTemplate(fc, mapWidth, SetObjects.getHeight());
             else
                 map = deflatten(fc, mapWidth, SetObjects.getHeight());
             fitness = fitnessFunction(map);
@@ -184,16 +180,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Termination = termination;
         //ga.TaskExecutor = taskExecutor;
 
-        ga.GenerationRan += (sender, e) =>
-        {
-            tmpro.text = "Iterasi ke-" + ga.GenerationsNumber;
-        };
-
         ga.Start();
 
         var a = ga.BestChromosome.GetGenes();
+        Debug.Log(String.Join(',',a));
         if (useTemplatedGeneration)
-            SetObjects.setMap(templateDeflatten(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
+            SetObjects.setMap(putPlayerinTemplate(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
         else
         {
             SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
@@ -205,23 +197,63 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     {
         int[,] result = new int[height, width * (useMirrorFitness ? 2 : 1)];
         int[,] currTemplate;
-        for (int i = 0; i < height/5; i++)
+        for (int i = 0; i < height / 5; i++)
         {
-            for (int j = 0; j < width/5; j++)
+            for (int j = 0; j < width / 5; j++)
             {
-                currTemplate = PossibleTemplates.getTemplate((int)((Gene)arrays[i * (width/5) + j]).Value);
-                for (int k = 0; k <  5; k++)
+                currTemplate = PossibleTemplates.getTemplate((int)((Gene)arrays[i * (width / 5) + j]).Value);
+                for (int k = 0; k < 5; k++)
                 {
                     for (int l = 0; l < 5; l++)
                     {
                         result[5 * i + k, 5 * j + l] = currTemplate[k, l];
                         if (useMirrorFitness)
-                            result[5 * i + k, (width*2) - 1 - (5 * j + l)] = currTemplate[k, l];
+                            result[5 * i + k, (width * 2) - 1 - (5 * j + l)] = currTemplate[k, l];
                     }
                 }
             }
         }
         return result;
+    }
+
+    //Mungkin kapan kapan aja di tambahi Dilation + erosion
+    int[,] putPlayerinTemplate(Gene[] arrays, int width, int height)
+    {
+        int[,] tempTemplate = templateDeflatten(arrays, width, height);
+        Coordinate[] _5Coordinates = new Coordinate[] {
+            new Coordinate(Mathf.RoundToInt(width/3),Mathf.RoundToInt(height/4)),
+            new Coordinate(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt(height/4)),
+            new Coordinate(Mathf.RoundToInt(width/2),Mathf.RoundToInt(height/2)),
+            new Coordinate(Mathf.RoundToInt(width/3),Mathf.RoundToInt((height*3)/4)),
+            new Coordinate(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt((height*3)/4)),
+        };
+        foreach (Coordinate item in _5Coordinates)
+        {
+            if (tempTemplate[item.yCoor, item.xCoor] == 0)
+                tempTemplate[item.yCoor, item.xCoor] = 3;
+            else
+            {
+                Queue<Coordinate> q = new Queue<Coordinate>();
+                Coordinate currentCoor,tempCoor;
+                q.Enqueue(item);
+                while (q.Count != 0)
+                {
+                    currentCoor = q.Dequeue();
+                    for (int k = 0; k < 4; k++)
+                    {
+                        tempCoor = new Coordinate(currentCoor.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), currentCoor.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
+                        q.Enqueue(tempCoor);
+                        if (tempTemplate[tempCoor.yCoor,tempCoor.xCoor] == 0)
+                        {
+                            tempTemplate[item.yCoor, item.xCoor] = 3;
+                            q.Clear();
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return tempTemplate;
     }
 
     int[,] deflatten(Gene[] arrays, int width, int height)
@@ -234,7 +266,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 //Debug.Log(i + "," + j+","+ (width - 1 - j));
                 result[i, j] = (int)((Gene)arrays[i * width + j]).Value;
                 if (useMirrorFitness)
-                    result[i, (width*2) - 1 - j] = (int)((Gene)arrays[i * width + j]).Value;
+                    result[i, (width * 2) - 1 - j] = (int)((Gene)arrays[i * width + j]).Value;
             }
         }
         return result;
@@ -279,8 +311,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     //Cek Fitness Panjang Gap antar Wall
                     wallGapFitness(map, tempCoor, ref fitnessScores, ref jumlahGap);
                     //Cek Jumlah batu dalam 1 kumpulan
-                    rockGroupAmount++;
-                    fitnessScores[5]+= rockAmountFitness(map,tempCoor,ref ischecked);
+                        rockGroupAmount++;
+                    if (!useTemplatedGeneration)
+                    {
+                        fitnessScores[5] += rockAmountFitness(map, tempCoor, ref ischecked);
+                    }
                 }
                 else if (map[i, j] != 1 && !ischecked[i, j])
                 {
@@ -307,7 +342,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         }
 
-        if(jumlahGap>0)
+        if (jumlahGap > 0)
             fitnessScores[2] = fitnessScores[2] * WallGapWeight / jumlahGap;
         float biggest = -999;
 
@@ -362,7 +397,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
-        if (maxRockFitness && rockGroupAmount > 0)
+        if (maxRockFitness && rockGroupAmount > 0 && useTemplatedGeneration)
             fitnessScores[5] = (fitnessScores[5] / rockGroupAmount) * maxRockWeight;
 
         if (useMirrorFitness)
@@ -372,9 +407,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(objAmt[3] - 5) * 5 + 1, 3), 3);
     }
 
-    float rockAmountFitness(int[,] map, Coordinate coor,ref bool[,] ischecked )
+    float rockAmountFitness(int[,] map, Coordinate coor, ref bool[,] ischecked)
     {
-        if (maxRockFitness && !ischecked[coor.yCoor,coor.xCoor])
+        if (maxRockFitness && !ischecked[coor.yCoor, coor.xCoor])
         {
             int size = 1, i = coor.yCoor, j = coor.xCoor;
             ischecked[i, j] = true;
@@ -473,7 +508,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         int size = 1, i = curr.yCoor, j = curr.xCoor;
         ischecked[i, j] = true;
         Queue<Coordinate> q = new Queue<Coordinate>();
-        Coordinate c,tempCoor;
+        Coordinate c, tempCoor;
         q.Enqueue(new Coordinate(j, i));
         //Ngambil Ukuran area 1 per 1
         while (q.Count > 0)
