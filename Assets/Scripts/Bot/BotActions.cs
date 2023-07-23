@@ -26,7 +26,7 @@ public class BotActions : MonoBehaviour
     Rigidbody2D thisRigid;
     PlayersManager playerManagerRef;
     GameObject target;
-    Vector2 lastpos, direction;
+    Vector2 lastpos, direction,viewDirection;
     float timeDelay = 0.5f, currentTimeDelay = 0;
     SnowBrawler snowBrawlerRef;
 
@@ -113,10 +113,18 @@ public class BotActions : MonoBehaviour
                 currDistance = Vector2.Distance(transform.position, currentHitObject.collider.transform.position);
                 if (currentHitObject.collider.CompareTag("BallPile") && currDistance < shortestBallDist)
                 {
-                    shortestBallDist = currDistance;
-                    sawBallGO = currentHitObject.collider.gameObject;
+                    if (currentHitObject.collider.GetComponent<PowerUp>() == null)
+                    {
+                        shortestBallDist = currDistance;
+                        sawBallGO = currentHitObject.collider.gameObject;
+                    }
+                    else if (!currentHitObject.collider.GetComponent<PowerUp>().isActive())
+                    {
+                        shortestBallDist = currDistance;
+                        sawBallGO = currentHitObject.collider.gameObject;
+                    }
                 }
-                else if (currentHitObject.collider.CompareTag("Player") && currDistance < shortestEnemyDist)
+                else if ((currentHitObject.collider.CompareTag("Player") || currentHitObject.collider.CompareTag("EnemyTeam") )&& currDistance < shortestEnemyDist)
                 {
                     if (currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
                     {
@@ -138,10 +146,16 @@ public class BotActions : MonoBehaviour
         if (!walkLocation.Equals(Vector2.zero))
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
-            float x = (direction.x == 0 ? 1 : direction.x);
-            transform.localScale = new Vector3(x / Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+            viewDirection = direction;
+            
             thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
+
+        float x = (viewDirection.x == 0 ? 1 : viewDirection.x);
+        transform.localScale = new Vector3(x / Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+
+        if (snowBrawlerRef.isAiming)
+            direction = Vector3.Normalize((Vector2)target.transform.position - (Vector2)transform.position);
     }
 
     public void walkSideways()

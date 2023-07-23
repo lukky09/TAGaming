@@ -123,6 +123,10 @@ public class SetObjects : MonoBehaviour
                         playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
                         oneBotAI = true;
                     }
+                    else
+                    {
+                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
+                    }
                 }
 
             }

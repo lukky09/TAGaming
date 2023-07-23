@@ -343,7 +343,7 @@ MonoBehaviour:
   castingLength: 10
   sphereCastRadius: 1.5
   catchTimerDelay: 3
-  catchChance: 60
+  catchChance: 100
   noticeMark: {fileID: 7215567336116283612}
 --- !u!114 &6630183316652505263
 MonoBehaviour:

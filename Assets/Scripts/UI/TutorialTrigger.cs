@@ -38,6 +38,7 @@ public class TutorialTrigger : MonoBehaviour
         yield return new WaitForSecondsRealtime(1f);
         PlayerPrefs.SetString("TutorialDone", "Yes");
         PlayerPrefs.Save();
+        Time.timeScale = 1;
         if (mandatoryTutorial)
         {
             mandatoryTutorial = false;

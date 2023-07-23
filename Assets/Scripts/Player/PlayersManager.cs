@@ -87,6 +87,11 @@ public class PlayersManager : MonoBehaviour
     {
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
+        if (isPlayerTeam)
+        {
+            tempEnemyPrefab.GetComponent<SnowBrawler>().playerteam = true;
+            tempEnemyPrefab.GetComponent<ColorTaker>().id = 1;
+        }
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
             if (accesibleAreas[j][c.yCoor, c.xCoor])

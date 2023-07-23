@@ -118,7 +118,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] float PURatioAmt;
     [SerializeField] int PURatioWeight;
     [SerializeField] int StagnationTerminationAmt;
-    [SerializeField] bool maxRockFitness;
+    [SerializeField] bool useMaxRockFitness;
     [SerializeField] float maxRockRatio; //Template tidak pakai
     [SerializeField] int maxRockWeight;
     int mapWidth;
@@ -183,7 +183,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ga.Start();
 
         var a = ga.BestChromosome.GetGenes();
-        Debug.Log(String.Join(',',a));
         if (useTemplatedGeneration)
             SetObjects.setMap(putPlayerinTemplate(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
         else
@@ -397,7 +396,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnessScores[3] = (fitnessScores[3] / lokasiPowerUp.Count) * PUPAccesibilityWeight;
         }
 
-        if (maxRockFitness && rockGroupAmount > 0 && useTemplatedGeneration)
+        if (useMaxRockFitness && rockGroupAmount > 0 && useTemplatedGeneration)
             fitnessScores[5] = (fitnessScores[5] / rockGroupAmount) * maxRockWeight;
 
         if (useMirrorFitness)
@@ -409,7 +408,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
     float rockAmountFitness(int[,] map, Coordinate coor, ref bool[,] ischecked)
     {
-        if (maxRockFitness && !ischecked[coor.yCoor, coor.xCoor])
+        if (useMaxRockFitness && !ischecked[coor.yCoor, coor.xCoor])
         {
             int size = 1, i = coor.yCoor, j = coor.xCoor;
             ischecked[i, j] = true;

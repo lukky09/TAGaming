@@ -149,9 +149,18 @@ public class SnowBallManager : MonoBehaviour
 
     public GameObject getBallfromIndex(int index)
     {
-        if (snowballs.Count > 0)
-            return snowballs[index];
-        return null;
+
+        try
+        {
+            if (snowballs.Count > 0)
+                return snowballs[index];
+            return null;
+        }
+        catch (System.Exception)
+        {
+            return null;
+        }
+
     }
 
     public int getBallAmount()
