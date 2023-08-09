@@ -24,6 +24,7 @@ public class SnowBrawler : MonoBehaviour
     bool iscatching;
     Sprite ballSprite;
     Animator animator;
+    AudioSource SFXSource;
     public bool canAct;
 
     Vector2 lastpos;
@@ -33,6 +34,7 @@ public class SnowBrawler : MonoBehaviour
     public void Start()
     {
         animator = GetComponent<Animator>();
+        SFXSource = GetComponent<AudioSource>();
         isAiming = false;
         canAct = true;
         runSpeed = originalRunSpeed;
@@ -101,6 +103,8 @@ public class SnowBrawler : MonoBehaviour
                 ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
             }
         }
+        SFXSource.clip = AudioScript.audioObject.getSound("Get");
+        SFXSource.Play();
         updateHoldedBallVisuals();
     }
 
@@ -123,6 +127,8 @@ public class SnowBrawler : MonoBehaviour
             if (ballPowerId > 0)
                 ballin.GetComponent<SpriteRenderer>().sprite = ballSprite;
         }
+        SFXSource.clip = AudioScript.audioObject.getSound("Yeet");
+        SFXSource.Play();
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
         updateHoldedBallVisuals();
     }

@@ -90,6 +90,7 @@ public class BallMovement : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        AudioSource.PlayClipAtPoint(AudioScript.audioObject.getSound("Get"),transform.position);
         if (collision.tag == "Wall")
         {
             if (powerupId == 5 || powerupId == 3)

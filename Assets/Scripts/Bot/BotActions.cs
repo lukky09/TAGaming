@@ -290,6 +290,8 @@ public class BotActions : MonoBehaviour
 
     IEnumerator visualiseNotice()
     {
+        GetComponent<AudioSource>().clip = AudioScript.audioObject.getSound("Huhwhat");
+        GetComponent<AudioSource>().Play();
         noticeMark.SetActive(true);
         noticeMark.GetComponent<Animator>().Play("Base Layer.BotNotice");
         yield return new WaitForSeconds(0.5f);
