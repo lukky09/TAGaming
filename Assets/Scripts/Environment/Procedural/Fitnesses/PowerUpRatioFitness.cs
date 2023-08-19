@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing;
 using UnityEngine;
 
 public class PowerUpRatioFitness : InLoopFitnessBase
@@ -8,8 +9,11 @@ public class PowerUpRatioFitness : InLoopFitnessBase
     ArrayList areaSize;
     bool[,] ischecked;
     int powerUpAmount;
+    [SerializeField] bool inRatioFormat;
     [Range(0.0f, 100.0f)]
-    [SerializeField] float PURatioAmt;
+    [SerializeField] float minPowerupAmount;
+    [Range(0.0f, 100.0f)]
+    [SerializeField] float maxPowerupAmount;
 
     public override void calculateFitness(int[,] map, Coordinate currCoor)
     {
@@ -52,7 +56,33 @@ public class PowerUpRatioFitness : InLoopFitnessBase
                 biggest = (int)areaSize[i];
         }
 
-            return (1 - MathF.Abs((powerUpAmount / biggest) - (PURatioAmt/100))) * weight;
+        int minRatio, maxRatio;
+        if (inRatioFormat)
+        {
+            minRatio = Mathf.RoundToInt(SetObjects.getHeight() * SetObjects.getWidth() * minPowerupAmount / 100);
+            maxRatio = Mathf.RoundToInt(SetObjects.getHeight() * SetObjects.getWidth() * maxPowerupAmount / 100);
+        }
+        else
+        {
+            minRatio = Mathf.FloorToInt(minPowerupAmount);
+            maxRatio = Mathf.FloorToInt(maxPowerupAmount);
+        }
+        if (maxRatio < minRatio)
+        {
+            Debug.LogWarning("Min dan max ditukar");
+            (minRatio, maxRatio) = (minRatio, maxRatio);
+        }
+
+        float nilaiMinus = 0;
+        if (powerUpAmount < minRatio)
+            nilaiMinus = minRatio - powerUpAmount;
+        else if (powerUpAmount > maxRatio)
+            nilaiMinus = powerUpAmount - maxRatio;
+
+        float nilaiMinusMax = SetObjects.getWidth() * SetObjects.getHeight() - maxRatio > minRatio ? SetObjects.getWidth() * SetObjects.getHeight() - maxRatio : minRatio;
+        nilaiMinus = nilaiMinus / nilaiMinusMax;
+
+        return MathF.Pow(1 - nilaiMinus, 2) * weight;
     }
 
     public override void resetVariables()
@@ -65,7 +95,7 @@ public class PowerUpRatioFitness : InLoopFitnessBase
 
     public float getRatio()
     {
-        return PURatioAmt;
+        return minPowerupAmount / 100;
     }
 
 }

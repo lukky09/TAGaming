@@ -10,12 +10,16 @@ public class WallLengthFitness : InLoopFitnessBase
     int[] wSize = new int[2]; //jumlah [horizontal , vertikal]
     float[] wScore = new float[2]; //skor total  
 
+    //Jujur ini gak perlu dipakai seh
     public override void calculateFitness(int[,] map, Coordinate currCoor)
     {
         int i = currCoor.yCoor, j = currCoor.xCoor;
         int jtemp, itemp;
 
-        int mapWidth = SetObjects.getWidth() / 2;
+        if (map[i, j] != 1)
+            return;
+
+        int mapWidth = SetObjects.getWidth();
         //Cek Horizontal
         if (j + 1 < mapWidth && map[i, j + 1] == 1 && (j == 0 || map[i, j - 1] != 1))
         {

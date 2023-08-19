@@ -1,3 +1,4 @@
+using GeneticSharp.Domain.Chromosomes;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +7,7 @@ using UnityEngine;
 public class TemplateVarietyFitness : InLoopFitnessBase
 {
     [SerializeField] int variedTemplateTolerance;
-    int[,] savedMap;
+    int[] savedMap;
 
     public override void calculateFitness(int[,] map, Coordinate currCoor)
     {
@@ -14,33 +15,35 @@ public class TemplateVarietyFitness : InLoopFitnessBase
     }
 
     //Khusus Template Variety karena dia pake template map bukan map biasanya
-    public void getTemplateMap(int[,] map)
+    public void getTemplateMap(Gene[] map)
     {
-        savedMap = map;
+        
+        savedMap = new int[map.Length];
+        for (int i = 0; i < map.Length; i++)
+        {
+            savedMap[i] = (int)map[i].Value;
+        }
     }
 
     public override float getFitnessScore()
     {
-        SortedList<int, int> templateOccurences = new SortedList<int, int>();
-        for (int i = 0; i < savedMap.GetLength(0); i++)
+        SortedList<int, int> templateOccurences = new();
+        for (int i = 0; i < savedMap.Length; i++)
         {
-            for (int j = 0; j < savedMap.GetLength(1); j++)
-            {
-                if (templateOccurences.ContainsKey(savedMap[i, j]))
-                    templateOccurences.Add(savedMap[i, j], 1);
-                else
-                    templateOccurences[savedMap[i, j]]++;
-            }
+            if (templateOccurences.ContainsKey(savedMap[i]))
+                templateOccurences[savedMap[i]]++;
+            else
+                templateOccurences.Add(savedMap[i], 1);
         }
         int[] scores = new int[templateOccurences.Count];
         int temp;
         for (int i = 0; i < templateOccurences.Count; i++)
         {
-            temp = templateOccurences.Values[i]-variedTemplateTolerance < 0 ? -(templateOccurences.Values[i] - variedTemplateTolerance) : 0;
-            scores[i] = 1 - temp;
+            temp = templateOccurences.Values[i] - variedTemplateTolerance < 0 ? -(templateOccurences.Values[i] - variedTemplateTolerance) : 0;
+            scores[i] = 1 + temp;
         }
 
-        return (scores.Sum() / scores.Length) * weight;
+        return Mathf.Pow(scores.Sum() / scores.Length,2) * weight;
     }
 
     public override void resetVariables()

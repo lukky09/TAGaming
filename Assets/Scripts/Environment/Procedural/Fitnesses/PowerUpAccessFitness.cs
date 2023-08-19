@@ -24,33 +24,33 @@ public class PowerUpAccessFitness : InLoopFitnessBase
     {
         int indexPlayer = 0;
         float tempDistance, biggest;
-        if (lokasiPlayer.Count > 0)
+        if (lokasiPlayer.Count <= 0)
+            return 0;
+
+        for (int i = 0; i < lokasiPowerUp.Count; i++)
         {
-            for (int i = 0; i < lokasiPowerUp.Count; i++)
+            biggest = 999;
+            //Ambil player terdekat biar Astar tidak terlalu lama
+            for (int j = 0; j < lokasiPlayer.Count; j++)
             {
-                biggest = 999;
-                //Ambil player terdekat biar Astar tidak terlalu lama
-                for (int j = 0; j < lokasiPlayer.Count; j++)
+                tempDistance = Coordinate.Distance((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]);
+                if (tempDistance < biggest)
                 {
-                    tempDistance = Coordinate.Distance((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[j]);
-                    if (tempDistance < biggest)
-                    {
-                        biggest = tempDistance;
-                        indexPlayer = j;
-                    }
-                }
-                if (AStarAlgorithm.doAstarAlgo((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[indexPlayer], map) != null)
-                {
-                    fitnessTotal++;
+                    biggest = tempDistance;
+                    indexPlayer = j;
                 }
             }
-            if (lokasiPowerUp.Count > 0)
-                return  (fitnessTotal / lokasiPowerUp.Count) * weight;
-            else
-                return 0;
+            if (AStarAlgorithm.doAstarAlgo((Coordinate)lokasiPowerUp[i], (Coordinate)lokasiPlayer[indexPlayer], map) != null)
+            {
+                fitnessTotal++;
+            }
         }
-        return 0;
-    }
+        if (lokasiPowerUp.Count > 0)
+            return Mathf.Pow(fitnessTotal / lokasiPowerUp.Count, 2) * weight;
+        else
+            return 0;
+
+    }    
 
     public override void resetVariables()
     {

@@ -4,11 +4,13 @@ using UnityEngine;
 
 public class WallGapFitness : InLoopFitnessBase
 {
-
-    [SerializeField] int WallGapLength;
-    [SerializeField] int WallGapLengthMax;
+    [Range(0, 10)]
+    [SerializeField] int minWallGap;
+    [Range(0, 10)]
+    [SerializeField] int maxWallGap;
     int jumlahGap;
 
+    // Kalau ini dipakai area besar akan lebih sedikit, mungkin jangan dipakai
     public override void calculateFitness(int[,] map, Coordinate currCoor)
     {
         int i = currCoor.yCoor, j = currCoor.xCoor;
@@ -23,10 +25,10 @@ public class WallGapFitness : InLoopFitnessBase
             jtemp = j + 1;
             while (jtemp < SetObjects.getWidth() && map[i, jtemp] != 1)
                 jtemp++;
-            if (jtemp - j < WallGapLengthMax)
+            if (jtemp - j < maxWallGap)
             {
                 jumlahGap++;
-                fitnessTotal += Mathf.Log10((jtemp - j) * 10 / WallGapLength);
+                fitnessTotal += Mathf.Log10((jtemp - j) * 10 / minWallGap);
             }
         }
         //Cek Vertikal
@@ -35,10 +37,10 @@ public class WallGapFitness : InLoopFitnessBase
             itemp = i + 1;
             while (itemp < SetObjects.getHeight() && map[itemp, j] != 1)
                 itemp++;
-            if (itemp - i < WallGapLengthMax)
+            if (itemp - i < minWallGap)
             {
                 jumlahGap++;
-                fitnessTotal += Mathf.Log10((itemp - i) * 10 / WallGapLength);
+                fitnessTotal += Mathf.Log10((itemp - i) * 10 / minWallGap);
             }
         }
 

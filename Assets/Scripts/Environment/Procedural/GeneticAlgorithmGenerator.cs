@@ -71,7 +71,6 @@ public class TemplatedMapChromosome : ChromosomeBase
     private readonly int m_ukuranMap;
     public TemplatedMapChromosome(int ukuranMap) : base(ukuranMap)
     {
-        int temp;
         m_ukuranMap = ukuranMap;
         var mapValues = RandomizationProvider.Current.GetInts(ukuranMap, -(PossibleTemplates.getTemplateAmount()), (PossibleTemplates.getTemplateAmount()) - 1);
 
@@ -104,23 +103,26 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] bool useTemplatedGeneration;
     [SerializeField] int StagnationTerminationAmt;
     InLoopFitnessBase[] fitnesses;
-    int mapWidth;
 
     // Start is called before the first frame update
     void Start()
     {
         fitnesses = GetComponents<InLoopFitnessBase>();
+        useTemplatedGeneration = MainMenuNavigation.isTemplate;
+        Debug.Log(fitnesses.Length);
         for (int i = 0; i < fitnesses.Length; i++)
         {
+            //Debug.Log(!fitnesses[i].IsUsed +" - "+ (useTemplatedGeneration && !fitnesses[i].ForTemplateGen) + " - " + (!useTemplatedGeneration && !fitnesses[i].ForTileGen));
             //Ngilangin Fitness yang ngga dipakai
-            if (!fitnesses[i].IsUsed || !(useTemplatedGeneration && fitnesses[i].ForTemplateGen) || !(!useTemplatedGeneration && fitnesses[i].ForTileGen))
+            if (!fitnesses[i].IsUsed || (useTemplatedGeneration && !fitnesses[i].ForTemplateGen) || (!useTemplatedGeneration && !fitnesses[i].ForTileGen))
                 fitnesses[i] = null;
         }
         fitnesses = fitnesses.Where(f => f != null).ToArray();
+        Debug.Log(fitnesses.Length);
 
         double fitness;
-        useTemplatedGeneration = MainMenuNavigation.isTemplate;
-        int length = SetObjects.getHeight() * SetObjects.getWidth();
+      
+        int generatedMapLength = SetObjects.getHeight() * SetObjects.getWidth() / 2;
 
         //Multithreading
         var taskExecutor = new ParallelTaskExecutor();
@@ -130,11 +132,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ChromosomeBase chromosome;
         //Kromosom
         if (useTemplatedGeneration)
-         chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(length / 25));
+         chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(generatedMapLength / 25));
         else
         {
-            Debug.Log(length);
-            chromosome = new GameChromosome(length, Mathf.FloorToInt(GetComponent<PowerUpRatioFitness>().getRatio() * length));
+            chromosome = new GameChromosome(generatedMapLength, Mathf.FloorToInt(GetComponent<PowerUpRatioFitness>().getRatio() * generatedMapLength/2));
         }
 
         //Populasi
@@ -144,11 +145,13 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             var fc = c.GetGenes();
             int[,] map;
+            //Menghasilkan map utuh yang siap diperiksa oleh fitness
             if (useTemplatedGeneration)
-                map = putPlayerinTemplate(fc, mapWidth, SetObjects.getHeight());
+                map = putPlayerinTemplate(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
+            
             else
-                map = deflatten(fc, mapWidth, SetObjects.getHeight());
-            fitness = fitnessFunction(map);
+                map = deflatten(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
+            fitness = fitnessFunction(map, fc);
             //Debug.Log(fitness);
             return fitness;
         });
@@ -168,13 +171,73 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         var a = ga.BestChromosome.GetGenes();
         if (useTemplatedGeneration)
-            SetObjects.setMap(putPlayerinTemplate(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
+        {
+            SetObjects.setMap(putPlayerinTemplate(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
+        }
         else
         {
-            SetObjects.setMap(deflatten(a, mapWidth, SetObjects.getHeight()), useMirrorFitness);
+            //Debug.Log(print2DArray(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight())));
+            SetObjects.setMap(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
         MainMenuNavigation.changeSceneIndex(5);
     }
+
+    double fitnessFunction(int[,] map , Gene[] original)
+    {
+        int playerAmount = 0;
+        InLoopFitnessBase[] currentFitnesses = (InLoopFitnessBase[])fitnesses.Clone();
+
+        //Khusus Template Variety
+        for (int i = 0; i < currentFitnesses.Length; i++)
+            if (currentFitnesses[i].GetType() == GetComponent<TemplateVarietyFitness>().GetType())
+                ((TemplateVarietyFitness)currentFitnesses[i]).getTemplateMap(original);
+        
+
+        double[] fitnessScores = new double[fitnesses.Length];
+        foreach (InLoopFitnessBase item in currentFitnesses)
+            item.resetVariables();
+
+        Coordinate tempCoor;
+        for (int i = 0; i < SetObjects.getHeight(); i++)
+            for (int j = 0; j < SetObjects.getWidth(); j++) {
+                tempCoor = new Coordinate(j, i);
+                if (map[tempCoor.yCoor, tempCoor.xCoor] == 3)
+                    playerAmount++;
+                foreach (InLoopFitnessBase item in currentFitnesses)
+                {
+                    item.calculateFitness(map,tempCoor);
+                }
+            }
+
+        for (int i = 0; i < currentFitnesses.Length; i++)
+        {
+            fitnessScores[i] = currentFitnesses[i].getFitnessScore();
+        }
+
+        //Debug.Log(printFitness(currentFitnesses));
+        //Debug.Log(String.Join(" - ", fitnessScores));
+        //Debug.Log(print2DArray(map));
+        return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(playerAmount - 10) * 5 + 1, 3), 3);
+    }
+
+
+
+    int[,] deflatten(Gene[] arrays, int width, int height)
+    {
+        int[,] result = new int[height, width * (useMirrorFitness ? 2 : 1)];
+        for (int i = 0; i < height; i++)
+        {
+            for (int j = 0; j < width; j++)
+            {
+                //Debug.Log(i + "," + j+","+ (width - 1 - j));
+                result[i, j] = (int)((Gene)arrays[i * width + j]).Value;
+                if (useMirrorFitness)
+                    result[i, (width * 2) - 1 - j] = (int)((Gene)arrays[i * width + j]).Value;
+            }
+        }
+        return result;
+    }
+
 
     int[,] templateDeflatten(Gene[] arrays, int width, int height)
     {
@@ -217,7 +280,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             else
             {
                 Queue<Coordinate> q = new Queue<Coordinate>();
-                Coordinate currentCoor,tempCoor;
+                Coordinate currentCoor, tempCoor;
                 q.Enqueue(item);
                 while (q.Count != 0)
                 {
@@ -226,7 +289,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     {
                         tempCoor = new Coordinate(currentCoor.xCoor + Mathf.RoundToInt(Mathf.Sin(k * Mathf.PI / 2)), currentCoor.yCoor + Mathf.RoundToInt(Mathf.Cos(k * Mathf.PI / 2)));
                         q.Enqueue(tempCoor);
-                        if (tempTemplate[tempCoor.yCoor,tempCoor.xCoor] == 0)
+                        if (tempTemplate[tempCoor.yCoor, tempCoor.xCoor] == 0)
                         {
                             tempTemplate[item.yCoor, item.xCoor] = 3;
                             q.Clear();
@@ -237,54 +300,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             }
         }
         return tempTemplate;
-    }
-
-    int[,] deflatten(Gene[] arrays, int width, int height)
-    {
-        int[,] result = new int[height, width * (useMirrorFitness ? 2 : 1)];
-        for (int i = 0; i < height; i++)
-        {
-            for (int j = 0; j < width; j++)
-            {
-                //Debug.Log(i + "," + j+","+ (width - 1 - j));
-                result[i, j] = (int)((Gene)arrays[i * width + j]).Value;
-                if (useMirrorFitness)
-                    result[i, (width * 2) - 1 - j] = (int)((Gene)arrays[i * width + j]).Value;
-            }
-        }
-        return result;
-    }
-
-    double fitnessFunction(int[,] map)
-    {
-        int playerAmount = 0;
-        InLoopFitnessBase[] currentFitnesses = (InLoopFitnessBase[])fitnesses.Clone();
-        double[] fitnessScores = new double[fitnesses.Length];
-        foreach (InLoopFitnessBase item in currentFitnesses)
-        {
-            item.resetVariables();
-        }
-
-        Coordinate tempCoor;
-        for (int i = 0; i < SetObjects.getHeight(); i++)
-            for (int j = 0; j < mapWidth; j++) {
-                tempCoor = new Coordinate(j, i);
-                if (map[tempCoor.yCoor, tempCoor.xCoor] == 3)
-                    playerAmount++;
-                foreach (InLoopFitnessBase item in currentFitnesses)
-                {
-                    item.calculateFitness(map,tempCoor);
-                }
-            }
-
-        for (int i = 0; i < currentFitnesses.Length; i++)
-        {
-            fitnessScores[i] = currentFitnesses[i].getFitnessScore();
-        }
-
-        //Debug.Log(printFitness(currentFitnesses));
-        //Debug.Log(String.Join(" - ", fitnessScores));
-        return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(playerAmount - 10) * 5 + 1, 3), 3);
     }
 
     public static string printFitness(FitnessBase[] fitnesses)
@@ -304,7 +319,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             for (int j = 0; j < array.GetLength(1); j++)
             {
-                s += array[i, j] + ",";
+                if(array[i, j] == 1)
+                    s += "<color=grey>"+array[i, j] + "</color>,";
+                else if(array[i, j] == 2)
+                    s += "<color=green>" + array[i, j] + "</color>,";
+                else if (array[i, j] == 3)
+                    s += "<color=red>" + array[i, j] + "</color>,";
             }
             s += "\n";
         }

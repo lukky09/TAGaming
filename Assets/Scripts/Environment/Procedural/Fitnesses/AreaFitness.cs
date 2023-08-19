@@ -18,7 +18,7 @@ public class AreaFitness : InLoopFitnessBase
         Queue<Coordinate> q = new Queue<Coordinate>();
         Coordinate c, tempCoor;
         q.Enqueue(new Coordinate(j, i));
-        //Ngambil Ukuran area 1 per 1
+        //Ngambil Ukuran area yang sekarang di koordinat currCoor
         while (q.Count > 0)
         {
             c = q.Dequeue();
@@ -48,12 +48,13 @@ public class AreaFitness : InLoopFitnessBase
                 biggest = (int)areaSize[i];
         }
 
-        fitnessTotal = biggest * 2;
-        for (int i = 0; i < areaSize.Count; i++)
-        {
-            fitnessTotal -= (int)areaSize[i];
-        }
-        return fitnessTotal * weight / totalSize;
+        fitnessTotal = biggest / totalSize;
+        return Mathf.Pow(fitnessTotal, 2) * weight;
+        //for (int i = 0; i < areaSize.Count; i++)
+        //{
+        //    fitnessTotal -= (int)areaSize[i];
+        //}
+        //return fitnessTotal * weight / totalSize;
     }
 
     public override void resetVariables()
@@ -61,6 +62,5 @@ public class AreaFitness : InLoopFitnessBase
         areaSize = new ArrayList();
         totalSize = 0;
         ischecked = new bool[SetObjects.getHeight(), SetObjects.getWidth()];
-        fitnessTotal = 0;
     }
 }
