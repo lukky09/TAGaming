@@ -9,6 +9,8 @@ public class ShootMechanic : SnowBrawler
     [SerializeField] float aimAngle;
     [SerializeField] float aimTime;
     public float aimMovementSpeedPerc;
+    public bool IsFaking { get { return _isFaking; } }
+    bool _isFaking;
 
     private float currentaimangle;
     private float currentAimTime;
@@ -19,6 +21,7 @@ public class ShootMechanic : SnowBrawler
         playerteam = true;
         currentAimTime = 0;
         isAiming = false;
+        _isFaking = false;
         base.Start();
     }
 
@@ -36,13 +39,25 @@ public class ShootMechanic : SnowBrawler
         if (Input.GetKeyDown(KeyCode.E))
         {
             getBall();
+            return;
         }
+        //Mulai ngeaim
         if (Input.GetMouseButtonDown(0) && (ballAmount > 0 || caughtBall != null))
         {
             currentAimTime = aimTime;
             isAiming = true;
             line1.SetActive(true);
             line2.SetActive(true);
+            return;
+        }
+        //Fakeout
+        if(Input.GetMouseButtonDown(1) && isAiming)
+        {
+            line1.SetActive(false);
+            line2.SetActive(false);
+            isAiming = false;
+            StartCoroutine(Fakeout());
+            return;
         }
         if (Input.GetMouseButtonUp(0) && isAiming)
         {
@@ -54,7 +69,9 @@ public class ShootMechanic : SnowBrawler
             line1.SetActive(false);
             line2.SetActive(false);
             shartShooting();
+            return;
         }
+        //Kalkulasi 2 garis bidikan
         if (isAiming)
         {
             Vector3 throwDir = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
@@ -71,4 +88,18 @@ public class ShootMechanic : SnowBrawler
         }
     }
 
+    IEnumerator Fakeout()
+    {
+        canAct = false;
+        _isFaking = true;
+        GetComponent<Animator>().SetBool("IsFaking",true);
+        yield return new WaitForSeconds(0.5f);
+        _isFaking = false;
+        GetComponent<Animator>().SetBool("IsFaking", false);
+        isAiming = true;
+        line1.SetActive(true);
+        line2.SetActive(true);
+        canAct = true;
+    }
+    
 }

@@ -324,6 +324,7 @@ MonoBehaviour:
   ballTakeRange: 1
   ball: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
   isAiming: 0
+  catchRecharge: 1
   canAct: 0
   timeDelay: 0.1
 --- !u!114 &307614600252962186

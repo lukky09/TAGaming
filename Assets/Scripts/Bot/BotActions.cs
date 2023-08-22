@@ -124,7 +124,7 @@ public class BotActions : MonoBehaviour
                         sawBallGO = currentHitObject.collider.gameObject;
                     }
                 }
-                else if ((currentHitObject.collider.CompareTag("Player") || currentHitObject.collider.CompareTag("EnemyTeam") )&& currDistance < shortestEnemyDist)
+                else if ((currentHitObject.collider.CompareTag("Player") || currentHitObject.collider.CompareTag("EnemyTeam")) && currDistance < shortestEnemyDist)
                 {
                     if (currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
                     {
@@ -147,12 +147,12 @@ public class BotActions : MonoBehaviour
         {
             direction = Vector3.Normalize(walkLocation - (Vector2)transform.position);
             viewDirection = direction;
-            
+
             thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
 
-        float x = (viewDirection.x == 0 ? 1 : viewDirection.x);
-        transform.localScale = new Vector3(x / Mathf.Abs(x), transform.localScale.y, transform.localScale.z);
+        if (viewDirection.x != 0)
+            transform.localScale = new Vector3(viewDirection.x / Mathf.Abs(viewDirection.x), transform.localScale.y, transform.localScale.z);
 
         if (snowBrawlerRef.isAiming)
             direction = Vector3.Normalize((Vector2)target.transform.position - (Vector2)transform.position);
@@ -258,10 +258,17 @@ public class BotActions : MonoBehaviour
         return false;
     }
 
-    public void tryCatchBall()
+    public void tryCatchBallChance()
     {
         if (Random.Range(1, 101) < catchChance)
             StartCoroutine(snowBrawlerRef.catchBall());
+        catchTimer = catchTimerDelay;
+        Debug.Log("Coba Tangkap Bola");
+    }
+
+    public void tryCatchBall()
+    {
+        StartCoroutine(snowBrawlerRef.catchBall());
         catchTimer = catchTimerDelay;
         Debug.Log("Coba Tangkap Bola");
     }
@@ -327,5 +334,10 @@ public class BotActions : MonoBehaviour
     public float getCatchTimer()
     {
         return catchTimer;
+    }
+
+    public void setDirection(Vector2 dir)
+    {
+        direction = dir;
     }
 }

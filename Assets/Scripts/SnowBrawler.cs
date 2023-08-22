@@ -21,11 +21,13 @@ public class SnowBrawler : MonoBehaviour
     public float ballTakeRange;
     public GameObject ball;
     public bool isAiming;
+    public float catchRecharge;
     bool iscatching;
     Sprite ballSprite;
     Animator animator;
     AudioSource SFXSource;
     public bool canAct;
+    bool canCatchBall;
 
     Vector2 lastpos;
     public float timeDelay = 0.1f;
@@ -38,6 +40,7 @@ public class SnowBrawler : MonoBehaviour
         isAiming = false;
         canAct = true;
         runSpeed = originalRunSpeed;
+        canCatchBall = true;
     }
 
     public void Update()
@@ -181,6 +184,16 @@ public class SnowBrawler : MonoBehaviour
         animator.SetBool("IsCatching", false);
         runSpeed = originalRunSpeed;
         iscatching = false;
+        StartCoroutine(catchRecharging());
+    }
+
+    public IEnumerator catchRecharging()
+    {
+        canCatchBall = false;
+        GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
+        yield return new WaitForSeconds(catchRecharge);
+        GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
+        canCatchBall = true;
     }
 
     public void shartShooting()
