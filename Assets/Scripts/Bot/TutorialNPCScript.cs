@@ -20,7 +20,6 @@ public class TutorialNPCScript : MonoBehaviour
     {
         if (target != null && target.GetComponent<ShootMechanic>().IsFaking && GetComponent<BotActions>().getCatchTimer() < 0)
         {
-            Debug.Log("Faker");
             GetComponent<BotActions>().tryCatchBall();
         }
         if (botReference.canSeePerson() && !targetSeen)
