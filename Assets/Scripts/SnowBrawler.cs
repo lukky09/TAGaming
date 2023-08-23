@@ -85,7 +85,7 @@ public class SnowBrawler : MonoBehaviour
     {
         int ballindex = SnowBallManager.Instance.getNearestBallIndex(transform);
         Debug.Log(ballindex);
-        if (ballindex < 0 || Vector2.Distance(transform.position, SnowBallManager.Instance.getBallfromIndex(ballindex).transform.position))
+        if (ballindex < 0 || Vector2.Distance(transform.position, SnowBallManager.Instance.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
             return;
         if (SnowBallManager.Instance.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
