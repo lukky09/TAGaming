@@ -8,7 +8,7 @@ using System.Linq;
 
 public class AStarAlgorithm : MonoBehaviour
 {
-    public static float circleSize = 0.4f;
+    public static float circleSize = 1f;
 
     public static Coordinate[] makeWay(Transform character, Transform ball)
     {
@@ -29,8 +29,11 @@ public class AStarAlgorithm : MonoBehaviour
         else
         {
             AstarNode result = doAstarAlgo(character, ball, SetObjects.getMap(false));
-            if (result == null)
+            if (result == null || result.parentNode == null)
+            {
+                Debug.Log("Null : " + character.ToString() + " ke " + ball.ToString());
                 return null;
+            }
             ArrayList coordinates = new ArrayList();
             while (result.parentNode != null)
             {
@@ -139,7 +142,6 @@ public class AStarAlgorithm : MonoBehaviour
                 }
             }
         }
-        Debug.Log("Null : " + posisikarakter + " ke " + posisibola);
         return null;
     }
 
@@ -194,6 +196,11 @@ public class Coordinate
     public static Coordinate returnAsCoordinate(Vector2 vector)
     {
         return new Coordinate(Mathf.RoundToInt(vector.x - 1.5f), Mathf.RoundToInt(-vector.y - 0.5f));
+    }
+
+    public bool Equal(Coordinate c)
+    {
+        return (c.xCoor == xCoor && c.yCoor == yCoor);
     }
 
     public Vector2 returnAsVector()

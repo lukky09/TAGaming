@@ -72,6 +72,7 @@ public class BarScoreManager : MonoBehaviour
         else if(enemyTeamBar.value >= playerTeamBar.value)
             gameOverText.text = "enemy team wins";
         yield return new WaitForSecondsRealtime(2);
+        Time.timeScale = 1;
         MainMenuNavigation.changeSceneIndex(0);
     }
 }

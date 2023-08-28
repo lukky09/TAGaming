@@ -40,6 +40,7 @@ public class BotActions : MonoBehaviour
 
     public void forgetTarget()
     {
+        target.GetComponent<SnowBrawler>().isTargeted = false;
         target = null;
     }
 
@@ -61,7 +62,9 @@ public class BotActions : MonoBehaviour
     public void setTarget(GameObject target)
     {
         this.target = target;
-        StartCoroutine(visualiseNotice());
+        target.GetComponent<SnowBrawler>().isTargeted = true;
+        if (target.GetComponent<ShootMechanic>() != null)
+            StartCoroutine(visualiseNotice());
     }
 
     public void setWalkLocation(Coordinate walkLocation)
@@ -113,18 +116,13 @@ public class BotActions : MonoBehaviour
                 currDistance = Vector2.Distance(transform.position, currentHitObject.collider.transform.position);
                 if (currentHitObject.collider.CompareTag("BallPile") && currDistance < shortestBallDist)
                 {
-                    if (currentHitObject.collider.GetComponent<PowerUp>() == null)
-                    {
-                        shortestBallDist = currDistance;
-                        sawBallGO = currentHitObject.collider.gameObject;
-                    }
-                    else if (!currentHitObject.collider.GetComponent<PowerUp>().isActive())
+                    if (currentHitObject.collider.GetComponent<PowerUp>() == null || currentHitObject.collider.GetComponent<PowerUp>().isActive())
                     {
                         shortestBallDist = currDistance;
                         sawBallGO = currentHitObject.collider.gameObject;
                     }
                 }
-                else if ((currentHitObject.collider.CompareTag("Player") || currentHitObject.collider.CompareTag("EnemyTeam")) && currDistance < shortestEnemyDist)
+                else if ((currentHitObject.collider.CompareTag("Player") || currentHitObject.collider.CompareTag("EnemyTeam")) && currDistance < shortestEnemyDist && !currentHitObject.collider.GetComponent<SnowBrawler>().isTargeted)
                 {
                     if (currentHitObject.collider.GetComponent<SnowBrawler>().getplayerteam() != snowBrawlerRef.getplayerteam())
                     {
@@ -151,11 +149,11 @@ public class BotActions : MonoBehaviour
             thisRigid.MovePosition((Vector2)transform.position + (direction * Time.deltaTime * snowBrawlerRef.runSpeed * (snowBrawlerRef.isAiming ? aimSpeedPercentage : 1)));
         }
 
+        if (target != null)
+            viewDirection = Vector3.Normalize((Vector2)target.transform.position - (Vector2)transform.position);
+
         if (viewDirection.x != 0)
             transform.localScale = new Vector3(viewDirection.x / Mathf.Abs(viewDirection.x), transform.localScale.y, transform.localScale.z);
-
-        if (snowBrawlerRef.isAiming)
-            direction = Vector3.Normalize((Vector2)target.transform.position - (Vector2)transform.position);
     }
 
     public void walkSideways()
@@ -242,14 +240,15 @@ public class BotActions : MonoBehaviour
     public bool stillCanSeeTarget()
     {
         Vector2 direction = target.transform.position - transform.position;
-        RaycastHit2D seenObject = Physics2D.Linecast((Vector2)transform.position + direction, target.transform.position);
-        return (seenObject.collider.gameObject == target);
+        RaycastHit2D seenObject = Physics2D.Linecast((Vector2)transform.position + direction, target.transform.position,64);
+        return (!seenObject);
     }
 
     public bool isThrowBlocked()
     {
         Vector2 direction = target.transform.position - transform.position;
-        RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, AStarAlgorithm.circleSize, direction, Vector2.Distance(target.transform.position, transform.position));
+        //Hanya kalau diblok oleh batu
+        RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, AStarAlgorithm.circleSize, direction, Vector2.Distance(target.transform.position, transform.position),64);
         foreach (RaycastHit2D item in seenObject)
         {
             if (!item.collider.CompareTag("BallPile") && item.collider.gameObject != target && item.collider.gameObject != gameObject)
@@ -284,12 +283,12 @@ public class BotActions : MonoBehaviour
         if (sawProjectileGO == null)
             return false;
         Vector2 dir = Vector3.Normalize(transform.position - sawProjectileGO.transform.position);
-        RaycastHit2D[] objectsInWay = Physics2D.CircleCastAll(sawProjectileGO.transform.position, 1, dir, Vector2.Distance(transform.position, sawProjectileGO.transform.position));
+        RaycastHit2D[] objectsInWay = Physics2D.CircleCastAll(sawProjectileGO.transform.position, 0.4f, dir, Vector2.Distance(transform.position, sawProjectileGO.transform.position));
         foreach (RaycastHit2D item in objectsInWay)
         {
             if (item.collider.CompareTag("Wall"))
                 return false;
-            if (item.collider == gameObject)
+            if (item.collider.gameObject == gameObject && sawProjectileGO.GetComponent<BallMovement>().getThrower() != gameObject)
                 return true;
         }
         return false;
@@ -310,6 +309,10 @@ public class BotActions : MonoBehaviour
         return sawProjectileGO != null;
     }
 
+    public GameObject getSeenProjectile()
+    {
+        return sawProjectileGO;
+    }
 
     public bool canSeeBall()
     {

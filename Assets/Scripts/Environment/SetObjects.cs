@@ -120,10 +120,10 @@ public class SetObjects : MonoBehaviour
                     }
                     else if (only1BotActive && !oneBotAI)
                     {
-                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
+                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor,false);
                         oneBotAI = true;
                     }
-                    else
+                    else if(!only1BotActive)
                     {
                         playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
                     }

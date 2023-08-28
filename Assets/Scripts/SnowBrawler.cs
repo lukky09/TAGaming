@@ -28,6 +28,7 @@ public class SnowBrawler : MonoBehaviour
     AudioSource SFXSource;
     public bool canAct;
     bool canCatchBall;
+    public bool isTargeted;
 
     Vector2 lastpos;
     public float timeDelay = 0.1f;
@@ -41,6 +42,7 @@ public class SnowBrawler : MonoBehaviour
         canAct = true;
         runSpeed = originalRunSpeed;
         canCatchBall = true;
+        isTargeted = false;
     }
 
     public void Update()
@@ -67,7 +69,7 @@ public class SnowBrawler : MonoBehaviour
                     Destroy(caughtBall);
                 caughtBall = collision.gameObject;
                 caughtBall.SetActive(false);
-                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>());
+                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(),gameObject);
                 updateHoldedBallVisuals();
             }
             else
@@ -84,7 +86,6 @@ public class SnowBrawler : MonoBehaviour
     public void getBall()
     {
         int ballindex = SnowBallManager.Instance.getNearestBallIndex(transform);
-        Debug.Log(ballindex);
         if (ballindex < 0 || Vector2.Distance(transform.position, SnowBallManager.Instance.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
             return;
         if (SnowBallManager.Instance.getBallfromIndex(ballindex).GetComponent<PowerUp>())
@@ -103,7 +104,7 @@ public class SnowBrawler : MonoBehaviour
             {
                 ballPowerId = 0;
                 SnowBallManager.Instance.deleteclosestball(transform, ballTakeRange);
-                ballAmount = 3;
+                ballAmount = 1;
                 ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
             }
         }
@@ -147,6 +148,11 @@ public class SnowBrawler : MonoBehaviour
         return playerteam;
     }
 
+    public bool getIsTargeted()
+    {
+        return isTargeted;
+    }
+
     public GameObject getCaughtBall()
     {
         return caughtBall;
@@ -180,6 +186,7 @@ public class SnowBrawler : MonoBehaviour
     {
         runSpeed = 0;
         iscatching = true;
+        canCatchBall = false;
         animator.SetBool("IsCatching", true);
         yield return new WaitForSeconds(ballCatchTimer);
         animator.SetBool("IsCatching", false);
@@ -190,7 +197,6 @@ public class SnowBrawler : MonoBehaviour
 
     public IEnumerator catchRecharging()
     {
-        canCatchBall = false;
         GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.5f, 0.5f);
         yield return new WaitForSeconds(catchRecharge);
         GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
@@ -216,6 +222,11 @@ public class SnowBrawler : MonoBehaviour
     {
         if (!iscatching)
             StartCoroutine(catchBall());
+    }
+
+    public bool getIsCatching()
+    {
+        return iscatching;
     }
 
     void updateHoldedBallVisuals()

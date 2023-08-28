@@ -89,7 +89,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 135b5e69a8190294181aa8d222da16a1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isUsed: 0
+  isUsed: 1
   forTileGen: 1
   forTemplateGen: 0
   fitnessName: Rock Total Amount
@@ -108,7 +108,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6e8c7bac8a353047b5bf562dd1e5dc7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isUsed: 0
+  isUsed: 1
   forTileGen: 1
   forTemplateGen: 1
   fitnessName: Area Size
@@ -125,7 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3f9a6e291223790489ad7b4a54bb4b19, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isUsed: 0
+  isUsed: 1
   forTileGen: 1
   forTemplateGen: 1
   fitnessName: Power Up Access
@@ -142,7 +142,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3e3178fe257850a4583cd2166f418c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isUsed: 0
+  isUsed: 1
   forTileGen: 1
   forTemplateGen: 1
   fitnessName: Power Up Ratio

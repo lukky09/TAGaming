@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class TutorialNPCScript : MonoBehaviour
 {
+    [SerializeField] GameObject objectToDelete;
+
     BotActions botReference;
     bool targetSeen;
     GameObject target;
@@ -21,7 +23,14 @@ public class TutorialNPCScript : MonoBehaviour
         if (target != null && target.GetComponent<ShootMechanic>().IsFaking && GetComponent<BotActions>().getCatchTimer() < 0)
         {
             GetComponent<BotActions>().tryCatchBall();
+            return;
         }
+        if (GetComponent<BotActions>().canSeeProjectile() && Vector2.Distance(transform.position, GetComponent<BotActions>().getSeenProjectile().transform.position) <= 1)
+        {
+            GetComponent<BotActions>().tryCatchBall();
+            return;
+        }
+
         if (botReference.canSeePerson() && !targetSeen)
         {
             targetSeen = true;
@@ -29,5 +38,12 @@ public class TutorialNPCScript : MonoBehaviour
             target = botReference.getSeenEnemy();
         }
 
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        Debug.Log(GetComponent<SnowBrawler>().getIsCatching());
+        if(!GetComponent<SnowBrawler>().getIsCatching())
+            Destroy(objectToDelete);
     }
 }

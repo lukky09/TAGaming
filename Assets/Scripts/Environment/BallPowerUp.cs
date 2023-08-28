@@ -40,7 +40,7 @@ public class BallPowerUp : MonoBehaviour
             case 2:
                 if (bmRef.getPlayerTeam() != sbReff.getplayerteam())
                 {
-                    bmRef.ballIsCatched(bmRef.getPlayerTeam(), sbReff.ballScoreAdd, sbReff.ballSpeedAdd, collider.GetComponent<BoxCollider2D>());
+                    bmRef.ballIsCatched(bmRef.getPlayerTeam(), sbReff.ballScoreAdd, sbReff.ballSpeedAdd, collider.GetComponent<BoxCollider2D>(),bmRef.getThrower());
                     bmRef.setDirection(bmRef.getThrower().transform.position - transform.position);
                 }
                 else

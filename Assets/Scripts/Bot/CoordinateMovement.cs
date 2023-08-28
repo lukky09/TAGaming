@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class CoordinateMovement : MonoBehaviour
@@ -21,8 +22,12 @@ public class CoordinateMovement : MonoBehaviour
 
     public void setTargetCoordinate(Coordinate targetCoordinate)
     {
+        
         _targetCoordinate = targetCoordinate;
-        _pathCoordinates = AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), targetCoordinate);
+        if (targetCoordinate.Equal(Coordinate.returnAsCoordinate(transform.position)))
+            _pathCoordinates = new Coordinate[] { new Coordinate(targetCoordinate.xCoor, targetCoordinate.yCoor) };
+        else
+            _pathCoordinates = AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), targetCoordinate);
         _currentPathIndex = 0;
         _botActRef.setWalkLocation(_pathCoordinates[_currentPathIndex]);
     }

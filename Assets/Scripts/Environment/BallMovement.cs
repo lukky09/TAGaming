@@ -101,7 +101,7 @@ public class BallMovement : MonoBehaviour
 
     }
 
-    public void ballIsCatched(bool isPlayerTeam, int addScore, float speed, Collider2D you)
+    public void ballIsCatched(bool isPlayerTeam, int addScore, float speed, Collider2D you, GameObject thrower)
     {
         this.fromPlayerTeam = isPlayerTeam;
         this.ballScore += addScore;
@@ -112,6 +112,7 @@ public class BallMovement : MonoBehaviour
         //Ngga bisa kena pelempar baru
         Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), you);
         currentCollider = you;
+        this.thrower = thrower;
     }
 
     public void setDirection(Vector2 direction)

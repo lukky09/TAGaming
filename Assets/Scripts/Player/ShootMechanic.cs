@@ -59,7 +59,7 @@ public class ShootMechanic : SnowBrawler
             StartCoroutine(Fakeout());
             return;
         }
-        if (Input.GetMouseButtonUp(0) && isAiming)
+        if (!Input.GetMouseButton(0) && isAiming)
         {
             Vector2 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             Vector2 direction = mousePos - (Vector2)this.transform.position;
