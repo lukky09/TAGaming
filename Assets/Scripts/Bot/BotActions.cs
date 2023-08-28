@@ -29,9 +29,11 @@ public class BotActions : MonoBehaviour
     Vector2 lastpos, direction,viewDirection;
     float timeDelay = 0.5f, currentTimeDelay = 0;
     SnowBrawler snowBrawlerRef;
+    bool isSameBall;
 
     private void Start()
     {
+        isSameBall = false;
         searchTimer = 0;
         catchTimer = 0;
         thisRigid = GetComponent<Rigidbody2D>();
@@ -132,6 +134,8 @@ public class BotActions : MonoBehaviour
                 }
                 else if (currentHitObject.collider.CompareTag("Projectile"))
                 {
+                    if (sawProjectileGO != currentHitObject.collider.gameObject)
+                        isSameBall = false;
                     sawProjectileGO = currentHitObject.collider.gameObject;
                 }
             }
@@ -259,17 +263,23 @@ public class BotActions : MonoBehaviour
 
     public void tryCatchBallChance()
     {
-        if (Random.Range(1, 101) < catchChance)
+        if (Random.Range(1, 101) < catchChance && !isSameBall)
+        {
             StartCoroutine(snowBrawlerRef.catchBall());
+            isSameBall = true;
+        }
         catchTimer = catchTimerDelay;
         Debug.Log("Coba Tangkap Bola");
     }
 
     public void tryCatchBall()
     {
-        StartCoroutine(snowBrawlerRef.catchBall());
-        catchTimer = catchTimerDelay;
-        Debug.Log("Coba Tangkap Bola");
+        if (catchTimer < 0)
+        {
+            StartCoroutine(snowBrawlerRef.catchBall());
+            catchTimer = catchTimerDelay;
+            Debug.Log("Coba Tangkap Bola");
+        }
     }
 
     private void OnDrawGizmos()
@@ -332,6 +342,11 @@ public class BotActions : MonoBehaviour
     public GameObject getSeenEnemy()
     {
         return sawEnemyGO;
+    }
+
+    public bool getIsSameBall()
+    {
+        return isSameBall;
     }
 
     public float getCatchTimer()
