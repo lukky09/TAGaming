@@ -7,8 +7,8 @@ using UnityEngine.UI;
 
 public class ColorManager : MonoBehaviour
 {
-    public DropdownAuto[] dropdowns = new DropdownAuto[4];
-    public int[] dropdownChoices = new int[4];
+    public DropdownAuto[] dropdowns = new DropdownAuto[3];
+    public int[] dropdownChoices = new int[3];
     public  Material shaderMaterial;
 
     private void Awake()
@@ -27,10 +27,9 @@ public class ColorManager : MonoBehaviour
 
     public static void mainGameDefault()
     {
-        PlayerPrefs.SetInt("DD0", 4);
-        PlayerPrefs.SetInt("DD1", 2);
-        PlayerPrefs.SetInt("DD2", 0);
-        PlayerPrefs.SetInt("DD3", 1);
+        PlayerPrefs.SetInt("DD0", 2);
+        PlayerPrefs.SetInt("DD1", 0);
+        PlayerPrefs.SetInt("DD2", 1);
         PlayerPrefs.Save();
     }
 
@@ -41,14 +40,12 @@ public class ColorManager : MonoBehaviour
             dropdownChoices[0] = PlayerPrefs.GetInt("DD0");
             dropdownChoices[1] = PlayerPrefs.GetInt("DD1");
             dropdownChoices[2] = PlayerPrefs.GetInt("DD2");
-            dropdownChoices[3] = PlayerPrefs.GetInt("DD3");
         }
         else
         {
-            dropdownChoices[0] = 4;
-            dropdownChoices[1] = 2;
-            dropdownChoices[2] = 0;
-            dropdownChoices[3] = 1;
+            dropdownChoices[0] = 2;
+            dropdownChoices[1] = 0;
+            dropdownChoices[2] = 1;
             saveSetting();
         }
         refreshChoices();

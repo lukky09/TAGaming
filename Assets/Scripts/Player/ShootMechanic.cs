@@ -68,7 +68,7 @@ public class ShootMechanic : SnowBrawler
             isAiming = false;
             line1.SetActive(false);
             line2.SetActive(false);
-            shartShooting();
+            StartCoroutine(shartShooting());
             return;
         }
         //Kalkulasi 2 garis bidikan

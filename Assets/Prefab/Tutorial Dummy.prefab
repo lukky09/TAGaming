@@ -258,7 +258,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 2
+  id: 1
 --- !u!114 &989328970205459513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -272,6 +272,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayedBall: {fileID: 8094063347812486162}
+  numberReference: {fileID: 3187974906680338077, guid: 1005edf9c9017734799136777207491c, type: 3}
   playerteam: 0
   throwSpeed: 15
   originalRunSpeed: 6.5
@@ -285,6 +286,7 @@ MonoBehaviour:
   isAiming: 0
   catchRecharge: 1
   canAct: 0
+  isTargeted: 0
   timeDelay: 0.1
 --- !u!114 &307614600252962186
 MonoBehaviour:
@@ -414,6 +416,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b3c46490c2a3fdd4eb8108fac5e2ca1c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  objectToDelete: {fileID: 0}
 --- !u!1 &4550136698602446182
 GameObject:
   m_ObjectHideFlags: 0

@@ -209,6 +209,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayedBall: {fileID: 0}
+  numberReference: {fileID: 3187974906680338077, guid: 1005edf9c9017734799136777207491c, type: 3}
   playerteam: 0
   throwSpeed: 0
   originalRunSpeed: 0
@@ -220,7 +221,9 @@ MonoBehaviour:
   ballTakeRange: 0
   ball: {fileID: 0}
   isAiming: 0
+  catchRecharge: 0
   canAct: 0
+  isTargeted: 0
   timeDelay: 0.1
 --- !u!114 &4975152431852153115
 MonoBehaviour:

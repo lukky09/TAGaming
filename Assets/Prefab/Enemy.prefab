@@ -260,7 +260,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b678de86f57a5904982ff9a9dc90b391, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  id: 2
+  id: 1
 --- !u!114 &8466225020258120766
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -308,6 +308,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   displayedBall: {fileID: 8094063347812486162}
+  numberReference: {fileID: 3187974906680338077, guid: 1005edf9c9017734799136777207491c, type: 3}
   playerteam: 0
   throwSpeed: 15
   originalRunSpeed: 6.5

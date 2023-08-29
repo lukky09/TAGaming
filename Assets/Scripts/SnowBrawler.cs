@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -10,6 +11,7 @@ public class SnowBrawler : MonoBehaviour
     protected int ballPowerId { get; set; }
 
     [SerializeField] GameObject displayedBall;
+    [SerializeField] GameObject numberReference;
     public bool playerteam;
     public float throwSpeed;
     public float originalRunSpeed;
@@ -69,7 +71,7 @@ public class SnowBrawler : MonoBehaviour
                     Destroy(caughtBall);
                 caughtBall = collision.gameObject;
                 caughtBall.SetActive(false);
-                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(),gameObject);
+                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
                 updateHoldedBallVisuals();
             }
             else
@@ -77,8 +79,8 @@ public class SnowBrawler : MonoBehaviour
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam)
                     BarScoreManager.addscore(bol.getPlayerTeam(), bol.getBallScore());
+                StartCoroutine(getHitNumerator(0.5f, bol.getBallScore()));
                 bol.trySelfDestruct(gameObject);
-                StartCoroutine(getHitNumerator(0.5f));
             }
         }
     }
@@ -143,6 +145,11 @@ public class SnowBrawler : MonoBehaviour
         return ballAmount + ((caughtBall == null) ? 0 : 1);
     }
 
+    public int getOnlyGroundBallAmount()
+    {
+        return ballAmount;
+    }
+
     public bool getplayerteam()
     {
         return playerteam;
@@ -166,15 +173,17 @@ public class SnowBrawler : MonoBehaviour
     IEnumerator slowDownNumerator(float slowPower, float seconds)
     {
         GetComponent<SpriteRenderer>().color = new Color(11 / 255, 211 / 255, 1);
-        Debug.Log(slowPower);
         runSpeed = originalRunSpeed * slowPower;
         yield return new WaitForSeconds(seconds);
         GetComponent<SpriteRenderer>().color = Color.white;
         runSpeed = originalRunSpeed;
     }
 
-    IEnumerator getHitNumerator(float seconds)
+    public IEnumerator getHitNumerator(float seconds,int score)
     {
+        GameObject numbers = Instantiate(numberReference);
+        numbers.GetComponent<NumbersController>().setGambar(score);
+        numbers.GetComponent<NumbersController>().StartingPosition = transform.position;
         canAct = false;
         animator.SetBool("IsHit", true);
         yield return new WaitForSeconds(seconds);
@@ -203,15 +212,12 @@ public class SnowBrawler : MonoBehaviour
         canCatchBall = true;
     }
 
-    public void shartShooting()
+    public IEnumerator shartShooting()
     {
         animator.SetBool("isShooting", true);
         canAct = false;
         runSpeed = 0;
-    }
-
-    public void stopShooting()
-    {
+        yield return new WaitForSeconds((0.5f * 5) / 6);
         runSpeed = originalRunSpeed;
         canAct = true;
         updateHoldedBallVisuals();
@@ -229,8 +235,15 @@ public class SnowBrawler : MonoBehaviour
         return iscatching;
     }
 
+    public Sprite getBallSprite()
+    {
+        return ballSprite;
+    }
+
     void updateHoldedBallVisuals()
     {
+        if (GetComponent<DisplayBall>() != null)
+            GetComponent<DisplayBall>().updateUI();
         if (caughtBall == null && ballAmount == 0)
         {
             displayedBall.SetActive(false);

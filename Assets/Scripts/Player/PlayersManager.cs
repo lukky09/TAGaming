@@ -90,7 +90,7 @@ public class PlayersManager : MonoBehaviour
         if (isPlayerTeam)
         {
             tempEnemyPrefab.GetComponent<SnowBrawler>().playerteam = true;
-            tempEnemyPrefab.GetComponent<ColorTaker>().id = 1;
+            tempEnemyPrefab.GetComponent<ColorTaker>().id = 0;
         }
         for (int j = 0; j < accesibleAreas.Count; j++)
         {
