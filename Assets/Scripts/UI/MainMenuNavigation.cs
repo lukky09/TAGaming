@@ -8,16 +8,19 @@ using System;
 public class MainMenuNavigation : MonoBehaviour
 {
     public static bool isTemplate;
+    public static bool startingTransitionActivated = true;
     static string size;
+    [SerializeField] GameObject transitionGO;
 
-    public static void mainMenuPressed()
+    public void mainMenuPressed()
     {
         if (!PlayerPrefs.HasKey("DD0"))
             ColorManager.mainGameDefault();
-        if (!PlayerPrefs.HasKey("TutorialDone")) {
+        if (!PlayerPrefs.HasKey("TutorialDone"))
+        {
             TutorialTrigger.mandatoryTutorial = true;
             Debug.Log("Harus Tutorial");
-            SceneManager.LoadScene(1);
+            StartCoroutine(numeratorTransisi(-1));
             return;
         }
         SceneManager.LoadScene(3);
@@ -28,19 +31,21 @@ public class MainMenuNavigation : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex - 1);
     }
 
-    public static void changeSceneIndex(int index)
-    {
-        SceneManager.LoadScene(index);
-    }
 
     public static void goToSettingScene()
     {
         SceneManager.LoadScene("SettingsMenu");
     }
 
-    public static void nextScene()
+
+    public void changeSceneIndex(int index)
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        StartCoroutine(numeratorTransisi(index));
+    }
+
+    public void nextScene()
+    {
+        StartCoroutine(numeratorTransisi(SceneManager.GetActiveScene().buildIndex + 1));
     }
 
     public static void exitGame()
@@ -77,5 +82,19 @@ public class MainMenuNavigation : MonoBehaviour
         isTemplate = currValue;
     }
 
-    
+    IEnumerator numeratorTransisi(int index)
+    {
+        Debug.Log("Jalan");
+        if (index < 0)
+        {
+            startingTransitionActivated = true;
+            index = Mathf.Abs(index) - 1;
+        }
+        if (transitionGO != null)
+        {
+            transitionGO.SetActive(true);
+            yield return new WaitForSeconds(1f);
+        }
+        SceneManager.LoadScene(index);
+    }
 }

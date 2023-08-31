@@ -1,3 +1,4 @@
+using Scriban.Syntax;
 using System;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -118,7 +119,7 @@ public class PlayersManager : MonoBehaviour
             {
                 isEnemy = currplayer.GetComponent<SnowBrawler>().getplayerteam() != player.GetComponent<SnowBrawler>().getplayerteam();
                 Vector2 direction = Vector3.Normalize(currplayer.transform.position - player.transform.position);
-                cekKolisi = Physics2D.CircleCast(player.position,0.4f, direction, visionRange, 64);
+                cekKolisi = Physics2D.CircleCast(player.position, 0.4f, direction, visionRange, 64);
                 //Physics2D.CircleCast(currentPoint.returnAsVector(), circleSize, arah, dist, 64);
                 range = Vector2.Distance(player.transform.position, currplayer.transform.position);
                 if (range < closestrange && range > 0 && !(includeCollision && cekKolisi) && isEnemy)
@@ -156,4 +157,21 @@ public class PlayersManager : MonoBehaviour
         }
         return -1;
     }
+
+    public void activatePlayersScript(bool activate)
+    {
+        MonoBehaviour[] scripts;
+        foreach (Transform item in playersContainer.transform)
+        {
+            scripts = item.GetComponents<MonoBehaviour>();
+            foreach (MonoBehaviour script in scripts)
+            {
+                script.enabled = activate;
+            }
+            item.GetComponent<ColorTaker>().enabled = true;
+            if (item.GetComponent<CoordinateMovement>() != null)
+                item.GetComponent<CoordinateMovement>().enabled = true;
+        }
+    }
+
 }

@@ -79,7 +79,7 @@ public class SnowBrawler : MonoBehaviour
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam)
                     BarScoreManager.addscore(bol.getPlayerTeam(), bol.getBallScore());
-                StartCoroutine(getHitNumerator(0.5f, bol.getBallScore()));
+                StartCoroutine(getHitNumerator(0.5f, collision.gameObject));
                 bol.trySelfDestruct(gameObject);
             }
         }
@@ -179,11 +179,14 @@ public class SnowBrawler : MonoBehaviour
         runSpeed = originalRunSpeed;
     }
 
-    public IEnumerator getHitNumerator(float seconds,int score)
+    public IEnumerator getHitNumerator(float seconds,GameObject snowBall)
     {
-        GameObject numbers = Instantiate(numberReference);
-        numbers.GetComponent<NumbersController>().setGambar(score);
-        numbers.GetComponent<NumbersController>().StartingPosition = transform.position;
+        if (snowBall.GetComponent<BallMovement>().getPlayerTeam() != playerteam)
+        {
+            GameObject numbers = Instantiate(numberReference);
+            numbers.GetComponent<NumbersController>().setGambar(snowBall.GetComponent<BallMovement>().getBallScore());
+            numbers.GetComponent<NumbersController>().StartingPosition = transform.position;
+        }
         canAct = false;
         animator.SetBool("IsHit", true);
         yield return new WaitForSeconds(seconds);

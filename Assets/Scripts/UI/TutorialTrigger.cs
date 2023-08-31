@@ -8,7 +8,6 @@ using UnityEngine.UI;
 public class TutorialTrigger : MonoBehaviour
 {
     public static bool mandatoryTutorial = false;
-    [SerializeField] GameObject transition;
     [SerializeField] Slider skipSlider;
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -34,17 +33,19 @@ public class TutorialTrigger : MonoBehaviour
     IEnumerator transitionStart()
     {
         Time.timeScale = 0;
-        transition.SetActive(true);
         yield return new WaitForSecondsRealtime(1f);
         PlayerPrefs.SetString("TutorialDone", "Yes");
         PlayerPrefs.Save();
         Time.timeScale = 1;
         if (mandatoryTutorial)
         {
+            PlayerPrefs.SetInt("TutorialDone", 1);
+            PlayerPrefs.Save();
+            Debug.Log("Tutorial Wajib mari");
             mandatoryTutorial = false;
-            MainMenuNavigation.changeSceneIndex(3);
+            GetComponent<MainMenuNavigation>().changeSceneIndex(-4);
         }
-        MainMenuNavigation.changeSceneIndex(0);
+        GetComponent<MainMenuNavigation>().changeSceneIndex(-1);
 
 
     }

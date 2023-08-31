@@ -123,7 +123,7 @@ public class BallPowerUp : MonoBehaviour
         int hitPlayers = 0;
         foreach (Collider2D coll in explosiveCollision)
         {
-            StartCoroutine(coll.GetComponent<SnowBrawler>().getHitNumerator(0.5f,bmRef.getBallScore()));
+            StartCoroutine(coll.GetComponent<SnowBrawler>().getHitNumerator(0.5f,gameObject));
             if (coll.GetComponent<SnowBrawler>().getplayerteam() != bmRef.getPlayerTeam())
                 hitPlayers++;
         }

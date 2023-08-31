@@ -100,6 +100,7 @@ public class TemplatedMapChromosome : ChromosomeBase
 public class GeneticAlgorithmGenerator : MonoBehaviour
 {
     bool useMirrorFitness = true;
+    [SerializeField] MainMenuNavigation MMN;
     [SerializeField] bool useTemplatedGeneration;
     [SerializeField] int StagnationTerminationAmt;
     InLoopFitnessBase[] fitnesses;
@@ -179,7 +180,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             //Debug.Log(print2DArray(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight())));
             SetObjects.setMap(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
-        MainMenuNavigation.changeSceneIndex(5);
+        MMN.changeSceneIndex(-6);
     }
 
     double fitnessFunction(int[,] map , Gene[] original)

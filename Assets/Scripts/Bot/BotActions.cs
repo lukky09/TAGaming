@@ -101,6 +101,9 @@ public class BotActions : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!snowBrawlerRef.canAct)
+            return;
+
         sawBallGO = null; sawEnemyGO = null; sawProjectileGO = null;
         RaycastHit2D currentHitObject;
         float initialAngle = -linecastAngle / 2;

@@ -43,7 +43,7 @@ public class CoordinateMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_targetCoordinate == null || _currentPathIndex == _pathCoordinates.Length)
+        if (_targetCoordinate == null || _currentPathIndex == _pathCoordinates.Length || !GetComponent<SnowBrawler>().canAct)
             return;
         //Debug.Log(_pathCoordinates[_currentPathIndex]);
         if (Vector2.Distance(transform.position, _pathCoordinates[_currentPathIndex].returnAsVector()) < 0.25 && _currentPathIndex< _pathCoordinates.Length-1)
