@@ -107,11 +107,11 @@ MonoBehaviour:
   ValueRange: 5
   randomPowerup: 1
   powerUpSprites:
-  - {fileID: 479318119, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
-  - {fileID: -1431301879, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
-  - {fileID: 1001844901, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
-  - {fileID: -1836180995, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
-  - {fileID: 1551921613, guid: ea41ab129abb2104fb65c02446a5f7fc, type: 3}
+  - {fileID: -1821757262, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
+  - {fileID: -599599054, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
+  - {fileID: -1027008157, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
+  - {fileID: -562619796, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
+  - {fileID: -1477896, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
 --- !u!95 &4817993415544264658
 Animator:
   serializedVersion: 4
@@ -232,7 +232,7 @@ SpriteRenderer:
   m_SortingLayerID: 1019056049
   m_SortingLayer: 1
   m_SortingOrder: 1
-  m_Sprite: {fileID: 1789153793, guid: 8a871698032713544a21511719e82502, type: 3}
+  m_Sprite: {fileID: 1878918316, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
