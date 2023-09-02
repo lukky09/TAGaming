@@ -227,21 +227,24 @@ public class BotActions : MonoBehaviour
 
     public Coordinate[] getWaytoRandomCoordinate()
     {
-        Coordinate target;
+        Coordinate targetCoor;
         if (mapSegmentid > 0)
         {
-            target = playerManagerRef.getRandomSpot(mapSegmentid - 1);
+            do
+            {
+                targetCoor = playerManagerRef.getRandomSpot(mapSegmentid - 1);
+            } while (targetCoor.Equal(Coordinate.returnAsCoordinate(transform.position)));
             //Debug.Log("Chosen " + (mapSegmentid - 1)+","+ target.ToString());
-            return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
+            return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), targetCoor);
         }
         else
         {
             do
             {
-                target = new Coordinate(Random.Range(0, SetObjects.getWidth() + 1), Random.Range(0, SetObjects.getHeight() + 1));
-            } while (AStarAlgorithm.doAstarAlgo(Coordinate.returnAsCoordinate(transform.position), target, SetObjects.getMap(false)) == null);
+                targetCoor = new Coordinate(Random.Range(0, SetObjects.getWidth() + 1), Random.Range(0, SetObjects.getHeight() + 1));
+            } while (targetCoor.Equal(Coordinate.returnAsCoordinate(transform.position)) || AStarAlgorithm.doAstarAlgo(Coordinate.returnAsCoordinate(transform.position), targetCoor, SetObjects.getMap(false)) == null);
         }
-        return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), target);
+        return AStarAlgorithm.makeWay(Coordinate.returnAsCoordinate(transform.position), targetCoor);
     }
 
     public bool stillCanSeeTarget()
