@@ -179,6 +179,11 @@ public class SnowBrawler : MonoBehaviour
         runSpeed = originalRunSpeed;
     }
 
+    public void getHit(float seconds, GameObject snowBall)
+    {
+        StartCoroutine(getHitNumerator(seconds,snowBall));
+    }
+
     public IEnumerator getHitNumerator(float seconds,GameObject snowBall)
     {
         if (snowBall.GetComponent<BallMovement>().getPlayerTeam() != playerteam)
@@ -189,9 +194,11 @@ public class SnowBrawler : MonoBehaviour
         }
         canAct = false;
         animator.SetBool("IsHit", true);
+        Debug.Log("Kena Hit");
         yield return new WaitForSeconds(seconds);
         canAct = true;
         animator.SetBool("IsHit", false);
+        Debug.Log("Selesai Kena Hit");
     }
 
     public IEnumerator catchBall()

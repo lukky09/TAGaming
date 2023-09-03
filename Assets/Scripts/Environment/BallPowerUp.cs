@@ -121,14 +121,17 @@ public class BallPowerUp : MonoBehaviour
         Collider2D[] explosiveCollision = Physics2D.OverlapCircleAll(transform.position, explosionRadius, 8);
 
         int hitPlayers = 0;
+        Debug.Log("Boom");
         foreach (Collider2D coll in explosiveCollision)
         {
-            StartCoroutine(coll.GetComponent<SnowBrawler>().getHitNumerator(0.5f,gameObject));
+            // Nggak isa melakukan coroutine kalau object ilang
+            coll.GetComponent<SnowBrawler>().getHit(0.5f,gameObject);
             if (coll.GetComponent<SnowBrawler>().getplayerteam() != bmRef.getPlayerTeam())
                 hitPlayers++;
         }
         BarScoreManager.addscore(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
         Destroy(gameObject);
+
     }
 
     void OnDrawGizmos()

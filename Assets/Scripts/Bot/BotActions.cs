@@ -258,10 +258,10 @@ public class BotActions : MonoBehaviour
     {
         Vector2 direction = target.transform.position - transform.position;
         //Hanya kalau diblok oleh batu
-        RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, AStarAlgorithm.circleSize, direction, Vector2.Distance(target.transform.position, transform.position),64);
+        RaycastHit2D[] seenObject = Physics2D.CircleCastAll((Vector2)transform.position, 0.2f, direction, Vector2.Distance(target.transform.position, transform.position), 64);
         foreach (RaycastHit2D item in seenObject)
         {
-            if (!item.collider.CompareTag("BallPile") && item.collider.gameObject != target && item.collider.gameObject != gameObject)
+            if (item.collider.CompareTag("Wall"))
                 return true;
         }
         return false;
@@ -299,7 +299,10 @@ public class BotActions : MonoBehaviour
         if (sawProjectileGO == null)
             return false;
         Vector2 dir = Vector3.Normalize(transform.position - sawProjectileGO.transform.position);
-        RaycastHit2D[] objectsInWay = Physics2D.CircleCastAll(sawProjectileGO.transform.position, 0.4f, dir, Vector2.Distance(transform.position, sawProjectileGO.transform.position));
+        //Debug.DrawLine((Vector2)transform.position, sawProjectileGO.transform.position, UnityEngine.Color.black, 1f);
+        //Debug.DrawLine((Vector2)(transform.position + Quaternion.Euler(0f, 0f, 90f) * dir * 0.15f), sawProjectileGO.transform.position + (Quaternion.Euler(0f, 0f, 90f) * dir * 0.2f), UnityEngine.Color.black, 1f);
+        //Debug.DrawLine((Vector2)(transform.position + Quaternion.Euler(0f, 0f, -90f) * dir * 0.15f), sawProjectileGO.transform.position + (Quaternion.Euler(0f, 0f, -90f) * dir * 0.2f), UnityEngine.Color.black, 1f);
+        RaycastHit2D[] objectsInWay = Physics2D.CircleCastAll(sawProjectileGO.transform.position, 0.15f, dir, Vector2.Distance(transform.position, sawProjectileGO.transform.position));
         foreach (RaycastHit2D item in objectsInWay)
         {
             if (item.collider.CompareTag("Wall"))
