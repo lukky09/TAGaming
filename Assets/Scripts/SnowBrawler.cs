@@ -54,6 +54,7 @@ public class SnowBrawler : MonoBehaviour
         if (currentTimeDelay <= 0)
         {
             animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos, transform.position));
+            animator.SetFloat("SeeDirection", Vector2.Angle(Vector2.up, (Vector2)transform.position - (Vector2)lastpos));
             lastpos = transform.position;
             currentTimeDelay = timeDelay;
         }

@@ -134,6 +134,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Turret
       objectReference: {fileID: 0}
+    - target: {fileID: 3045640123323006113, guid: 433136786cc5ace4f81903375e3cf33d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3552861968279902760, guid: 433136786cc5ace4f81903375e3cf33d, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -481,6 +485,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Turret (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 3045640123323006113, guid: 433136786cc5ace4f81903375e3cf33d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 3552861968279902760, guid: 433136786cc5ace4f81903375e3cf33d, type: 3}
       propertyPath: m_RootOrder
       value: 4
@@ -546,6 +554,10 @@ PrefabInstance:
     - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Name
       value: DummyPuppet (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
@@ -1083,6 +1095,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DummyPuppet (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
       value: 6
@@ -1244,6 +1260,10 @@ PrefabInstance:
     - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Name
       value: DummyPuppet
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
@@ -2096,6 +2116,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DummyPuppet (7)
       objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
       value: 11
@@ -2238,6 +2262,10 @@ PrefabInstance:
     - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Name
       value: DummyPuppet (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
@@ -14817,6 +14845,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DummyPuppet
       objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245378, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Color.b
       value: 1
@@ -15526,6 +15558,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DummyPuppet (6)
       objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
       value: 10
@@ -15967,6 +16003,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: DummyPuppet (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -16027,6 +16067,10 @@ PrefabInstance:
     - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Name
       value: DummyPuppet (4)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
@@ -16846,6 +16890,10 @@ PrefabInstance:
     - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_Name
       value: DummyPuppet (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8748381368748245377, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8748381368748245379, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: m_RootOrder
