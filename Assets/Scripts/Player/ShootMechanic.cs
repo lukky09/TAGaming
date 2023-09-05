@@ -76,6 +76,7 @@ public class ShootMechanic : SnowBrawler
         {
             Vector3 throwDir = Vector3.Normalize((Vector2)(Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position));
             float x = throwDir.x;
+            GetComponent<Animator>().SetFloat("SeeDirection",Vector2.Angle(Vector2.up, throwDir));
             transform.localScale = new Vector3(Mathf.RoundToInt(x / Mathf.Abs(x)), 1, 1);
             if (transform.localScale.x == -1)
                 throwDir = Vector3.Reflect(throwDir, Vector3.right);
