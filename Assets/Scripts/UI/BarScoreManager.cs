@@ -18,6 +18,7 @@ public class BarScoreManager : MonoBehaviour
     [SerializeField] GameObject itemToAnimate;
     [SerializeField] GameObject transition;
     [SerializeField] TextMeshProUGUI gameOverText;
+    [SerializeField] PlayersManager playerManagerRef;
     public bool StartTimer = false;
 
     // Start is called before the first frame update
@@ -41,8 +42,8 @@ public class BarScoreManager : MonoBehaviour
         if (!StartTimer)
             return;
         fightLength -= Time.deltaTime;
-        timerText.text = Mathf.CeilToInt(fightLength).ToString().PadLeft(3,'0');
-        if ((fightLength <= 0|| playerTeamBar.value>= maxScore || enemyTeamBar.value>= maxScore) && itemToAnimate !=null)
+        timerText.text = Mathf.CeilToInt(fightLength).ToString().PadLeft(3, '0');
+        if ((fightLength <= 0 || playerTeamBar.value >= maxScore || enemyTeamBar.value >= maxScore) && itemToAnimate != null)
             StartCoroutine(victoryAnimation());
     }
 
@@ -65,19 +66,19 @@ public class BarScoreManager : MonoBehaviour
 
     IEnumerator victoryAnimation()
     {
-        Time.timeScale = 0;
+        playerManagerRef.activatePlayersScript(false);
         itemToAnimate?.SetActive(true);
-        if(fightLength <= 0)
-         gameOverText.text = "Time Up!";
+        if (fightLength <= 0)
+            gameOverText.text = "Time Up!";
         else
             gameOverText.text = "Game Set!";
         yield return new WaitForSecondsRealtime(4);
         if (playerTeamBar.value >= enemyTeamBar.value)
             gameOverText.text = "Player Team wins";
-        else if(enemyTeamBar.value >= playerTeamBar.value)
+        else if (enemyTeamBar.value >= playerTeamBar.value)
             gameOverText.text = "enemy team wins";
+        playerManagerRef.gameOverAnimation(playerTeamBar.value >= enemyTeamBar.value);
         yield return new WaitForSecondsRealtime(2);
-        Time.timeScale = 1;
         GetComponent<MainMenuNavigation>().changeSceneIndex(-1);
     }
 }

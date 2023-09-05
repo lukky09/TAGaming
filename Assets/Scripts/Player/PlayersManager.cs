@@ -174,4 +174,13 @@ public class PlayersManager : MonoBehaviour
         }
     }
 
+    public void gameOverAnimation(bool playerTeamWin)
+    {
+        foreach (Transform item in playersContainer.transform)
+        {
+            item.GetComponent<Animator>().SetBool("GameDone",true);
+            item.GetComponent<Animator>().SetBool("HasWon", item.GetComponent<SnowBrawler>().getplayerteam() == playerTeamWin);
+        }
+    }
+
 }
