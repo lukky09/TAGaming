@@ -15016,7 +15016,7 @@ PrefabInstance:
     - target: {fileID: 7854845135202486132, guid: 26a117777befad442b4df08a8fcb74c7, type: 3}
       propertyPath: m_audioClip
       value: 
-      objectReference: {fileID: 8300000, guid: ef597f645e0cae847885e9b9dea400c0, type: 3}
+      objectReference: {fileID: 8300000, guid: 3a3fab9cdd97e4e449a41e4a5aea8da0, type: 3}
     - target: {fileID: 8231800338980723711, guid: 26a117777befad442b4df08a8fcb74c7, type: 3}
       propertyPath: m_Name
       value: AudioManager
