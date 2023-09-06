@@ -1242,10 +1242,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: -0.5
+    x: 0.20520835
     y: 0
-    width: 1
-    height: 0
+    width: 0.33333334
+    height: 0.35462964
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -7261,6 +7261,7 @@ MonoBehaviour:
   itemToAnimate: {fileID: 2146505524}
   transition: {fileID: 1819336540}
   gameOverText: {fileID: 42477855}
+  playerManagerRef: {fileID: 69075706}
   StartTimer: 0
 --- !u!114 &2052031807
 MonoBehaviour:
