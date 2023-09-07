@@ -1242,10 +1242,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20520835
+    x: 0
     y: 0
-    width: 0.33333334
-    height: 0.35462964
+    width: 1
+    height: 1
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1329,6 +1329,7 @@ GameObject:
   - component: {fileID: 586035449}
   - component: {fileID: 586035451}
   - component: {fileID: 586035450}
+  - component: {fileID: 586035452}
   m_Layer: 5
   m_Name: ItemBorder
   m_TagString: Untagged
@@ -1396,6 +1397,26 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 586035448}
   m_CullTransparentMesh: 1
+--- !u!95 &586035452
+Animator:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 586035448}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 8b888961239fbc441a09008af54ff713, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &590981790
 GameObject:
   m_ObjectHideFlags: 0

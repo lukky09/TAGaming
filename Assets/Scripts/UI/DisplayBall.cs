@@ -18,7 +18,7 @@ public class DisplayBall : MonoBehaviour
         _snowBrawlerReference = GetComponent<SnowBrawler>();
     }
 
-    public void updateUI()
+    public void updateUI(bool isThrown)
     {
         if (_snowBrawlerReference.getCaughtBall() != null && _snowBrawlerReference.getOnlyGroundBallAmount() > 0)
         {
@@ -27,6 +27,7 @@ public class DisplayBall : MonoBehaviour
             _frontImage.SetActive(true);
             _frontImage.GetComponent<Image>().sprite = _snowBrawlerReference.getCaughtBall().GetComponent<SpriteRenderer>().sprite;
             _frontImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(10, -10);
+            _ballContainer.GetComponent<Animator>().Play("Base Layer.get2Ball", 0);
         }
         else if (_snowBrawlerReference.getCaughtBall() != null)
         {
@@ -34,6 +35,8 @@ public class DisplayBall : MonoBehaviour
             _frontImage.SetActive(true);
             _frontImage.GetComponent<Image>().sprite = _snowBrawlerReference.getCaughtBall().GetComponent<SpriteRenderer>().sprite;
             _frontImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            if (!isThrown)
+                _ballContainer.GetComponent<Animator>().Play("Base Layer.get1Ball", 0);
         }
         else if (_snowBrawlerReference.getBallAmount() > 0)
         {
@@ -41,11 +44,14 @@ public class DisplayBall : MonoBehaviour
             _frontImage.SetActive(true);
             _frontImage.GetComponent<Image>().sprite = _snowBrawlerReference.getBallSprite();
             _frontImage.GetComponent<RectTransform>().anchoredPosition = new Vector2(0, 0);
+            if (!isThrown)
+                _ballContainer.GetComponent<Animator>().Play("Base Layer.get1Ball", 0);
         }
         else
         {
             _backImage.SetActive(false);
             _frontImage.SetActive(false);
+            _ballContainer.GetComponent<Animator>().Play("Base Layer.Emptee", 0);
         }
     }
 }

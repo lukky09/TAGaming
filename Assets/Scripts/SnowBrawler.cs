@@ -74,7 +74,7 @@ public class SnowBrawler : MonoBehaviour
                 caughtBall = collision.gameObject;
                 caughtBall.SetActive(false);
                 caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
-                updateHoldedBallVisuals();
+                updateHoldedBallVisuals(false);
             }
             else
             {
@@ -114,7 +114,7 @@ public class SnowBrawler : MonoBehaviour
         }
         SFXSource.clip = AudioScript.audioObject.getSound("Get");
         SFXSource.Play();
-        updateHoldedBallVisuals();
+        updateHoldedBallVisuals(false);
     }
 
     public void shootBall(Vector2 direction)
@@ -139,7 +139,7 @@ public class SnowBrawler : MonoBehaviour
         SFXSource.clip = AudioScript.audioObject.getSound("Yeet");
         SFXSource.Play();
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
-        updateHoldedBallVisuals();
+        updateHoldedBallVisuals(true);
     }
 
     public int getBallAmount()
@@ -232,7 +232,7 @@ public class SnowBrawler : MonoBehaviour
         yield return new WaitForSeconds((0.5f * 5) / 6);
         runSpeed = originalRunSpeed;
         canAct = true;
-        updateHoldedBallVisuals();
+        updateHoldedBallVisuals(true);
         animator.SetBool("isShooting", false);
     }
 
@@ -252,10 +252,10 @@ public class SnowBrawler : MonoBehaviour
         return ballSprite;
     }
 
-    void updateHoldedBallVisuals()
+    void updateHoldedBallVisuals(bool isThrown)
     {
         if (GetComponent<DisplayBall>() != null)
-            GetComponent<DisplayBall>().updateUI();
+            GetComponent<DisplayBall>().updateUI(isThrown);
         if (caughtBall == null && ballAmount == 0)
         {
             displayedBall.SetActive(false);

@@ -80,7 +80,7 @@ public class BallPowerUp : MonoBehaviour
                         balls[i] = Instantiate(gameObject, backPos, Quaternion.identity);
                         //balls[i].GetComponent<BallMovement>().initialize();
                         balls[i].GetComponent<BallMovement>().setDirection(Quaternion.Euler(0, 0, initialAngle + i * (splitRange / (splitBalls - 1))) * bmRef.getDirection());
-                        balls[i].GetComponent<BallMovement>().setBallScore(Mathf.CeilToInt(bmRef.getBallScore() / splitBalls));
+                        balls[i].GetComponent<BallMovement>().setBallScore(Mathf.CeilToInt(bmRef.getBallScore() / 2));
                         balls[i].GetComponent<BallMovement>().setPowerUpID(0);
                         balls[i].GetComponent<SpriteRenderer>().sprite = normalBallSprite;
                         balls[i].transform.localScale = new Vector3(0.7f, 0.7f, 1);
