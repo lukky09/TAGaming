@@ -18,9 +18,8 @@ public class MainMenuNavigation : MonoBehaviour
             ColorManager.mainGameDefault();
         if (!PlayerPrefs.HasKey("TutorialDone"))
         {
-            TutorialTrigger.mandatoryTutorial = true;
             Debug.Log("Harus Tutorial");
-            StartCoroutine(numeratorTransisi(-1));
+            StartCoroutine(numeratorTransisi(-2));
             return;
         }
         SceneManager.LoadScene(3);
@@ -46,6 +45,11 @@ public class MainMenuNavigation : MonoBehaviour
     public void nextScene()
     {
         StartCoroutine(numeratorTransisi(SceneManager.GetActiveScene().buildIndex + 1));
+    }
+
+    public void nextSceneNoTransition()
+    {
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
     }
 
     public static void exitGame()
@@ -84,7 +88,6 @@ public class MainMenuNavigation : MonoBehaviour
 
     IEnumerator numeratorTransisi(int index)
     {
-        Debug.Log("Jalan");
         if (index < 0)
         {
             startingTransitionActivated = true;

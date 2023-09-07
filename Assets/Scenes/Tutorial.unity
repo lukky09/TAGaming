@@ -16011,7 +16011,7 @@ RectTransform:
   m_Children:
   - {fileID: 66650376}
   m_Father: {fileID: 2052031804}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
@@ -16395,6 +16395,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 307614600252962186, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
+      propertyPath: catchTimerDelay
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 3380666572601521298, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
       propertyPath: m_Name
       value: Tutorial Dummy
@@ -17812,8 +17816,8 @@ RectTransform:
   - {fileID: 2017435609}
   - {fileID: 1643381526}
   - {fileID: 1583327293}
-  - {fileID: 373792498}
   - {fileID: 1383993254}
+  - {fileID: 373792498}
   - {fileID: 327139043}
   m_Father: {fileID: 0}
   m_RootOrder: 5
