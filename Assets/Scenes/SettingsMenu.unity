@@ -181,7 +181,7 @@ SpriteRenderer:
   m_SortingLayerID: -1790865707
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1527521534, guid: bcc6d2836918dab459783ef9d0880031, type: 3}
+  m_Sprite: {fileID: 1082370960, guid: bcc6d2836918dab459783ef9d0880031, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -507,6 +507,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ef294329765374aaffa922f84035b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionGO: {fileID: 0}
 --- !u!1 &314062703
 GameObject:
   m_ObjectHideFlags: 0
@@ -4642,7 +4643,7 @@ SpriteRenderer:
   m_SortingLayerID: -1790865707
   m_SortingLayer: 2
   m_SortingOrder: 0
-  m_Sprite: {fileID: 1527521534, guid: bcc6d2836918dab459783ef9d0880031, type: 3}
+  m_Sprite: {fileID: 1082370960, guid: bcc6d2836918dab459783ef9d0880031, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -5473,6 +5474,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26ef294329765374aaffa922f84035b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  transitionGO: {fileID: 0}
 --- !u!114 &1746152605 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6101323935172972309, guid: b7aa36a5ae9adeb48977ba76787d4ec5, type: 3}

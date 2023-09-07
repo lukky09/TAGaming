@@ -101,6 +101,7 @@ public class BotActions : MonoBehaviour
 
     private void FixedUpdate()
     {
+
         if (!snowBrawlerRef.canAct)
             return;
 
