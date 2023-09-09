@@ -23,7 +23,7 @@ public class DialogueScript : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Q) && _canPress && !_dialogueBox.activeSelf)
+        if (Input.anyKey && _canPress && !_dialogueBox.activeSelf)
         {
             _dialogueBox.SetActive(true);
             _dialogueBox.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _dialogueText;

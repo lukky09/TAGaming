@@ -105,8 +105,18 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] int StagnationTerminationAmt;
     InLoopFitnessBase[] fitnesses;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
+    {
+        StartCoroutine(delayedStart());
+    }
+
+    IEnumerator delayedStart()
+    {
+        yield return new WaitForSeconds(1f);
+        algorithmStart();
+    }
+
+    void algorithmStart()
     {
         fitnesses = GetComponents<InLoopFitnessBase>();
         useTemplatedGeneration = MainMenuNavigation.isTemplate;

@@ -29,7 +29,7 @@ public class SnowBrawler : MonoBehaviour
     Animator animator;
     AudioSource SFXSource;
     public bool canAct;
-    bool canCatchBall;
+    public bool canCatchBall;
     public bool isTargeted;
 
     Vector2 lastpos;
