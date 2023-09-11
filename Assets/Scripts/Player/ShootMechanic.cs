@@ -42,7 +42,7 @@ public class ShootMechanic : SnowBrawler
             return;
         }
         //Mulai ngeaim
-        if (Input.GetMouseButtonDown(0) && (ballAmount > 0 || caughtBall != null))
+        if (Input.GetMouseButtonDown(0) && (ballAmount > 0 || caughtBall != null) && !PauseGame.isPaused)
         {
             currentAimTime = aimTime;
             isAiming = true;
