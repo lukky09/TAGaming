@@ -11,7 +11,6 @@ public class ColorTaker : MonoBehaviour
     {
         if (PlayerPrefs.HasKey("DD0"))
         {
-            Debug.Log($"{gameObject.name} = {PlayerPrefs.GetInt($"DD{id}")}");
             GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", pilihanWarna.getWarna(PlayerPrefs.GetInt("DD" + id)).getColor());
         }
         else

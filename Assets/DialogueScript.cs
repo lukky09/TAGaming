@@ -17,17 +17,19 @@ public class DialogueScript : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
+        if (collision.GetComponent<SnowBrawler>() == null)
+            return;
         _eButton.SetActive(true);
         _canPress = true;
     }
 
     private void Update()
     {
-        if (Input.anyKey && _canPress && !_dialogueBox.activeSelf)
+        if (Input.GetKeyDown(KeyCode.Q) && _canPress && !_dialogueBox.activeSelf)
         {
             _dialogueBox.SetActive(true);
             _dialogueBox.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = _dialogueText;
-        }else if (Input.GetKeyDown(KeyCode.Q) && _canPress)
+        }else if (Input.anyKeyDown && _canPress)
         {
             _dialogueBox.SetActive(false);
         }
@@ -35,6 +37,8 @@ public class DialogueScript : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D collision)
     {
+        if (collision.GetComponent<SnowBrawler>() == null)
+            return;
         _canPress = false;
         _eButton.SetActive(false);
         _dialogueBox.SetActive(false);
