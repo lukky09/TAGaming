@@ -827,6 +827,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Algorithm
       objectReference: {fileID: 0}
+    - target: {fileID: 8947170099214634921, guid: a05fbc83d07ac7e4092648c303eeb005, type: 3}
+      propertyPath: isUsed
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8947170099214634926, guid: a05fbc83d07ac7e4092648c303eeb005, type: 3}
       propertyPath: MMN
       value: 
