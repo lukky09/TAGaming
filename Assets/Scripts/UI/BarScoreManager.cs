@@ -66,6 +66,7 @@ public class BarScoreManager : MonoBehaviour
 
     IEnumerator victoryAnimation()
     {
+        StartTimer = false;
         playerManagerRef.activatePlayersScript(false);
         itemToAnimate?.SetActive(true);
         if (fightLength <= 0)
