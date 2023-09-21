@@ -1,7 +1,9 @@
-1 Pendahuluan
-2. Algo Gen. + Implementasi Unity V
-3. Njelasin Unity + Cara Kerjanya V
-4. Analisa Game V
-5. Desain + Implementasi Game
-6. Uji Coba
-7. Penututp
+bab 1 pendahuluan
+bab 2 genetic (secara teori)
+bab 3 unity
+bab 4 analisa game
+bab 5 desain game
+bab 6 implementasi game
+bab 7 map generation menggunakan genetik
+bab 8 ujicoba
+bab 9 penutup
