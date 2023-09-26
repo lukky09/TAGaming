@@ -372,6 +372,7 @@ MonoBehaviour:
   isAiming: 0
   catchRecharge: 1
   canAct: 0
+  canCatchBall: 0
   isTargeted: 0
   timeDelay: 0.1
   line1: {fileID: 3767412540042823851}

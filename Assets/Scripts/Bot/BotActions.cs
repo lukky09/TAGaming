@@ -105,7 +105,7 @@ public class BotActions : MonoBehaviour
         if (!snowBrawlerRef.canAct)
             return;
 
-        sawBallGO = null; sawEnemyGO = null; sawProjectileGO = null;
+        sawBallGO = null; sawEnemyGO = null;;
         RaycastHit2D currentHitObject;
         float initialAngle = -linecastAngle / 2;
         Vector2 currentDirection;
@@ -271,10 +271,8 @@ public class BotActions : MonoBehaviour
     public void tryCatchBallChance()
     {
         if (Random.Range(1, 101) < catchChance && !isSameBall)
-        {
             StartCoroutine(snowBrawlerRef.catchBall());
-            isSameBall = true;
-        }
+        isSameBall = true;
         catchTimer = catchTimerDelay;
         Debug.Log("Coba Tangkap Bola");
     }
