@@ -28,22 +28,26 @@ public class TemplateVarietyFitness : InLoopFitnessBase
     public override float getFitnessScore()
     {
         SortedList<int, int> templateOccurences = new();
+        int temp;
         for (int i = 0; i < savedMap.Length; i++)
         {
-            if (templateOccurences.ContainsKey(savedMap[i]))
-                templateOccurences[savedMap[i]]++;
+            temp = savedMap[i] >= 0 ? savedMap[i] : -savedMap[i] - 1;
+            if (templateOccurences.ContainsKey(temp))
+                templateOccurences[temp]++;
             else
-                templateOccurences.Add(savedMap[i], 1);
+                templateOccurences.Add(temp, 1);
         }
         int[] scores = new int[templateOccurences.Count];
-        int temp;
         for (int i = 0; i < templateOccurences.Count; i++)
         {
-            temp = templateOccurences.Values[i] - variedTemplateTolerance < 0 ? -(templateOccurences.Values[i] - variedTemplateTolerance) : 0;
+            temp = variedTemplateTolerance  - templateOccurences.Values[i] < 0 ? variedTemplateTolerance - templateOccurences.Values[i] : 0;
             scores[i] = 1 + temp;
         }
 
-        return Mathf.Pow(scores.Sum() / scores.Length,2) * weight;
+        float sum = scores.Sum();
+        if (sum < 0)
+            sum = 0;
+        return Mathf.Pow(sum / scores.Length,2) * weight;
     }
 
     public override void resetVariables()

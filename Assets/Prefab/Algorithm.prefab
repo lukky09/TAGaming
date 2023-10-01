@@ -57,6 +57,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MMN: {fileID: 0}
   useTemplatedGeneration: 1
+  bestFitnessDebug: 1
   StagnationTerminationAmt: 100
 --- !u!114 &8947170099214634921
 MonoBehaviour:
