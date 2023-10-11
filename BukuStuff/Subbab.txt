@@ -1,0 +1,365 @@
+Subbab
+1	Pendahuluan 			1
+1.1	Latar Balekang			1
+1.2	Tujuan				2
+1.3	Teori Penunjang			2
+1.3.1	OOP				3
+1.3.2	Algoritma A*			3
+1.3.3	Finite State Machine		5
+1.4	Ruang Lingkup			6
+1.4.1	Fitur Game			6
+1.4.2	Batasan Masalah			7
+1.4.2	Tahap Penyelesaian		7
+1.4.4	Uji Coba			8
+1.5	Sistematika Pembahasan		8
+2	Genetic Algorithm		10
+2.1	Terminologi			10
+2.1.1	Gene & Chromosome (Kromosom)	10
+2.1.2	Populase / Generasi		10
+2.1.3	Fitness				11
+2.1.4	Parent Child Chromosome		11
+2.2	Metodologi			12
+2.3	Langkah - langkah Algoritma Genetik	13
+2.3.1	Inisialisasi Populasi		13
+2.3.2	Seleksi				14
+2.3.3	Reproduksi			14
+2.3.4	Mutation (Mutasi)		15
+2.3.5	Elitism				16
+2.3.6	Repetisi dan Pemberhentian	16
+2.4	Library GeneticSharp		17
+2.4.1	Permasalahan			17
+2.4.2	Representasi			18
+2.4.3	Fitness Function		18
+2.4.4	Metode - metode pemrosesan data	19
+2.4.5	Pseudocode dan Penjelasan	20
+2.4.6	Tracing				23
+3 	Unity				29
+3.1	UI & Scene			29
+3.2	Game Object & Prefab		31
+3.3	Script				37	
+3.4	Tilemap & Rule Tile		38
+3.5	State Machine			39
+3.6	Shader Graph			39
+4	Analisa Game Inspirasi		41
+4.1	CrossCode			42
+4.1.1	Story				43
+4.1.2	Gameplay			46
+4.1.3	Stats&Elements			48
+4.1.4	Skill Tree			49
+4.1.5	Combat Arts			52
+4.1.6	Equipment			53
+4.1.7	Consumables			54
+4.1.8	Status Conditions		55
+4.1.9	Party				56
+4.1.10	UI & UX				58
+4.1.11	Enemies & Bosses		66
+4.1.12	PVP				68
+4.1.13	Level Design			70
+4.1.14	Aspek Inspirasi			71
+4.2	Knockout City			72
+4.2.1	Gameplay			73
+4.2.2	UI				75
+4.2.3	Special Ball			76
+4.2.4	Level Design			77
+4.2.5	Aspek Inspirasi			78
+4.3	Spelunky 2			78
+4.3.1	Story				79
+4.3.2	Gameplay			80
+4.3.3	Environment			83
+4.3.4	Items				85
+4.3.5	Shops				86
+4.3.6	Level Generation		87
+4.3.7	Aspek Inspirasi			87
+5	Desain Game			88
+5.1	Flow Aplikasi & UX		88
+5.2	Gameplay			89
+5.3	Main Level			90
+5.4	Bola Spesial			90
+5.4.1	Ice Piercer			91
+5.4.2	Snow-a-rang			91
+5.4.3	Explod-o-Ball			91
+5.4.4	Freezing Winter			92
+5.4.5	Stone Auger			92
+5.5	User Interface			93
+5.6	Desain Aksi Player / Bot	94
+5.6.1	Movement / Gerakan		94
+5.6.2	Mengambil Bola			95
+5.6.3	Menangkap Bola			95
+5.6.4	Melempar Bola			96
+5.6.5	Kena Lempar Bola		97
+5.6.6	Fakeout (Khusus Player)		97
+5.7 	Tutorial			97
+5.8	Level Generation		98
+5.8.1	Jumlah batu dalam Level (Tile Generation)	99
+5.8.2	Ukuran Kelompok Batu (Tile Generation)	101
+5.8.3	Luas Area yang bisa diakses	102
+5.8.4	Jumlah bola spesial yang bisa diambil	103
+5.8.5	Rasio antara bola spesial dan luas area level	103
+5.8.6	Veriasi template dalam level (Template Generation)	104
+5.8.7	Selection			106
+5.8.8	Crossover			106
+5.8.9	Mutation			107
+5.8.10	Stop Condition			108
+5.9	Bot State Machine		108
+5.9.1 	Start State			109
+5.9.2 	Mencari Bola			109
+5.9.3 	Ambil Bola			109
+5.9.4 	Mencari Musuh			109
+5.9.5 	Bidik Musuh			110
+5.9.6 	Kejar Musuh			110
+5.9.7 	Coba tangkap bola		110
+6	Implementasi Map Generation menggunakan Genetic Algorithm	111
+6.1	Chromosome / Representasi	111
+6.1.1	Tile Chromosome			111
+6.1.2	Templated Map Chromosome	113
+6.2	Main Code			116
+6.3	Function FitnessFunction	118
+6.4	Fitness Individual		120
+6.4.1	Rock Amount Fitness		122
+6.4.2	Rock Groups Size Fitness	124
+6.4.3	Area Fitness			126
+6.4.4	Power Up Access Fitness		127
+6.4.5	Power Up Ratio Fitness		129
+6.4.6	Template Variety Fitness	131
+7	Implementasi Game		134
+7.1	Mengolah hasil Genetic Algorithm menjadi Level	134
+7.1.1	SetObjects			134
+7.1.2	Make Floor			137
+7.1.3	PlayersManager			138
+7.2	Bola Salju			140
+7.2.1	Snowball Manager		140
+7.2.2	Ball Movemenet			143
+7.2.3	Bola Spesial			145
+7.2.4	Power Up			149
+7.3	Karakter Player			152
+7.3.1	SnowBrawler			152
+7.3.2	Movement / Gerakan		155
+7.3.3	Shoot Mechanic			157
+7.3.4	Catch Ball			159
+7.4	Karakter Bot			160
+7.4.1	Bot Actions			160
+7.4.2	Metode Melempar Bot		163
+7.4.3	Coordinate Movement		168
+7.4.4	A* Algorithm			169
+7.4.5	State Machine			174
+7.4.5.1	Random Walking			175
+7.4.5.2	Transisi Random Walking menuju Ambil Bola	175
+7.4.5.3	Ambil Bola			176
+7.4.5.4	Transisi Ambil Bola menuju Random Walking	177
+7.4.5.5	Transisi Random Walking menuju Aim & Throw	178
+7.4.5.6	Aim & Throw			179
+7.4.5.7	Transisi Aim & Thwor menuju Random Walking	180
+7.4.5.8	Transisi Aim & Throw menuju Follow Target	181
+7.4.5.9	Follow Target			181
+7.4.5.10Transisi Follow Target menuju Random Walking	182
+7.4.5.11Transisi Follow Target menuju Aim & Throw	183
+7.4.5.12Transisi Any State menuju Catch Ball		183
+7.4.5.13 Catch Ball dan transisinya	183
+7.5	Sistem Timer & Skor		185
+8	Uji Coba			188
+8.1	Tes AI dari bot			188
+8.1.1	Bisa Melihat dan mengambil salju189
+8.1.2	Mencari lawan dan membidiknya	189
+8.1.3	Melempar Bola dengan prediksi	190
+8.1.4	Mencari salju baru setelah melempar bola	188
+8.1.5	Menangkap Bola			193
+8.2	Evaluasi level yang dibuat Genetic Algorithm	192
+8.2.1	Level dari Template Generation	192
+8.2.2	Level dari Tile Generation	196
+8.3	Kuisioner			200
+8.3.1	Generasi Level			201
+8.3.2	Kualitas Bot			203
+8.3.3	Keseruan dari Game		203
+9.1	Kesimpulan			205
+9.2	Saran				205
+Daftar Pustaka				207
+Riwayat Hidup				208
+Lampiran A Kode Bab 6			A-1
+Lampiran B Kode Bab 7			B-1
+
+Gambar
+2.1 Visualisasi Gene, Kromosom dan Populasi 11
+2.2 Visualisasi Garis besar cara kerja Algoritma Genetik 12
+2.3 Visualisasi One Point Crossover 14
+2.4 Visualisasi Random Mutation 15
+2.5 Visualisasi konsep Elitism 16
+2.6 Sebuah Kubus dan 2 garis diagonal 17
+2.7 Rumus menghitung diagonal dari kubus 18
+2.8 Rumus menghitung jarak antara 2 titik di dalam kubus 19
+2.9 Generasi Pertama 24
+2.10 Persentase seluruh Populasi dan Visualisasi roda Roulette 25
+2.11 Persentase dan Visualisasi Fitness kuadrat 26
+2.12 Hasil Memutar roda Roulette 26
+2.13 Crossover pasangan kromosom pertama dan hasil keseluruhan 27
+2.14 Mutasi kromosom pertama dan hasil keseluruhan 28
+3.1 Logo Unity sebelum 2021 dan dari 2021 hingga sekarang 29
+3.2 UI Unity 30
+3.3 Tampilan Transform 31
+3.4 Tampilan Sprite Renderer 32
+3.5 Tampilan Animator 33
+3.6 Isi dari sebuah Animation Controller 33
+3.7 Isi dari sebuah Transisi 34
+3.8 Rigidbody 2D 35
+3.9 Komponen Box Collider 2D dan tampilan box Collider di Gameobject 36
+3.10 Komponen Script Bot Action dan isi Variabel 37
+3.11 Contoh Tilemap 38
+3.12 Rule Tile 38
+3.13 State Machine 39
+3.14 Shader Graph 40
+4.1 Cuplikan Layar CrossCode 42
+4.2 Dari Kiri; Sergei Asimov, Carla Salvator dan Lea berbincang 44
+4.3 Gerald “Jet” McFly didatangi oleh seorang Avatar biru 44
+4.4 Lea dan Carla dihadang oleh monster milik avatar biru 45
+4.5 Lea menyerang dengan VPI dan VRP 46
+4.6 Lea membidik Charged Shot untuk menyelesaikan puzzle 47
+4.7 5 Elemen dalam Crosscode dan Lea mengalami elemental overload 49
+4.8 Tampilan Skill Tree secara keseluruhan 50
+4.9 Tampilan Skill Tree elemen netral 50
+4.10 Tampilan Skill Tree elemen Es 51
+4.11 Special Point Bar yang ditampilkan 52
+4.12 Combat Art jarak jauh Es level 3 “Gatling Arctillery” 53
+4.13 Menu Equipment Lea 53
+4.14 Lea Memakan Sandwich 55
+4.15 Tampilan keempat status condition 55
+4.16 Lea bertarung bersama dengan Emilie 56
+4.17 Tampilan Menu mengajak anggota party 57
+4.18 Menu untuk mengatur perilaku dari para party member 58
+4.19 UI Crosscode secara normal dan saat shift ditahan 59
+4.20 UI menu saat tab ditekan 60
+4.21 Equipment lain dihover untuk melihat perbedaan stat 62
+4.22 Dipencet help dan mouse melayang di modifier Bullseye 63
+4.23 Menu Inventory Consumables 64
+4.24 Menu Inventory Arms 65
+4.25 Menu Inventory Trade 66
+4.26 Lea melakukan Break pada Rockin’ Hillkat 67
+4.27 PVP antara Lea dan Apollo di Bergen Trail 68
+4.28 Apollo dan Lea sebelum duel dimulai 69
+4.29 Sebuah silver chest di sebelah kiri layar 70
+4.30 Screenshot game Knockout City 72
+4.31 Aksi yang tersedia : Lempar, Fake out, Tangkap, dan Dash 73
+4.32 Player menjadi bola dan player dilempar 74
+4.33 UI Knockout City secara normal dan saat dilempar bola 75
+4.34 Seluruh bola yang terdapat di dalam Knockout City 76
+4.35 Gambar Jukebox Station dari wiki 77
+4.36 Screenshot game Spelunky 2 79
+4.37 Halaman terakhir jurnal Guy Spelunky yang ditinggal di bulan 79
+4.38 Player membawa mayat musuh untuk menangkis panah perangkap 80
+4.39 Player melempar bom dan bom meledak 82
+4.40 Player melempar tali dan memanjat tali yang dilempar 83
+4.41 Player mati kena perangkap tinju 83
+4.42 Player bersama dengan kucingnya Percy 84
+4.43 Player membawa sebuah teleporter 85
+4.44 Player melakukan stun kepada penjaga toko untuk mencuri barang 86
+5.1 Flow dari Splatted 88
+5.2 Ice Piercer 91
+5.3 Snow-a-rang 91
+5.4 Explod-o-Ball 91
+5.5 Freezing Winter 92
+5.6 Stone Auger 92
+5.7 Design UI untuk permainan Splatted 93
+5.8 Dodo 94
+5.9 Ilustrasi cara kerja A* untuk mencapai tujuan 95
+5.10 Ilustrasi Dodo membidik seseorang 96
+5.11 Hasil nilai m fungsi 5.1 100
+5.12 Grafik hasil fitness contoh yang diberi sebelum dikuadrat 101
+5.13 Hasil perhitungan template contoh 105
+5.14 Hasil perhitungan template contoh dengan toleransi 105
+5.15 Visualisasi Roulette Wheel Selection 106
+5.16 Visualisasi Uniform Crossover 106
+5.17 Visualisasi Partial Shuffle Mutation 107
+5.18 State Machine Diagram Bot 108
+6.1 Isi Variabel pengaturan dari algoritma genetik 118
+6.2 Isi Variabel dari Rock Amount Fitness 124
+6.3 Isi Variabel dari Rock Groups Size Fitness 126
+6.4 Isi Variabel dari Power Up Ratio Fitness 130
+6.5 Isi Variabel dari Template Variety Fitness 133
+7.1 Variabel Set Objects di dalam Level utama 136
+7.2 Tile batu dan Tampilan level dengan setobject dan Player Manager 136
+7.3 Tile tanah salju dan Tampilan level hanya dengan makeFloor 137
+7.4 Isi variabel player manager 140
+7.5 Gumpalan salju yang di-spawn secara berkala 140
+7.6 Isi Variabel dari script SnowBallManager 143
+7.7 Bola – bola salju dengan power up id 0 – 5 145
+7.8 Isi Variabel Ball Power Up 148
+7.9 Tampilan Spawner Bola Spesial di dalam game 149
+7.10 Variabel yang dipakai Script power up 151
+7.11 Tampilan Karakter membidik sebuah bola 155
+7.12 Variabel yang digunakan pada shoot Mechanic 158
+7.13 Tampilan karakter player membidik bola 158
+7.14 Tampilan karakter player mencoba menangkap bola 159
+7.15 Variabel – variabel yang digunakan oleh Bot Actions 162
+7.16 Bot menggunakan Linecast untuk “melihat” 163
+7.17 Hukum Cosine 164
+7.18 Hukum Cosine untuk keperluan prediksi lemparan bola 164
+7.19 Rumus kuadrat ABC 167
+7.20 State Machine dari bot 174
+7.21 Isi state Random Walking 175
+7.22 Isi transisi Jalan menuju ambil bola 176
+7.23 Isi state Ambil Bola 177
+7.24 Transisi  Ambil bola ke berjalan 177
+7.25 Bagian kiri dan kanan dari transisi jalan ke bidik bola 178
+7.26 Isi state Aim & Throw 179
+7.27 Transisi aim & throw ke jalan bagian kiri dan kanan 180
+7.28 Transisi Aim & Throw menuju Follow Target 181
+7.29 Isi state Follow Target 181
+7.30 Isi transisi Follow Target menuju jalan bagian kiri dan kanan 182
+7.31 Isi transisi Follow Target menuju Aim & Throw 183
+7.32 Isi transisi menangkap bola 183
+7.33 Isi state Catchball, transisi ke jalan dan ke Aim & Throw 184
+7.34 Tampilan layar Splatted 185
+7.35 Isi Variabel Bar Score Manager 186
+8.1 Level yang akan digunakan untuk mencoba AI dari bot 188
+8.2 Bot melihat bola dan mengambilnya 189
+8.3 Bot melihat lawan dan membidik player 189
+8.4 Bot memprediksi melempar boomerang ke kanan atas 190
+8.5 Bot melihat bola dan berhasil mengambilnya 191
+8.6 Bentuk lokasi uji coba tangkap bola bot 191
+8.7 Bot menangkap bola di depannya 192
+8.8 Level Pertama,fitnessnya dan array id templatenya 193
+8.9 Level Kedua,fitnessnya dan array id templatenya 194
+8.10 Level ketiga,fitnessnya dan array id templatenya 194
+8.11 Level keempat,fitnessnya dan array id templatenya 195
+8.12 Level kelima,fitnessnya dan array id templatenya 196
+8.13 Level kedua dan fitnessnya 197
+8.14 Level kedua dan fitnessnya 198
+8.15 Level ketiga dan fitnessnya 198
+8.16 Level keempat dan fitnessnya 199
+8.17 Level kelima dan fitnessnya 200
+8.18 Pendapat responden mengenai kualitas level yang dibuat 201
+8.19 Jumlah metode Generation tertentu yang dipakai responden 202
+8.20 Pendapat responden berdasarkan Level Generation yang dipakai 202
+8.21 Pendapat responden mengenai kualitas bot yang dibuat 203
+8.22 Pendapat responden mengenai keseruan game 203
+
+Segmen Program
+6.1 Class TileChromosome 111
+6.2 Templated Map Chromosomes 115
+6.3 Fungsi FitnessFunction 118
+6.4 Class Abstrak FitnessBase 120
+6.5 Class Abstrak InLoopFitnessBase 121
+6.6 Class Rock Amount Fitness 122
+6.7 Power Up Access Fitness 128
+6.8 Template Variety Fitness 131
+7.1 Class Make Floor 137
+7.2 Class PowerUp 149
+7.3 Class Player Movement 155
+7.4 Class CatchBall 159
+7.5 Class Coordinate 169
+7.6 Class A Star Node 170
+A.1 Class PossibleTemplates A-1
+A.2 Genetic Algorithm A-2
+A.3 Rock Groups Size Fitness A-3
+A.4 Area Fitness A-5
+A.5 Power Up Ratio Fitness A-6
+B.1 Class Set Objects B-1
+B.2 Class Players Manager B-3
+B.3 Class Snow Ball Manager B-6
+B.4 Class BallMovement B-9
+B.5 Class Ball Power Up B-11
+B.6 Class SnowBrawler B-13
+B.7 Class Shoot Mechanic B-18
+B.8 Class BotActions B-20
+B.9 Fungsi GetAngle B-24
+B.10 Fungsi Coordinate Movement B-26
+B.11 A Star Algorithm B-27
+B.12 Bar Score Manager B-30
