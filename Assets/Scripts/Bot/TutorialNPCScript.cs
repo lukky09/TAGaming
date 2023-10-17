@@ -25,7 +25,7 @@ public class TutorialNPCScript : MonoBehaviour
             GetComponent<BotActions>().tryCatchBall();
             return;
         }
-        if (GetComponent<BotActions>().canSeeProjectile() && Vector2.Distance(transform.position, GetComponent<BotActions>().getSeenProjectile().transform.position) <= 1)
+        if (GetComponent<BotActions>().canSeeProjectile() && GetComponent<BotActions>().getSeenProjectile().activeInHierarchy && Vector2.Distance(transform.position, GetComponent<BotActions>().getSeenProjectile().transform.position) <= 1)
         {
             GetComponent<BotActions>().tryCatchBall();
             return;
