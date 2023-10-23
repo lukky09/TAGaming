@@ -111,6 +111,7 @@ public class BotActions : MonoBehaviour
         Vector2 currentDirection;
         float shortestBallDist = 999, shortestEnemyDist = 999;
         float currDistance;
+        bool seeball = false;
         for (int i = 0; i < linecastAmount; i++)
         {
             currentDirection = Quaternion.Euler(0, 0, initialAngle + i * (linecastAngle / (linecastAmount - 1))) * direction;
@@ -138,6 +139,7 @@ public class BotActions : MonoBehaviour
                 }
                 else if (currentHitObject.collider.CompareTag("Projectile"))
                 {
+                    seeball = true;
                     if (sawProjectileGO != currentHitObject.collider.gameObject)
                         isSameBall = false;
                     sawProjectileGO = currentHitObject.collider.gameObject;
@@ -146,6 +148,11 @@ public class BotActions : MonoBehaviour
             Debug.DrawLine((Vector2)transform.position + currentDirection / 2, (Vector2)transform.position + currentDirection * castingLength, UnityEngine.Color.black, 0.0f);
         }
 
+        if (!seeball)
+        {
+            sawProjectileGO = null;
+            isSameBall = false;
+        }
         if (searchTimer > 0 || !snowBrawlerRef.canAct)
             return;
         // koding sini lebih rapi ketimbang di Visual Script
@@ -270,7 +277,8 @@ public class BotActions : MonoBehaviour
 
     public void tryCatchBallChance()
     {
-        if (Random.Range(1, 101) < catchChance && !isSameBall)
+        Debug.Log((Random.Range(1, 100) < catchChance) +" - "+ (!isSameBall));
+        if (Random.Range(1, 100) < catchChance && !isSameBall)
             StartCoroutine(snowBrawlerRef.catchBall());
         isSameBall = true;
         catchTimer = catchTimerDelay;

@@ -226,7 +226,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
         if (useTemplatedGeneration)
         {
-            Debug.Log(print2DArray(deflatten(a, SetObjects.getWidth() / 10, SetObjects.getHeight() / 5)));
             SetObjects.setMap(putPlayerinTemplate(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
         else

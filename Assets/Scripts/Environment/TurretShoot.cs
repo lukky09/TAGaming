@@ -32,6 +32,6 @@ public class TurretShoot : MonoBehaviour
     {
         GameObject tempBall = Instantiate(snowBall, transform.position, Quaternion.identity);
         tempBall.GetComponent<BallMovement>().initialize(10, Vector3.Normalize(direction), false, 1, null, gameObject);
-        tempBall.GetComponent<ColorTaker>().id = 2;
+        tempBall.GetComponent<ColorTaker>().id = 1;
     }
 }
