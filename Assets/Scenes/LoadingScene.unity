@@ -840,6 +840,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 8947170100586220372}
     - target: {fileID: 8947170099214634926, guid: a05fbc83d07ac7e4092648c303eeb005, type: 3}
+      propertyPath: printLevelsFitness
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8947170099214634926, guid: a05fbc83d07ac7e4092648c303eeb005, type: 3}
       propertyPath: transitionnGameObject
       value: 
       objectReference: {fileID: 0}

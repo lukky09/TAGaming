@@ -15,9 +15,12 @@ using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
 using TMPro;
 using System.Threading.Tasks;
-using GeneticSharp.Infrastructure.Framework.Threading;
 using Newtonsoft.Json.Linq;
 using static UnityEngine.UI.Image;
+using System.IO;
+using System.IO.Pipes;
+using UnityEditor.VersionControl;
+using System.Runtime.InteropServices.ComTypes;
 
 public class GameChromosome : ChromosomeBase
 {
@@ -104,6 +107,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     [SerializeField] MainMenuNavigation MMN;
     [SerializeField] bool useTemplatedGeneration;
     [SerializeField] bool bestFitnessDebug;
+    [SerializeField] bool printLevelsFitness;
     [SerializeField] int StagnationTerminationAmt;
     InLoopFitnessBase[] fitnesses;
 
@@ -122,7 +126,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     {
         fitnesses = GetComponents<InLoopFitnessBase>();
         useTemplatedGeneration = MainMenuNavigation.isTemplate;
-        Debug.Log(fitnesses.Length);
         for (int i = 0; i < fitnesses.Length; i++)
         {
             //Debug.Log(!fitnesses[i].IsUsed +" - "+ (useTemplatedGeneration && !fitnesses[i].ForTemplateGen) + " - " + (!useTemplatedGeneration && !fitnesses[i].ForTileGen));
@@ -131,17 +134,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 fitnesses[i] = null;
         }
         fitnesses = fitnesses.Where(f => f != null).ToArray();
-        Debug.Log(fitnesses.Length);
 
         double fitness;
 
-        Debug.Log(SetObjects.getHeight());
         int generatedMapLength = SetObjects.getHeight() * SetObjects.getWidth() / 2;
-
-        //Multithreading
-        var taskExecutor = new ParallelTaskExecutor();
-        taskExecutor.MinThreads = 12;
-        taskExecutor.MaxThreads = 12;
 
         ChromosomeBase chromosome;
         //Kromosom
@@ -179,9 +175,36 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         var ga = new GeneticAlgorithm(population, fitnessfunc, selection, crossover, mutation);
         ga.Termination = termination;
-        //ga.TaskExecutor = taskExecutor;
+
+        StreamWriter stream;
+        string path = @"C:\Users\gamel\Desktop\File TA\nilai.txt";
+
+        var fs = new FileStream(path, System.IO.FileMode.Open);
+        stream = new StreamWriter(fs);
+        if (printLevelsFitness)
+        {
+            stream.WriteLine("Population,Fitness");
+            ga.GenerationRan += (sender, e) =>
+            {
+                if (useTemplatedGeneration)
+                {
+                    var currentBestChromosome = ga.BestChromosome as TemplatedMapChromosome;
+                    Debug.Log(currentBestChromosome.Fitness.Value);
+                    stream.WriteLine($"{ga.GenerationsNumber},{currentBestChromosome.Fitness.Value}");
+                }
+                else
+                {
+                    var currentBestChromosome = ga.BestChromosome as GameChromosome;
+                    Debug.Log(currentBestChromosome.Fitness.Value);
+                    stream.WriteLine($"{ga.GenerationsNumber},{currentBestChromosome.Fitness.Value}");
+                }
+            };
+        }
 
         ga.Start();
+
+        if (printLevelsFitness)
+            stream.Close();
 
         var a = ga.BestChromosome.GetGenes();
         if (bestFitnessDebug)
@@ -268,7 +291,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             fitnessScores[i] = currentFitnesses[i].getFitnessScore();
         }
 
-        return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(playerAmount - 10) * 5 + 1, 3), 3);
+        //Karena map template tidak ada orang
+        if(useTemplatedGeneration)
+            return Mathf.Pow((float)fitnessScores.Sum(), 3);
+        else
+            return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(playerAmount - 10) * 5 + 1, 3), 3);
     }
 
 
@@ -378,7 +405,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 else if (array[i, j] == 3)
                     s += "<color=red>" + array[i, j] + "</color>,";
                 else
-                    s += array[i, j]+",";
+                    s += array[i, j]+","; 
             }
             s += "\n";
         }
