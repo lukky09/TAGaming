@@ -19,7 +19,6 @@ using Newtonsoft.Json.Linq;
 using static UnityEngine.UI.Image;
 using System.IO;
 using System.IO.Pipes;
-using UnityEditor.VersionControl;
 using System.Runtime.InteropServices.ComTypes;
 
 public class GameChromosome : ChromosomeBase

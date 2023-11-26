@@ -42,6 +42,11 @@ public class MainMenuNavigation : MonoBehaviour
         StartCoroutine(numeratorTransisi(index));
     }
 
+    public void changeSceneIndexNoTransition(int index)
+    {
+        SceneManager.LoadScene(index);
+    }
+
     public void nextScene()
     {
         StartCoroutine(numeratorTransisi(SceneManager.GetActiveScene().buildIndex + 1));
