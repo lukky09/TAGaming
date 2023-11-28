@@ -11,18 +11,6 @@ public class MultiplayerManager : NetworkBehaviour
     private string _multiplayerName;
     public string MultiplayerName { get { return _multiplayerName; } set { _multiplayerName = value; } }
 
-    private void update()
-    {
-        if (IsOwner)
-        {
-            _lobbyMultiplayerName.Value = _multiplayerName;
-        }
-        else
-        {
-            _multiplayerName = _lobbyMultiplayerName.Value.ToString();
-        }
-    }
-
     public void hostGame()
     {
         Debug.Log("Host dimulai");
