@@ -14,7 +14,8 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] MultiplayerManager _multiplayerManagerRef;
     [SerializeField] GameObject _LobbyScreen;
     [SerializeField] GameObject _searchScreen;
-    Lobby _hostLobby;
+    Lobby _currentLobby;
+    bool _isHosting;
     bool _startedSearch;
 
     // Start is called before the first frame update
@@ -22,6 +23,7 @@ public class LobbyManager : MonoBehaviour
     {
         _multiplayerManagerRef = transform.GetChild(0).GetComponent<MultiplayerManager>();
         _startedSearch = false;
+        _isHosting = false;
 
         await UnityServices.InitializeAsync();
 
@@ -38,8 +40,18 @@ public class LobbyManager : MonoBehaviour
         {
             string lobbyName = _multiplayerManagerRef.MultiplayerName + "'s Lobby";
             int maxPlayers = 10;
+            CreateLobbyOptions lobbyOptions = new CreateLobbyOptions
+            {
+                Data = new Dictionary<string, DataObject>
+                {
+                    { "LeftTeamAmt", new DataObject(DataObject.VisibilityOptions.Member, 1.ToString()) },
+                    { "RightTeamAmt", new DataObject(DataObject.VisibilityOptions.Member, 0.ToString()) }
+                },
+                Player = getPlayer(true)
+            };
             Lobby multiplayerLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers);
-            _hostLobby = multiplayerLobby;
+            _currentLobby = multiplayerLobby;
+            _isHosting = true;
 
             Debug.Log("Created Lobby with name " + multiplayerLobby.Name + " and max " + multiplayerLobby.MaxPlayers + " players");
 
@@ -50,6 +62,18 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    Player getPlayer(bool isLeftTeam)
+    {
+        return new Player
+        {
+            Data = new Dictionary<string, PlayerDataObject>
+                    {
+                        {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, _multiplayerManagerRef.MultiplayerName) },
+                        {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,(isLeftTeam == true)? "y" : "n") }
+                    }
+        };
+    }
+
     float _heartbeatCooldown = 15;
     float _currentHeartbeatCooldown;
     async void _hostLobbyHeartbeat()
@@ -58,7 +82,7 @@ public class LobbyManager : MonoBehaviour
         if (_currentHeartbeatCooldown <= 0)
         {
             _currentHeartbeatCooldown = _heartbeatCooldown;
-            await LobbyService.Instance.SendHeartbeatPingAsync(_hostLobby.Id);
+            await LobbyService.Instance.SendHeartbeatPingAsync(_currentLobby.Id);
         }
     }
 
@@ -66,15 +90,12 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
+            resetLobbySearch();
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync();
 
             Debug.Log("Lobbies found : " + queryResponse.Results.Count);
             GameObject scView;
             int i = 0;
-            foreach (Transform item in _lobbyScrollViewViewport.transform)
-            {
-                Destroy(item.gameObject);
-            }
             foreach (Lobby lobby in queryResponse.Results)
             {
                 scView = Instantiate(_scrollViewContentPrefab);
@@ -94,10 +115,22 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    void resetLobbySearch()
+    {
+        foreach (Transform item in _lobbyScrollViewViewport.transform)
+        {
+            Destroy(item.gameObject);
+        }
+    }
+
     public async void joinLobby(string lobbbyID)
     {
         try
         {
+            JoinLobbyByIdOptions joinOptions = new JoinLobbyByIdOptions()
+            {
+                Player = getPlayer(true)
+            };
             await Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID);
             _searchScreen.GetComponent<MultiplayerMenuNavigation>().changeScreen(_LobbyScreen);
         }
@@ -111,7 +144,7 @@ public class LobbyManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_hostLobby != null)
+        if (_currentLobby != null && _isHosting)
             _hostLobbyHeartbeat();
         else if (_startedSearch)
             searchLobby();
