@@ -94,11 +94,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    public void joinLobby(string lobbbyID)
+    public async void joinLobby(string lobbbyID)
     {
         try
         {
-            Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID);
+            await Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID);
             _searchScreen.GetComponent<MultiplayerMenuNavigation>().changeScreen(_LobbyScreen);
         }
         catch (LobbyServiceException e)
