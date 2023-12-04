@@ -42,11 +42,6 @@ public class LobbyManager : MonoBehaviour
             int maxPlayers = 10;
             CreateLobbyOptions lobbyOptions = new CreateLobbyOptions
             {
-                Data = new Dictionary<string, DataObject>
-                {
-                    { "LeftTeamAmt", new DataObject(DataObject.VisibilityOptions.Member, 1.ToString()) },
-                    { "RightTeamAmt", new DataObject(DataObject.VisibilityOptions.Member, 0.ToString()) }
-                },
                 Player = getPlayer(true)
             };
             Lobby multiplayerLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers);
@@ -69,7 +64,7 @@ public class LobbyManager : MonoBehaviour
             Data = new Dictionary<string, PlayerDataObject>
                     {
                         {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, _multiplayerManagerRef.MultiplayerName) },
-                        {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,(isLeftTeam == true)? "y" : "n") }
+                        {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,(isLeftTeam == true)? "y" : "n") }
                     }
         };
     }
@@ -95,11 +90,21 @@ public class LobbyManager : MonoBehaviour
 
             Debug.Log("Lobbies found : " + queryResponse.Results.Count);
             GameObject scView;
-            int i = 0;
+            int i = 0, leftPlayerAmt, rightPlayerAmt;
             foreach (Lobby lobby in queryResponse.Results)
             {
                 scView = Instantiate(_scrollViewContentPrefab);
-                scView.GetComponent<LobbyContentScript>().initialize(lobby.Name, lobby.Players.Count, lobby.Id, this);
+                leftPlayerAmt = 0;
+                rightPlayerAmt = 0;
+                foreach (Player p in lobby.Players)
+                {
+                    Debug.Log(p.Data["isLeftTeam"]);
+                    if (p.Data.ContainsKey("isLeftTeam") && p.Data["isLeftTeam"].ToString().Equals("y"))
+                        leftPlayerAmt += 1;
+                    else
+                        rightPlayerAmt += 1;
+                }
+                scView.GetComponent<LobbyContentScript>().initialize(lobby.Name, leftPlayerAmt, rightPlayerAmt, lobby.Id, this);
                 scView.transform.SetParent(_lobbyScrollViewViewport.transform);
                 scView.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
                 scView.GetComponent<RectTransform>().offsetMax = new Vector2(0, -150 * i);
@@ -123,13 +128,13 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    public async void joinLobby(string lobbbyID)
+    public async void joinLobby(string lobbbyID, LobbyContentScript lobbyScriptRef)
     {
         try
         {
             JoinLobbyByIdOptions joinOptions = new JoinLobbyByIdOptions()
             {
-                Player = getPlayer(true)
+                Player = getPlayer(lobbyScriptRef.LeftTeamPlayerAmount >= lobbyScriptRef.RightTeamPlayerAmount)
             };
             await Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID);
             _searchScreen.GetComponent<MultiplayerMenuNavigation>().changeScreen(_LobbyScreen);

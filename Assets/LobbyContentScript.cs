@@ -11,10 +11,13 @@ public class LobbyContentScript : MonoBehaviour
     TextMeshProUGUI _playerAmountText;
     string _lobbyID;
     Button _joinButton;
+    int _leftPlayerAmt, _rightPlayerAmt;
     LobbyManager _lobbyManagerRef;
 
     public string LobbyName { set { _lobbyNameText.text = value; } }
-    public int PlayerAmount { set { _playerAmountText.text = value.ToString() + "/10"; } }
+    public int PlayerAmount { get { return _leftPlayerAmt + _rightPlayerAmt; } set { _playerAmountText.text = value.ToString() + "/10"; } }
+    public int LeftTeamPlayerAmount { get { return _leftPlayerAmt; } }
+    public int RightTeamPlayerAmount { get { return _rightPlayerAmt; } }
     public string LobbyID { get { return _lobbyID; } set { _lobbyID = value; } }
 
     // Start is called before the first frame update
@@ -23,16 +26,17 @@ public class LobbyContentScript : MonoBehaviour
         _lobbyNameText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         _playerAmountText = transform.GetChild(1).GetComponent<TextMeshProUGUI>();
         _joinButton = transform.GetChild(2).GetComponent<Button>();
-        Debug.Log(_lobbyNameText.text);
     }
 
-    public void initialize(string lobbyName, int playerAmount, string lobbyID,LobbyManager lobbyManager)
+    public void initialize(string lobbyName, int leftPlayerAmount, int rightPlayerAmount, string lobbyID, LobbyManager lobbyManager)
     {
         LobbyName = lobbyName;
-        PlayerAmount = playerAmount;
+        PlayerAmount = leftPlayerAmount + rightPlayerAmount;
+        _leftPlayerAmt = leftPlayerAmount;
+        _rightPlayerAmt = rightPlayerAmount;
         LobbyID = lobbyID;
-        _lobbyManagerRef = lobbyManager; 
-        if (playerAmount == 10)
+        _lobbyManagerRef = lobbyManager;
+        if (PlayerAmount == 10)
         {
             _joinButton.interactable = false;
             _joinButton.transform.GetChild(0).GetComponent<TextMeshProUGUI>().text = "full";
@@ -48,7 +52,7 @@ public class LobbyContentScript : MonoBehaviour
     {
         try
         {
-            _lobbyManagerRef.joinLobby(LobbyID);
+            _lobbyManagerRef.joinLobby(LobbyID,this);
             Debug.Log("Room Joined");
         }
         catch (LobbyServiceException e)
@@ -56,7 +60,7 @@ public class LobbyContentScript : MonoBehaviour
             Debug.LogError(e);
             throw;
         }
-       
+
     }
 
 }
