@@ -9,7 +9,6 @@ public class MainMenuNavigation : MonoBehaviour
 {
     public static bool isTemplate;
     public static bool startingTransitionActivated = true;
-    static string size;
     [SerializeField] GameObject transitionGO;
 
     public void mainMenuPressed()
@@ -79,11 +78,6 @@ public class MainMenuNavigation : MonoBehaviour
         {
             gameObject.GetComponent<TMP_InputField>().text = (intinput - 1).ToString();
         }
-    }
-
-    public void changeSize(string input)
-    {
-        size = input;
     }
 
     public void changeTemplate(bool currValue)

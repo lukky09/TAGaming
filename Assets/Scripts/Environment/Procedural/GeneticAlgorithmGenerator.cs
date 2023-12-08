@@ -141,10 +141,10 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         ChromosomeBase chromosome;
         //Kromosom
         if (useTemplatedGeneration)
-         chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(generatedMapLength / 25));
+            chromosome = new TemplatedMapChromosome(Mathf.RoundToInt(generatedMapLength / 25));
         else
         {
-            chromosome = new GameChromosome(generatedMapLength, Mathf.FloorToInt(GetComponent<PowerUpRatioFitness>().getRatio() * generatedMapLength/2));
+            chromosome = new GameChromosome(generatedMapLength, Mathf.FloorToInt(GetComponent<PowerUpRatioFitness>().getRatio() * generatedMapLength));
         }
 
         //Populasi
@@ -156,8 +156,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             int[,] map;
             //Menghasilkan map utuh yang siap diperiksa oleh fitness
             if (useTemplatedGeneration)
-                map = putPlayerinTemplate(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
-            
+                map = putPlayerinTemplate(templateDeflatten(fc, SetObjects.getWidth() / 2, SetObjects.getHeight()), SetObjects.getWidth() / 2, SetObjects.getHeight());
+
             else
                 map = deflatten(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
             fitness = fitnessFunction(map, fc);
@@ -188,13 +188,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                 if (useTemplatedGeneration)
                 {
                     var currentBestChromosome = ga.BestChromosome as TemplatedMapChromosome;
-                    Debug.Log(currentBestChromosome.Fitness.Value);
                     stream.WriteLine($"{ga.GenerationsNumber},{currentBestChromosome.Fitness.Value}");
                 }
                 else
                 {
                     var currentBestChromosome = ga.BestChromosome as GameChromosome;
-                    Debug.Log(currentBestChromosome.Fitness.Value);
                     stream.WriteLine($"{ga.GenerationsNumber},{currentBestChromosome.Fitness.Value}");
                 }
             };
@@ -213,7 +211,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             int[,] map;
             //Menghasilkan map utuh yang siap diperiksa oleh fitness
             if (useTemplatedGeneration)
-                map = putPlayerinTemplate(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
+                map = putPlayerinTemplate(templateDeflatten(fc, SetObjects.getWidth() / 2, SetObjects.getHeight()), SetObjects.getWidth() / 2, SetObjects.getHeight());
 
             else
                 map = deflatten(fc, SetObjects.getWidth() / 2, SetObjects.getHeight());
@@ -248,17 +246,36 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
         if (useTemplatedGeneration)
         {
-            SetObjects.setMap(putPlayerinTemplate(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
+            SetObjects.setMap(putPlayerinTemplate(templateDeflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
         else
         {
             //Debug.Log(print2DArray(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight())));
             SetObjects.setMap(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
+
+        //Cek kalau multiplayer
+        try
+        {
+            if (LobbyManager.instance.CurrentLobby != null)
+            {
+                LobbyManager.instance.changeLobbyVariable(
+                    new string[] { "MapSize", "MapData" },
+                    new string[] { $"{SetObjects.getWidth()},{SetObjects.getHeight()}", geneToMultiplayerData(a) });
+                MMN.changeSceneIndex(-8);
+                return;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.Log(e.ToString());
+        }
+
+
         MMN.changeSceneIndex(-6);
     }
 
-    double fitnessFunction(int[,] map , Gene[] original)
+    double fitnessFunction(int[,] map, Gene[] original)
     {
         int playerAmount = 0;
         InLoopFitnessBase[] currentFitnesses = (InLoopFitnessBase[])fitnesses.Clone();
@@ -267,7 +284,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         for (int i = 0; i < currentFitnesses.Length; i++)
             if (currentFitnesses[i].GetType() == GetComponent<TemplateVarietyFitness>().GetType())
                 ((TemplateVarietyFitness)currentFitnesses[i]).getTemplateMap(original);
-        
+
 
         double[] fitnessScores = new double[fitnesses.Length];
         foreach (InLoopFitnessBase item in currentFitnesses)
@@ -275,13 +292,14 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
         Coordinate tempCoor;
         for (int i = 0; i < SetObjects.getHeight(); i++)
-            for (int j = 0; j < SetObjects.getWidth(); j++) {
+            for (int j = 0; j < SetObjects.getWidth(); j++)
+            {
                 tempCoor = new Coordinate(j, i);
                 if (map[tempCoor.yCoor, tempCoor.xCoor] == 3)
                     playerAmount++;
                 foreach (InLoopFitnessBase item in currentFitnesses)
                 {
-                    item.calculateFitness(map,tempCoor);
+                    item.calculateFitness(map, tempCoor);
                 }
             }
 
@@ -291,7 +309,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Karena map template tidak ada orang
-        if(useTemplatedGeneration)
+        if (useTemplatedGeneration)
             return Mathf.Pow((float)fitnessScores.Sum(), 3);
         else
             return Mathf.Pow((float)fitnessScores.Sum() / Mathf.Pow(MathF.Abs(playerAmount - 10) * 5 + 1, 3), 3);
@@ -317,6 +335,49 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     }
 
 
+    string geneToMultiplayerData(Gene[] arrays)
+    {
+        string result = "";
+        foreach (Gene eh in arrays)
+            result += eh.Value.ToString() + (useTemplatedGeneration ? " " : "");
+        return result;
+    }
+
+    public static int[,] multiplayerDataToMap(string MapData, int width, int height)
+    {
+        int[,] result = new int[height, width];
+        // Kalau Generation biasa
+        if(!MapData.Contains(' '))
+        for (int i = 0; i < height; i++)
+            for (int j = 0; j < width; j++)
+            {
+                result[i, j] = (int)Char.GetNumericValue(MapData[i * width + j]);
+                result[i, (width * 2) - 1 - j] = (int)Char.GetNumericValue(MapData[i * width + j]);
+            }
+        //Kalau Template Generation
+        else
+        {
+            string[] currentMapData = MapData.Split(' ');
+            int[,] currTemplate;
+            for (int i = 0; i < height / 5; i++)
+            {
+                for (int j = 0; j < width / 10; j++)
+                {
+                    currTemplate = PossibleTemplates.getTemplate(Int32.Parse(currentMapData[i * (width / 10) + j]));
+                    for (int k = 0; k < 5; k++)
+                    {
+                        for (int l = 0; l < 5; l++)
+                        {
+                            result[5 * i + k, 5 * j + l] = currTemplate[k, l];
+                            result[5 * i + k, width - 1 - (5 * j + l)] = currTemplate[k, l];
+                        }
+                    }
+                }
+            }
+        }
+        return result;
+    }
+
     int[,] templateDeflatten(Gene[] arrays, int width, int height)
     {
         int[,] result = new int[height, width * (useMirrorFitness ? 2 : 1)];
@@ -341,9 +402,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     }
 
     //Mungkin kapan kapan aja di tambahi Dilation + erosion
-    int[,] putPlayerinTemplate(Gene[] arrays, int width, int height)
+    int[,] putPlayerinTemplate(int[,] arrays, int width, int height)
     {
-        int[,] tempTemplate = templateDeflatten(arrays, width, height);
+        int[,] tempTemplate = arrays;
         Coordinate[] _5Coordinates = new Coordinate[] {
             new Coordinate(Mathf.RoundToInt(width/3),Mathf.RoundToInt(height/4)),
             new Coordinate(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt(height/4)),
@@ -397,14 +458,14 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         {
             for (int j = 0; j < array.GetLength(1); j++)
             {
-                if(array[i, j] == 1)
-                    s += "<color=grey>"+array[i, j] + "</color>,";
-                else if(array[i, j] == 2)
+                if (array[i, j] == 1)
+                    s += "<color=grey>" + array[i, j] + "</color>,";
+                else if (array[i, j] == 2)
                     s += "<color=green>" + array[i, j] + "</color>,";
                 else if (array[i, j] == 3)
                     s += "<color=red>" + array[i, j] + "</color>,";
                 else
-                    s += array[i, j]+","; 
+                    s += array[i, j] + ",";
             }
             s += "\n";
         }
