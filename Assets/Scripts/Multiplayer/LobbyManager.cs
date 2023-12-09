@@ -117,9 +117,8 @@ public class LobbyManager : MonoBehaviour
             resetTeams();
         }
         if (!_currentLobby.Data["MapData"].Value.Equals("-"))
-        {
-
-            _menuNavigationRef.changeSceneIndex(9);
+        { 
+            _menuNavigationRef.changeSceneIndexNoTransition(7);
         }
     }
 

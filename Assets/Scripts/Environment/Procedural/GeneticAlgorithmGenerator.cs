@@ -269,10 +269,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         catch (Exception e)
         {
             Debug.Log(e.ToString());
+            MMN.changeSceneIndex(-6);
         }
-
-
-        MMN.changeSceneIndex(-6);
     }
 
     double fitnessFunction(int[,] map, Gene[] original)
