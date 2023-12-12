@@ -95,11 +95,13 @@ public class LobbyManager : MonoBehaviour
 
     float _heartbeatCooldown = 15;
     float _currentHeartbeatCooldown;
-    async void _hostLobbyHeartbeat()
+    public async void hostLobbyHeartbeat()
     {
         _currentHeartbeatCooldown -= Time.deltaTime;
+        
         if (_currentHeartbeatCooldown <= 0)
         {
+            UnityEngine.Debug.Log("Hearbeat");
             _currentHeartbeatCooldown = _heartbeatCooldown;
             await LobbyService.Instance.SendHeartbeatPingAsync(_currentLobby.Id);
         }
@@ -107,13 +109,13 @@ public class LobbyManager : MonoBehaviour
 
     float _updateCooldown = 1.1f;
     float _currentUpdateCooldown;
-    async void _LobbyViewUpdate()
+    async void LobbyViewUpdate()
     {
         _currentUpdateCooldown -= Time.deltaTime;
         if (_currentUpdateCooldown <= 0)
         {
             _currentUpdateCooldown = _updateCooldown;
-            _currentLobby = await LobbyService.Instance.GetLobbyAsync(_currentLobby.Id);
+            updateLobby();
             resetTeams();
         }
         if (!_currentLobby.Data["MapData"].Value.Equals("-"))
@@ -164,6 +166,11 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    public async void updateLobby()
+    {
+        _currentLobby  = await LobbyService.Instance.GetLobbyAsync(_currentLobby.Id);
+    }
+
     void resetLobbySearch()
     {
         foreach (Transform item in _lobbyScrollViewViewport.transform)
@@ -211,14 +218,7 @@ public class LobbyManager : MonoBehaviour
         {
             if (p.Id == _thisPlayerId)
             {
-                Debug.Log(_currentLobby.Id);
-                Debug.Log(_thisPlayerId); Debug.Log(p.Data["isLeftTeam"].Value);
-                _currentLobby = await LobbyService.Instance.UpdatePlayerAsync(_currentLobby.Id, _thisPlayerId, new UpdatePlayerOptions()
-                {
-                    Data = new Dictionary<string, PlayerDataObject>{
-                        {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,(p.Data["isLeftTeam"].Value == "y")? "n" : "y") }
-                    }
-                });
+                changeOwnPlayerVariable("isLeftTeam", PlayerDataObject.VisibilityOptions.Public, (p.Data["isLeftTeam"].Value == "y") ? "n" : "y");
             }
 
         }
@@ -229,12 +229,12 @@ public class LobbyManager : MonoBehaviour
         changeLobbyVariable("HasStarted","y");
     }
 
-    public async void changeOwnPlayerVariable(string VariableName, string VariableValue)
+    public async void changeOwnPlayerVariable(string VariableName, PlayerDataObject.VisibilityOptions visibility, string VariableValue)
     {
         _currentLobby = await LobbyService.Instance.UpdatePlayerAsync(_currentLobby.Id, _thisPlayerId, new UpdatePlayerOptions()
         {
             Data = new Dictionary<string, PlayerDataObject>{
-                        {VariableName, new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,VariableValue) }
+                        {VariableName, new PlayerDataObject(visibility,VariableValue) }
                     }
         });
     }
@@ -274,7 +274,7 @@ public class LobbyManager : MonoBehaviour
             _currentLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID, joinOptions);
             _searchScreen.GetComponent<MultiplayerMenuNavigation>().changeScreen(_LobbyScreen);
             _startButton.interactable = false;
-            _LobbyViewUpdate();
+            LobbyViewUpdate();
         }
         catch (LobbyServiceException e)
         {
@@ -304,9 +304,9 @@ public class LobbyManager : MonoBehaviour
     {
         if (_currentLobby != null)
         {
-            _LobbyViewUpdate();
+            LobbyViewUpdate();
             if (_isHosting)
-                _hostLobbyHeartbeat();
+                hostLobbyHeartbeat();
 
         }
         else if (_startedSearch)

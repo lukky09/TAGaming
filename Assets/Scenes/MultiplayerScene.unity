@@ -8786,7 +8786,7 @@ MonoBehaviour:
         m_CallState: 2
       - m_Target: {fileID: 363035661}
         m_TargetAssemblyTypeName: MainMenuNavigation, Assembly-CSharp
-        m_MethodName: changeSceneIndex
+        m_MethodName: changeSceneIndexNoTransition
         m_Mode: 3
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
