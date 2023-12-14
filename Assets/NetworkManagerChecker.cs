@@ -7,20 +7,16 @@ public class NetworkManagerChecker : MonoBehaviour
 {
     private void Awake()
     {
-		try
-		{
-			if(LobbyManager.instance.CurrentLobby != null)
-			{
-				if (LobbyManager.instance.IsHosting)
-					NetworkManager.Singleton.StartHost();
-				else
-                    NetworkManager.Singleton.StartClient();
-            }
-		}
-		catch (System.Exception e)
-		{
-			Destroy(gameObject);
-		}
+        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
+            NetworkManager.Singleton.StartHost();
+        else
+        {
+            if (LobbyManager.instance.IsHosting)
+                NetworkManager.Singleton.StartHost();
+            else
+                NetworkManager.Singleton.StartClient();
+        }
+
     }
 }
 

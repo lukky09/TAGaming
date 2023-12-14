@@ -1242,10 +1242,10 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0
+    x: 0.20260417
     y: 0
-    width: 1
-    height: 1
+    width: 0.33333334
+    height: 0.32592592
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1918,8 +1918,7 @@ MonoBehaviour:
   rok: {fileID: 11400000, guid: 3691f70950302044b88fb69076322f75, type: 2}
   powerUpContainer: {fileID: 1070962874}
   powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
-  playerManagerReference: {fileID: 69075703}
-  only1BotActive: 0
+  playerManagerReference: {fileID: 69075706}
   colManager: {fileID: 0}
 --- !u!114 &728283040
 MonoBehaviour:

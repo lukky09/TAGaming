@@ -1,18 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
+using Unity.Netcode;
+using Unity.Services.Lobbies.Models;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : NetworkBehaviour
 {
     Vector2 moveDirection;
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
     SnowBrawler SBReference;
+    int _SpawnID;
 
     // Start is called before the first frame update
     void Start()
     {
+        onlineBehavior();
+        
         moveDirection = new Vector2(0,0);
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
@@ -42,6 +47,29 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
+    }
+
+    void onlineBehavior()
+    {
+        Debug.Log("OnlineTime");
+        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline)
+        {
+            if (!IsOwner)
+                Destroy(this);
+            foreach (Player p in LobbyManager.instance.CurrentLobby.Players)
+            {
+                //Isi nanti dulu
+            }
+        }
+        else
+        {
+            _SpawnID = 1;
+        }
+        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, PlayersManager.isLeftTeam(gameObject));
+
+        transform.SetParent(GameObject.Find("Players").transform);
+        FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
+
     }
 
 }

@@ -16,8 +16,6 @@ public class LobbyContentScript : MonoBehaviour
 
     public string LobbyName { set { _lobbyNameText.text = value; } }
     public int PlayerAmount { get { return _leftPlayerAmt + _rightPlayerAmt; } set { _playerAmountText.text = value.ToString() + "/10"; } }
-    public int LeftTeamPlayerAmount { get { return _leftPlayerAmt; } }
-    public int RightTeamPlayerAmount { get { return _rightPlayerAmt; } }
     public string LobbyID { get { return _lobbyID; } set { _lobbyID = value; } }
 
     // Start is called before the first frame update
@@ -52,7 +50,7 @@ public class LobbyContentScript : MonoBehaviour
     {
         try
         {
-            _lobbyManagerRef.joinLobby(LobbyID,this);
+            _lobbyManagerRef.joinLobby(LobbyID);
             Debug.Log("Room Joined");
         }
         catch (LobbyServiceException e)

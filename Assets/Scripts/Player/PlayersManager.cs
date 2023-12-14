@@ -76,6 +76,11 @@ public class PlayersManager : MonoBehaviour
 
     }
 
+    static public bool isLeftTeam(GameObject player)
+    {
+        return Coordinate.returnAsCoordinate(player.transform.position).xCoor < (SetObjects.getWidth() / 2) + 1;
+    }
+
     public void makeNewPlayer(Coordinate c)
     {
         int i = getFirstNullPlayerIndex();
@@ -88,6 +93,7 @@ public class PlayersManager : MonoBehaviour
     {
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
+        tempEnemyPrefab.transform.localScale = new Vector3(isPlayerTeam ? 1 : -1, 1, 1);
         if (isPlayerTeam)
         {
             tempEnemyPrefab.GetComponent<SnowBrawler>().playerteam = true;

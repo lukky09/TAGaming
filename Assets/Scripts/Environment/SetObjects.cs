@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Tilemaps;
+using Unity.Mathematics;
+using Unity.Services.Lobbies.Models;
 
 public class SetObjects : MonoBehaviour
 {
@@ -17,9 +19,11 @@ public class SetObjects : MonoBehaviour
     public TileBase rok;
     public GameObject powerUpContainer;
     public GameObject powerUp;
-    [SerializeField] GameObject playerManagerReference;
-    [SerializeField] bool only1BotActive;
+    [SerializeField] PlayersManager playerManagerReference;
     [SerializeField] ColorManager colManager;
+
+    public Coordinate[,] PlayerCoordinates;
+    public int[,] PlayerPositions;
 
     public static void initializeSize(int w, int h)
     {
@@ -79,12 +83,14 @@ public class SetObjects : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        PlayerCoordinates = new Coordinate[2, 5];
         mapTilemap = this.GetComponent<Tilemap>();
         fillMap();
     }
 
     public void fillMap()
     {
+        Debug.Log("Mulai Fill");
         //horizontal
         for (int i = 0; i < width; i++)
         {
@@ -99,7 +105,9 @@ public class SetObjects : MonoBehaviour
         }
         Coordinate tempCoor;
         GameObject temp;
-        bool playerMade = false, oneBotAI = false;
+        int[] playerAmt = new int[] { 0, 0 };
+        int k;
+        PlayerPositions = new int[,] { { 0, 0, 0, 0, 0 }, { 0, 0, 0, 0, 0 } };
         for (int i = 0; i < height - 2; i++)
             for (int j = 0; j < width - 2; j++)
             {
@@ -113,23 +121,57 @@ public class SetObjects : MonoBehaviour
                 }
                 else if (stageUnfolded[i, j] == 3)
                 {
-                    if (!playerMade)
-                    {
-                        playerManagerReference.GetComponent<PlayersManager>().makeNewPlayer(tempCoor);
-                        playerMade = true;
-                    }
-                    else if (only1BotActive && !oneBotAI)
-                    {
-                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor,false);
-                        oneBotAI = true;
-                    }
-                    else if(!only1BotActive)
-                    {
-                        playerManagerReference.GetComponent<PlayersManager>().makeNewBot(tempCoor, j < (int)(width / 2) + 1);
-                    }
-                }
+                    k = (j < (int)(width / 2) + 1) ? 0 : 1;
+                    PlayerCoordinates[(j < (int)(width / 2) + 1) ? 0 : 1, playerAmt[k]] = new Coordinate(j, i);
+                    playerAmt[k]++;
 
+                }
             }
+        Debug.Log("Tengah Fill");
+        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
+            PlayerPositions[0, UnityEngine.Random.Range(0, 5)] = 1;
+        else
+        {
+            playerAmt = new int[] { 0, 0 };
+            foreach (Player p in LobbyManager.instance.CurrentLobby.Players)
+            {
+                if (p.Data["isLeftTeam"].Value.Equals("y"))
+                    playerAmt[0]++;
+                else
+                    playerAmt[1]++;
+            }
+            string[] orderValue = LobbyManager.instance.CurrentLobby.Data["PlayerOrder"].Value.Split(",");
+            for (int i = 0; i < 2; i++)
+                for (int j = 0; j < 5; j++)
+                {
+                    if ((int)Char.GetNumericValue(orderValue[i][j]) <= playerAmt[i])
+                        PlayerPositions[i, j] = (int)Char.GetNumericValue(orderValue[i][j]);
+                    else
+                        PlayerPositions[i, j] = 0;
+                }
+        }
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                //Spawn Bot kalau ngga ada player
+                if (PlayerPositions[i, j] == 0)
+                    playerManagerReference.makeNewBot(PlayerCoordinates[i, j], i == 0);
+            }
+        }
+        Debug.Log("Fill Selesai");
+    }
+
+    public Vector3 GetPositionFromOrderID(int OrderID, bool isLeftTeam)
+    {
+        int eh = isLeftTeam ? 0 : 1;
+        Debug.Log(PlayerPositions[0,0]);
+        for (int i = 0; i < 5; i++)
+        {
+            if (PlayerPositions[eh, i] == OrderID)
+                return PlayerCoordinates[eh, i].returnAsVector();
+        }
+        return Vector3.zero;
     }
 
     public void clearMap()

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.Mathematics;
 using Unity.Services.Authentication;
 using Unity.Services.Core;
 using Unity.Services.Lobbies;
@@ -23,17 +25,20 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] MainMenuNavigation _menuNavigationRef;
     Lobby _currentLobby;
     bool _isHosting;
+    bool _isOnline;
     bool _startedSearch;
     string _thisPlayerId;
 
     public Lobby CurrentLobby { get { return _currentLobby; } }
     public bool IsHosting { get { return _isHosting; } }
+    public bool IsOnline { get { return _isOnline; } }
 
     public static LobbyManager instance;
 
     // Start is called before the first frame update
     async void Start()
     {
+        _isOnline = false;
         _multiplayerManagerRef = transform.GetChild(0).GetComponent<MultiplayerManager>();
         _startedSearch = false;
         _isHosting = false;
@@ -58,18 +63,20 @@ public class LobbyManager : MonoBehaviour
             int maxPlayers = 10;
             CreateLobbyOptions lobbyOptions = new CreateLobbyOptions
             {
-                Player = getPlayer(true),
+                Player = getPlayer(true, 0),
                 Data = new Dictionary<string, DataObject>
                 {
                     {"HasStarted" , new DataObject(DataObject.VisibilityOptions.Public, "n" ) },
                     {"MapSize" , new DataObject(DataObject.VisibilityOptions.Member, "-" ) },
                     {"MapData" , new DataObject(DataObject.VisibilityOptions.Member, "-" ) },
+                    {"PlayerOrder" , new DataObject(DataObject.VisibilityOptions.Member, createPlayerOrder() ) }
                 }
             };
             Lobby multiplayerLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, lobbyOptions);
             _currentLobby = multiplayerLobby;
             _isHosting = true;
             _startButton.interactable = true;
+            _isOnline = true;
 
             Debug.Log("Created Lobby with name " + multiplayerLobby.Name + " and max " + multiplayerLobby.MaxPlayers + " players");
 
@@ -80,7 +87,7 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    Player getPlayer(bool isLeftTeam)
+    Player getPlayer(bool isLeftTeam, int order)
     {
         return new Player
         {
@@ -88,7 +95,8 @@ public class LobbyManager : MonoBehaviour
                     {
                         {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, _multiplayerManagerRef.MultiplayerName) },
                         {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,(isLeftTeam == true)? "y" : "n") },
-                        {"isReady",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,"n") }
+                        {"isReady",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,"n") },
+                        {"joinOrder",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,$"{order}") }
                     }
         };
     }
@@ -98,7 +106,7 @@ public class LobbyManager : MonoBehaviour
     public async void hostLobbyHeartbeat()
     {
         _currentHeartbeatCooldown -= Time.deltaTime;
-        
+
         if (_currentHeartbeatCooldown <= 0)
         {
             UnityEngine.Debug.Log("Hearbeat");
@@ -119,7 +127,7 @@ public class LobbyManager : MonoBehaviour
             resetTeams();
         }
         if (!_currentLobby.Data["MapData"].Value.Equals("-"))
-        { 
+        {
             _menuNavigationRef.changeSceneIndexNoTransition(7);
         }
     }
@@ -168,7 +176,7 @@ public class LobbyManager : MonoBehaviour
 
     public async void updateLobby()
     {
-        _currentLobby  = await LobbyService.Instance.GetLobbyAsync(_currentLobby.Id);
+        _currentLobby = await LobbyService.Instance.GetLobbyAsync(_currentLobby.Id);
     }
 
     void resetLobbySearch()
@@ -212,7 +220,7 @@ public class LobbyManager : MonoBehaviour
 
     }
 
-    public async void changeTeam()
+    public void changeTeam()
     {
         foreach (Player p in _currentLobby.Players)
         {
@@ -223,10 +231,10 @@ public class LobbyManager : MonoBehaviour
 
         }
     }
-
+    
     public void startGame()
     {
-        changeLobbyVariable("HasStarted","y");
+        changeLobbyVariable("HasStarted", "y");
     }
 
     public async void changeOwnPlayerVariable(string VariableName, PlayerDataObject.VisibilityOptions visibility, string VariableValue)
@@ -263,18 +271,57 @@ public class LobbyManager : MonoBehaviour
         });
     }
 
-    public async void joinLobby(string lobbbyID, LobbyContentScript lobbyScriptRef)
+    string createPlayerOrder()
+    {
+        int[,] teamOrder = new int[,] { { 1, 2, 3, 4, 5 }, { 1, 2, 3, 4, 5 } };
+        int numberStorage, randomedIndex;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                randomedIndex = UnityEngine.Random.Range(0,5);
+                numberStorage = teamOrder[i, j];
+                teamOrder[i, j] = teamOrder[i, randomedIndex];
+                teamOrder[i, randomedIndex] = numberStorage;
+            }
+        }
+        string result = string.Empty;
+        for (int i = 0; i < 2; i++)
+        {
+            for (int j = 0; j < 5; j++)
+            {
+                result += teamOrder[i, j].ToString();
+            }
+            result += ",";
+        }
+        result.Remove(result.Length - 1);
+        return result;
+    }
+
+        public async void joinLobby(string lobbbyID)
     {
         try
         {
+            Lobby seenLobby = await Lobbies.Instance.GetLobbyAsync(lobbbyID);
+            int jumKiri = 0, jumKanan = 0, orderTertinggi = 0;
+            foreach (Player p in seenLobby.Players)
+            {
+                if (p.Data["isLeftTeam"].Value.Equals("y"))
+                    jumKiri++;
+                else
+                    jumKanan++;
+                if (Int32.Parse(p.Data["joinOrder"].Value) > orderTertinggi)
+                    orderTertinggi = Int32.Parse(p.Data["joinOrder"].Value);
+            }
             JoinLobbyByIdOptions joinOptions = new JoinLobbyByIdOptions()
             {
-                Player = getPlayer(lobbyScriptRef.RightTeamPlayerAmount >= lobbyScriptRef.LeftTeamPlayerAmount)
+                Player = getPlayer(jumKiri <= jumKanan, orderTertinggi + 1)
             };
             _currentLobby = await Lobbies.Instance.JoinLobbyByIdAsync(lobbbyID, joinOptions);
             _searchScreen.GetComponent<MultiplayerMenuNavigation>().changeScreen(_LobbyScreen);
             _startButton.interactable = false;
             LobbyViewUpdate();
+            _isOnline = true;
         }
         catch (LobbyServiceException e)
         {
@@ -293,10 +340,12 @@ public class LobbyManager : MonoBehaviour
                         {
                             HostId = p.Id
                         });
+                    else
+                        await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
             else
-                await LobbyService.Instance.DeleteLobbyAsync(_currentLobby.Id);
-        else
-            await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, _thisPlayerId);
+                await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, _thisPlayerId);
+        _currentLobby = null;
+        _isOnline = false;
     }
 
     // Update is called once per frame

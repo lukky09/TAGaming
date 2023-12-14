@@ -206,7 +206,6 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         var a = ga.BestChromosome.GetGenes();
         if (bestFitnessDebug)
         {
-            Debug.Log("Mulai");
             var fc = ga.BestChromosome.GetGenes();
             int[,] map;
             //Menghasilkan map utuh yang siap diperiksa oleh fitness
@@ -255,22 +254,15 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Cek kalau multiplayer
-        try
+        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline)
         {
-            if (LobbyManager.instance.CurrentLobby != null)
-            {
-                LobbyManager.instance.changeLobbyVariable(
-                    new string[] { "MapSize", "MapData" },
-                    new string[] { $"{SetObjects.getWidth()},{SetObjects.getHeight()}", geneToMultiplayerData(a) });
-                MMN.changeSceneIndex(-8);
-                return;
-            }
+            LobbyManager.instance.changeLobbyVariable(
+                new string[] { "MapSize", "MapData" },
+                new string[] { $"{SetObjects.getWidth()},{SetObjects.getHeight()}", geneToMultiplayerData(a) });
+            MMN.changeSceneIndex(-8);
+            return;
         }
-        catch (Exception e)
-        {
-            Debug.Log(e.ToString());
-            MMN.changeSceneIndex(-6);
-        }
+        MMN.changeSceneIndex(-6);
     }
 
     double fitnessFunction(int[,] map, Gene[] original)
