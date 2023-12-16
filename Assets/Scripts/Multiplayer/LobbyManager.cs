@@ -32,6 +32,7 @@ public class LobbyManager : MonoBehaviour
     public Lobby CurrentLobby { get { return _currentLobby; } }
     public bool IsHosting { get { return _isHosting; } }
     public bool IsOnline { get { return _isOnline; } }
+    public string PlayerID { get { return _thisPlayerId; } }
 
     public static LobbyManager instance;
 
@@ -96,7 +97,7 @@ public class LobbyManager : MonoBehaviour
                         {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, _multiplayerManagerRef.MultiplayerName) },
                         {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,(isLeftTeam == true)? "y" : "n") },
                         {"isReady",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,"n") },
-                        {"joinOrder",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,$"{order}") }
+                        {"joinOrder",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,$"{order}") }
                     }
         };
     }
@@ -125,6 +126,7 @@ public class LobbyManager : MonoBehaviour
             _currentUpdateCooldown = _updateCooldown;
             updateLobby();
             resetTeams();
+            Debug.Log(_currentLobby.Data["MapData"].Value);
         }
         if (!_currentLobby.Data["MapData"].Value.Equals("-"))
         {
@@ -346,6 +348,7 @@ public class LobbyManager : MonoBehaviour
                 await LobbyService.Instance.RemovePlayerAsync(_currentLobby.Id, _thisPlayerId);
         _currentLobby = null;
         _isOnline = false;
+        _isHosting = false;
     }
 
     // Update is called once per frame

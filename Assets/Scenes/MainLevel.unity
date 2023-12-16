@@ -1242,7 +1242,7 @@ Camera:
   m_FocalLength: 50
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20260417
+    x: 0.20416668
     y: 0
     width: 0.33333334
     height: 0.32592592
@@ -7795,6 +7795,30 @@ PrefabInstance:
     - target: {fileID: 8731919307070151942, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].Prefab
+      value: 
+      objectReference: {fileID: 3380666572601521298, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[1].Prefab
+      value: 
+      objectReference: {fileID: 3380666572601521298, guid: 42ba52936b544bc4198868660f86b8d5, type: 3}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[2].Prefab
+      value: 
+      objectReference: {fileID: 2075824792}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].Override
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.NetworkPrefabs.Array.data[0].SourcePrefabToOverride
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}

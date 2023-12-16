@@ -128,7 +128,7 @@ public class SetObjects : MonoBehaviour
                 }
             }
         Debug.Log("Tengah Fill");
-        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
+        if (!LobbyManager.instance.IsOnline)
             PlayerPositions[0, UnityEngine.Random.Range(0, 5)] = 1;
         else
         {
@@ -150,13 +150,16 @@ public class SetObjects : MonoBehaviour
                         PlayerPositions[i, j] = 0;
                 }
         }
-        for (int i = 0; i < 2; i++)
+        if (!LobbyManager.instance.IsOnline || LobbyManager.instance.IsHosting)
         {
-            for (int j = 0; j < 5; j++)
+            for (int i = 0; i < 2; i++)
             {
-                //Spawn Bot kalau ngga ada player
-                if (PlayerPositions[i, j] == 0)
-                    playerManagerReference.makeNewBot(PlayerCoordinates[i, j], i == 0);
+                for (int j = 0; j < 5; j++)
+                {
+                    //Spawn Bot kalau ngga ada player
+                    if (PlayerPositions[i, j] == 0)
+                        playerManagerReference.makeNewBot(PlayerCoordinates[i, j], i == 0);
+                }
             }
         }
         Debug.Log("Fill Selesai");

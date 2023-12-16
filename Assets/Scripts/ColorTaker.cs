@@ -17,4 +17,14 @@ public class ColorTaker : MonoBehaviour
             Debug.LogWarning($"Id {id} tidak punya warna");
     }
 
+    public void updateColor(int colorID)
+    {
+        if (PlayerPrefs.HasKey("DD0"))
+        {
+            id = colorID;
+            GetComponent<SpriteRenderer>().material.SetColor("_OutlineColor", pilihanWarna.getWarna(PlayerPrefs.GetInt("DD" + colorID)).getColor());
+        }
+        
+    }
+
 }

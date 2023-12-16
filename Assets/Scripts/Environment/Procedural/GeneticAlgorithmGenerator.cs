@@ -254,7 +254,8 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Cek kalau multiplayer
-        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline)
+        Debug.Log(LobbyManager.instance != null);
+        if (LobbyManager.instance.IsOnline)
         {
             LobbyManager.instance.changeLobbyVariable(
                 new string[] { "MapSize", "MapData" },

@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerLoadingScript : MonoBehaviour
 {
-    Lobby _lobby  { get { return LobbyManager.instance.CurrentLobby; } }
+    Lobby _lobby { get { return LobbyManager.instance.CurrentLobby; } }
     // Start is called before the first frame update
     void Start()
     {
@@ -34,11 +34,12 @@ public class PlayerLoadingScript : MonoBehaviour
     void Update()
     {
         currentLobbyUpdateTimer -= Time.deltaTime;
-        LobbyManager.instance.hostLobbyHeartbeat();
+        if (LobbyManager.instance.IsHosting)
+            LobbyManager.instance.hostLobbyHeartbeat();
         if (currentLobbyUpdateTimer <= 0)
         {
             LobbyManager.instance.updateLobby();
-            currentLobbyUpdateTimer = 1.0f;
+            currentLobbyUpdateTimer = 1.1f;
         }
         bool _everyoneReady = true;
         foreach (Player p in _lobby.Players)

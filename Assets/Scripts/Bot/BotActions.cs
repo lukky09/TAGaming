@@ -277,7 +277,6 @@ public class BotActions : MonoBehaviour
 
     public void tryCatchBallChance()
     {
-        Debug.Log((Random.Range(1, 100) < catchChance) +" - "+ (!isSameBall));
         if (Random.Range(1, 100) < catchChance && !isSameBall)
             StartCoroutine(snowBrawlerRef.catchBall());
         isSameBall = true;

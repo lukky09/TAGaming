@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Mathematics;
@@ -17,8 +18,8 @@ public class PlayerMovement : NetworkBehaviour
     void Start()
     {
         onlineBehavior();
-        
-        moveDirection = new Vector2(0,0);
+
+        moveDirection = new Vector2(0, 0);
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
         SBReference = this.GetComponent<SnowBrawler>();
@@ -28,13 +29,13 @@ public class PlayerMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!SBReference.canAct)
+        if (!SBReference.canAct || !IsOwner)
         {
             moveDirection = new Vector2(0, 0);
             return;
         }
         float diagonalCheck = Mathf.Sqrt(Mathf.Pow(Input.GetAxisRaw("Horizontal"), 2) + Mathf.Pow(Input.GetAxisRaw("Vertical"), 2));
-        moveDirection.x = Input.GetAxisRaw("Horizontal") * SBReference.runSpeed ;
+        moveDirection.x = Input.GetAxisRaw("Horizontal") * SBReference.runSpeed;
         moveDirection.y = Input.GetAxisRaw("Vertical") * SBReference.runSpeed;
         if (diagonalCheck != 0f)
             moveDirection /= diagonalCheck;
@@ -52,24 +53,35 @@ public class PlayerMovement : NetworkBehaviour
     void onlineBehavior()
     {
         Debug.Log("OnlineTime");
-        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline)
+        _SpawnID = 1;
+        if (LobbyManager.instance.IsOnline)
         {
-            if (!IsOwner)
-                Destroy(this);
+           
+            int thisJoinOrder = 0;
+            string isLeftTeam = "";
+            //Ambil data player ini
             foreach (Player p in LobbyManager.instance.CurrentLobby.Players)
+                if (p.Id == LobbyManager.instance.PlayerID)
+                {
+                    thisJoinOrder = Int32.Parse(p.Data["joinOrder"].Value);
+                    isLeftTeam = p.Data["isLeftTeam"].Value;
+                    break;
+                }
+            //Liat berapa order yang lebih kecil dari player
+            foreach (Player p in LobbyManager.instance.CurrentLobby.Players)
+                if (Int32.Parse(p.Data["joinOrder"].Value) < thisJoinOrder && p.Data["isLeftTeam"].Value.Equals(isLeftTeam))
+                    _SpawnID++;
+            //Dan juga ganti tim kalau tim kanan
+            if (isLeftTeam.Equals("y"))
             {
-                //Isi nanti dulu
+                GetComponent<SnowBrawler>().playerteam = false;
+                GetComponent<ColorTaker>().updateColor(1);
             }
-        }
-        else
-        {
-            _SpawnID = 1;
         }
         transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, PlayersManager.isLeftTeam(gameObject));
 
-        transform.SetParent(GameObject.Find("Players").transform);
+        //transform.SetParent(GameObject.Find("Players").transform);
         FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
-
     }
 
 }
