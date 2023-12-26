@@ -7,6 +7,7 @@ using UnityEngine;
 using UnityEngine.Tilemaps;
 using Unity.Mathematics;
 using Unity.Services.Lobbies.Models;
+using Unity.Netcode;
 
 public class SetObjects : MonoBehaviour
 {
@@ -163,12 +164,13 @@ public class SetObjects : MonoBehaviour
             }
         }
         Debug.Log("Fill Selesai");
+        printCoordinatesAndPositions();
     }
 
     public Vector3 GetPositionFromOrderID(int OrderID, bool isLeftTeam)
     {
         int eh = isLeftTeam ? 0 : 1;
-        Debug.Log(PlayerPositions[0,0]);
+        Debug.Log(PlayerPositions[0, 0]);
         for (int i = 0; i < 5; i++)
         {
             if (PlayerPositions[eh, i] == OrderID)
@@ -180,6 +182,24 @@ public class SetObjects : MonoBehaviour
     public void clearMap()
     {
         mapTilemap.ClearAllTiles();
+    }
+
+    void printCoordinatesAndPositions()
+    {
+        string result = "";
+        try
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                result += $"[{PlayerPositions[0, i]} : {PlayerCoordinates[0, i]}] ";
+                result += $"[{PlayerPositions[1, i]} : {PlayerCoordinates[1, i]}]\n";
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError(e);
+        }
+        Debug.Log(result);
     }
 
 }

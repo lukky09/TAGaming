@@ -14,7 +14,6 @@ public class PlayerLoadingScript : MonoBehaviour
     {
         if (LobbyManager.instance.IsHosting)
         {
-            Debug.Log("Hosting");
             LobbyManager.instance.changeOwnPlayerVariable("isReady", PlayerDataObject.VisibilityOptions.Member, "y");
         }
         else
@@ -23,13 +22,13 @@ public class PlayerLoadingScript : MonoBehaviour
             string mapSizeString = _lobby.Data["MapSize"].Value;
             int mapWidth = Int32.Parse(mapSizeString.Split(',')[0]);
             int mapHeight = Int32.Parse(mapSizeString.Split(',')[1]);
-            SetObjects.setMap(GeneticAlgorithmGenerator.multiplayerDataToMap(mapData, mapWidth, mapHeight), false);
+            SetObjects.setMap(GeneticAlgorithmGenerator.multiplayerDataToMap(mapData, mapWidth, mapHeight), true);
             LobbyManager.instance.changeOwnPlayerVariable("isReady", PlayerDataObject.VisibilityOptions.Member, "y");
             Debug.Log("Map Siap");
         }
     }
 
-    float currentLobbyUpdateTimer = 0;
+    float currentLobbyUpdateTimer = 1;
     // Update is called once per frame
     void Update()
     {

@@ -20,6 +20,7 @@ using static UnityEngine.UI.Image;
 using System.IO;
 using System.IO.Pipes;
 using System.Runtime.InteropServices.ComTypes;
+using Debug = UnityEngine.Debug;
 
 public class GameChromosome : ChromosomeBase
 {
@@ -254,12 +255,12 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Cek kalau multiplayer
-        Debug.Log(LobbyManager.instance != null);
         if (LobbyManager.instance.IsOnline)
         {
             LobbyManager.instance.changeLobbyVariable(
                 new string[] { "MapSize", "MapData" },
                 new string[] { $"{SetObjects.getWidth()},{SetObjects.getHeight()}", geneToMultiplayerData(a) });
+            //printMapOnlineEndcoding(a, SetObjects.getMap(false));
             MMN.changeSceneIndex(-8);
             return;
         }
@@ -336,15 +337,22 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
 
     public static int[,] multiplayerDataToMap(string MapData, int width, int height)
     {
-        int[,] result = new int[height, width];
+        int[,] result = new int[height, width / 2];
         // Kalau Generation biasa
-        if(!MapData.Contains(' '))
-        for (int i = 0; i < height; i++)
-            for (int j = 0; j < width; j++)
-            {
-                result[i, j] = (int)Char.GetNumericValue(MapData[i * width + j]);
-                result[i, (width * 2) - 1 - j] = (int)Char.GetNumericValue(MapData[i * width + j]);
-            }
+        if (!MapData.Contains(' '))
+            for (int i = 0; i < height; i++)
+                for (int j = 0; j < width/2; j++)
+                {
+                    try
+                    {
+                        result[i, j] = (int)Char.GetNumericValue(MapData[i * (width / 2) + j]);
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError(i * (width / 2) + j +" , "+ MapData.Length);
+                    }
+                    
+                }
         //Kalau Template Generation
         else
         {
@@ -360,11 +368,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                         for (int l = 0; l < 5; l++)
                         {
                             result[5 * i + k, 5 * j + l] = currTemplate[k, l];
-                            result[5 * i + k, width - 1 - (5 * j + l)] = currTemplate[k, l];
                         }
                     }
                 }
             }
+            result = putPlayerinTemplate(result, width / 2, height);
         }
         return result;
     }
@@ -393,7 +401,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     }
 
     //Mungkin kapan kapan aja di tambahi Dilation + erosion
-    int[,] putPlayerinTemplate(int[,] arrays, int width, int height)
+    static int[,] putPlayerinTemplate(int[,] arrays, int width, int height)
     {
         int[,] tempTemplate = arrays;
         Coordinate[] _5Coordinates = new Coordinate[] {
@@ -463,4 +471,14 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         return s;
     }
 
+    void printMapOnlineEndcoding(Gene[] geneOriginal, int[,] array)
+    {
+        string encoding = geneToMultiplayerData(geneOriginal);
+        Debug.Log("Sebelum Encoding:");
+        Debug.Log(print2DArray(array));
+        Debug.Log("Saat Encoding:");
+        Debug.Log(encoding);
+        Debug.Log("Setelah Encoding:");
+        Debug.Log(print2DArray(multiplayerDataToMap(encoding, SetObjects.getWidth(), SetObjects.getHeight())));
+    }
 }

@@ -12,18 +12,21 @@ public class PlayerMovement : NetworkBehaviour
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
     SnowBrawler SBReference;
+    SpriteRenderer SRReference;
     int _SpawnID;
 
     // Start is called before the first frame update
     void Start()
     {
-        onlineBehavior();
-
         moveDirection = new Vector2(0, 0);
         thisRigid = this.GetComponent<Rigidbody2D>();
         SMReference = this.GetComponent<ShootMechanic>();
         SBReference = this.GetComponent<SnowBrawler>();
+        SRReference = this.GetComponent<SpriteRenderer>();
         thisRigid.useFullKinematicContacts = true;
+        if (IsOwner)
+            onlineBehavior();
+        
     }
 
     // Update is called once per frame
@@ -42,7 +45,7 @@ public class PlayerMovement : NetworkBehaviour
         if (SMReference.isAiming)
             moveDirection *= SMReference.aimMovementSpeedPerc;
         if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused && !SMReference.isAiming)
-            transform.localScale = new Vector3(Input.GetAxisRaw("Horizontal"), 1, 1);
+            SRReference.flipX = Input.GetAxisRaw("Horizontal") < 0;
     }
 
     private void FixedUpdate()
@@ -56,7 +59,6 @@ public class PlayerMovement : NetworkBehaviour
         _SpawnID = 1;
         if (LobbyManager.instance.IsOnline)
         {
-           
             int thisJoinOrder = 0;
             string isLeftTeam = "";
             //Ambil data player ini
@@ -72,16 +74,36 @@ public class PlayerMovement : NetworkBehaviour
                 if (Int32.Parse(p.Data["joinOrder"].Value) < thisJoinOrder && p.Data["isLeftTeam"].Value.Equals(isLeftTeam))
                     _SpawnID++;
             //Dan juga ganti tim kalau tim kanan
-            if (isLeftTeam.Equals("y"))
+            if (isLeftTeam.Equals("n"))
             {
-                GetComponent<SnowBrawler>().playerteam = false;
+                SBReference.playerteam = false;
                 GetComponent<ColorTaker>().updateColor(1);
+                GetComponent<SpriteRenderer>().flipX = true;
+            }
+            else
+            {
+                SBReference.playerteam = true;
+                GetComponent<ColorTaker>().updateColor(0);
+                GetComponent<SpriteRenderer>().flipX = false;
             }
         }
-        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, PlayersManager.isLeftTeam(gameObject));
+        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, SBReference.playerteam);
 
         //transform.SetParent(GameObject.Find("Players").transform);
-        FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
+        if (IsOwner)
+            FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
+    }
+
+    [ServerRpc]
+    void testingServerRpc()
+    {
+
+    }
+
+    [ClientRpc]
+    void testingClientRpc()
+    {
+
     }
 
 }

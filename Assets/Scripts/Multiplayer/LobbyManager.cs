@@ -43,8 +43,7 @@ public class LobbyManager : MonoBehaviour
         _multiplayerManagerRef = transform.GetChild(0).GetComponent<MultiplayerManager>();
         _startedSearch = false;
         _isHosting = false;
-        if (instance == null)
-            instance = this;
+        instance = this;
 
         await UnityServices.InitializeAsync();
 
@@ -126,7 +125,6 @@ public class LobbyManager : MonoBehaviour
             _currentUpdateCooldown = _updateCooldown;
             updateLobby();
             resetTeams();
-            Debug.Log(_currentLobby.Data["MapData"].Value);
         }
         if (!_currentLobby.Data["MapData"].Value.Equals("-"))
         {
@@ -154,7 +152,6 @@ public class LobbyManager : MonoBehaviour
                 rightPlayerAmt = 0;
                 foreach (Player p in lobby.Players)
                 {
-                    Debug.Log(p.Data["isLeftTeam"]);
                     if (p.Data.ContainsKey("isLeftTeam") && p.Data["isLeftTeam"].Value.Equals("y"))
                         leftPlayerAmt += 1;
                     else

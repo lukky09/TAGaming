@@ -1,6 +1,7 @@
 using Scriban.Syntax;
 using System;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.TextCore.Text;
@@ -14,7 +15,6 @@ public class PlayersManager : MonoBehaviour
     [SerializeField] bool isAIActive;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] bool spawnPlayer;
-    [SerializeField] GameObject playersContainer;
 
     [SerializeField] GameObject levelCamera;
 
@@ -24,7 +24,7 @@ public class PlayersManager : MonoBehaviour
     private void Start()
     {
         players = new GameObject[10];
-        foreach (Transform item in playersContainer.transform)
+        foreach (SnowBrawler item in GameObject.FindObjectsOfType<SnowBrawler>())
         {
             players[getFirstNullPlayerIndex()] = item.gameObject;
         }
@@ -86,7 +86,6 @@ public class PlayersManager : MonoBehaviour
         int i = getFirstNullPlayerIndex();
         players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
         levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i], false);
-        players[i].transform.SetParent(playersContainer.transform);
     }
 
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
@@ -110,7 +109,8 @@ public class PlayersManager : MonoBehaviour
         if (!isAIActive)
             tempEnemyPrefab.GetComponent<StateMachine>().enabled = false;
         players[i] = tempEnemyPrefab;
-        players[i].transform.SetParent(playersContainer.transform);
+        //if (LobbyManager.instance.IsOnline)
+        //    players[i].GetComponent<NetworkObject>().Spawn();
     }
 
     public GameObject getnearestPlayer(Transform player, bool includeCollision, float visionRange)
@@ -167,7 +167,7 @@ public class PlayersManager : MonoBehaviour
     public void activatePlayersScript(bool activate)
     {
         MonoBehaviour[] scripts;
-        foreach (Transform item in playersContainer.transform)
+        foreach (GameObject item in players)
         {
             scripts = item.GetComponents<MonoBehaviour>();
             foreach (MonoBehaviour script in scripts)
@@ -182,7 +182,7 @@ public class PlayersManager : MonoBehaviour
 
     public void gameOverAnimation(bool playerTeamWin)
     {
-        foreach (Transform item in playersContainer.transform)
+        foreach (GameObject item in players)
         {
             item.GetComponent<Animator>().SetBool("GameDone",true);
             item.GetComponent<Animator>().SetBool("HasWon", item.GetComponent<SnowBrawler>().getplayerteam() == playerTeamWin);

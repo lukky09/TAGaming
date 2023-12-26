@@ -61,6 +61,8 @@ public class CoordinateMovement : MonoBehaviour
 
     public bool hasArrivedtoDestination()
     {
+        if (_targetCoordinate == null)
+            return true;
         return (Vector2.Distance(_targetCoordinate.returnAsVector(), transform.position) < 0.25);
     }
 
