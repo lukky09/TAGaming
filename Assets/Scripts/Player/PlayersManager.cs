@@ -169,14 +169,17 @@ public class PlayersManager : MonoBehaviour
         MonoBehaviour[] scripts;
         foreach (GameObject item in players)
         {
-            scripts = item.GetComponents<MonoBehaviour>();
-            foreach (MonoBehaviour script in scripts)
+            if (item != null)
             {
-                script.enabled = activate;
+                scripts = item.GetComponents<MonoBehaviour>();
+                foreach (MonoBehaviour script in scripts)
+                {
+                    script.enabled = activate;
+                }
+                item.GetComponent<ColorTaker>().enabled = true;
+                if (item.GetComponent<CoordinateMovement>() != null)
+                    item.GetComponent<CoordinateMovement>().enabled = true;
             }
-            item.GetComponent<ColorTaker>().enabled = true;
-            if (item.GetComponent<CoordinateMovement>() != null)
-                item.GetComponent<CoordinateMovement>().enabled = true;
         }
     }
 

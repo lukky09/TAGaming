@@ -21,7 +21,7 @@ public class SetObjects : MonoBehaviour
     public GameObject powerUpContainer;
     public GameObject powerUp;
     [SerializeField] PlayersManager playerManagerReference;
-    [SerializeField] ColorManager colManager;
+    [SerializeField] GameObject _barScoreRTCGO;
 
     public Coordinate[,] PlayerCoordinates;
     public int[,] PlayerPositions;
@@ -162,6 +162,8 @@ public class SetObjects : MonoBehaviour
                         playerManagerReference.makeNewBot(PlayerCoordinates[i, j], i == 0);
                 }
             }
+            GameObject barScoreGO = Instantiate(_barScoreRTCGO);
+            barScoreGO.GetComponent<NetworkObject>().Spawn(true);
         }
         Debug.Log("Fill Selesai");
         printCoordinatesAndPositions();

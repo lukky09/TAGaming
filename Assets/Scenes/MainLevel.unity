@@ -664,7 +664,6 @@ MonoBehaviour:
   isAIActive: 1
   enemyPrefab: {fileID: 3380666572601521298, guid: 42ba52936b544bc4198868660f86b8d5, type: 3}
   spawnPlayer: 1
-  playersContainer: {fileID: 2075824792}
   levelCamera: {fileID: 519420028}
 --- !u!1 &169458152
 GameObject:
@@ -1256,7 +1255,7 @@ Camera:
     x: 0.20364584
     y: 0
     width: 0.33333334
-    height: 0.32592592
+    height: 0.4583333
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1919,7 +1918,7 @@ MonoBehaviour:
   powerUpContainer: {fileID: 1070962874}
   powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
   playerManagerReference: {fileID: 69075706}
-  colManager: {fileID: 0}
+  _barScoreRTCGO: {fileID: 6217131823896234848, guid: 0fa10cbe4b57b4349955011336d816c6, type: 3}
 --- !u!114 &728283040
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7297,9 +7296,7 @@ MonoBehaviour:
   timerText: {fileID: 240976728}
   fightLength: 120
   itemToAnimate: {fileID: 2146505524}
-  transition: {fileID: 1819336540}
   gameOverText: {fileID: 42477855}
-  playerManagerRef: {fileID: 69075706}
   StartTimer: 0
 --- !u!114 &2052031807
 MonoBehaviour:

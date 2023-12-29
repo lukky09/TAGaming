@@ -129,7 +129,7 @@ public class BallPowerUp : MonoBehaviour
             if (coll.GetComponent<SnowBrawler>().getplayerteam() != bmRef.getPlayerTeam())
                 hitPlayers++;
         }
-        BarScoreManager.addscore(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
+        FindObjectOfType<BarScoreRtc>().addScoreServerRPC(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
         Destroy(gameObject);
 
     }

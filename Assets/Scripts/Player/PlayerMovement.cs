@@ -14,6 +14,8 @@ public class PlayerMovement : NetworkBehaviour
     SnowBrawler SBReference;
     SpriteRenderer SRReference;
     int _SpawnID;
+    [SerializeField] GameObject Arrow;
+    float _lastPosX;
 
     // Start is called before the first frame update
     void Start()
@@ -32,6 +34,7 @@ public class PlayerMovement : NetworkBehaviour
     // Update is called once per frame
     void Update()
     {
+ 
         if (!SBReference.canAct || !IsOwner)
         {
             moveDirection = new Vector2(0, 0);
@@ -44,23 +47,24 @@ public class PlayerMovement : NetworkBehaviour
             moveDirection /= diagonalCheck;
         if (SMReference.isAiming)
             moveDirection *= SMReference.aimMovementSpeedPerc;
-        if (Input.GetAxisRaw("Horizontal") != 0 && !PauseGame.isPaused && !SMReference.isAiming)
-            SRReference.flipX = Input.GetAxisRaw("Horizontal") < 0;
     }
 
     private void FixedUpdate()
     {
         thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
+        SRReference.flipX = MathF.Abs(transform.position.x - _lastPosX) > 0.1f ? (transform.position.x - _lastPosX) < -0 : SRReference.flipX;
+        _lastPosX = transform.position.x;
     }
 
     void onlineBehavior()
     {
         Debug.Log("OnlineTime");
+        Arrow.SetActive(true);
         _SpawnID = 1;
+        string isLeftTeam = "";
         if (LobbyManager.instance.IsOnline)
         {
             int thisJoinOrder = 0;
-            string isLeftTeam = "";
             //Ambil data player ini
             foreach (Player p in LobbyManager.instance.CurrentLobby.Players)
                 if (p.Id == LobbyManager.instance.PlayerID)
@@ -74,36 +78,33 @@ public class PlayerMovement : NetworkBehaviour
                 if (Int32.Parse(p.Data["joinOrder"].Value) < thisJoinOrder && p.Data["isLeftTeam"].Value.Equals(isLeftTeam))
                     _SpawnID++;
             //Dan juga ganti tim kalau tim kanan
-            if (isLeftTeam.Equals("n"))
-            {
-                SBReference.playerteam = false;
-                GetComponent<ColorTaker>().updateColor(1);
-                GetComponent<SpriteRenderer>().flipX = true;
-            }
-            else
-            {
-                SBReference.playerteam = true;
-                GetComponent<ColorTaker>().updateColor(0);
-                GetComponent<SpriteRenderer>().flipX = false;
-            }
+            updateTeamServerRPC(isLeftTeam.Equals("y"));
         }
-        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, SBReference.playerteam);
+        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, isLeftTeam.Equals("y"));
 
         //transform.SetParent(GameObject.Find("Players").transform);
         if (IsOwner)
             FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
     }
 
-    [ServerRpc]
-    void testingServerRpc()
+    void updateTeam(bool playerTeam)
     {
+        SBReference.playerteam = playerTeam;
+        GetComponent<ColorTaker>().updateColor(playerTeam ? 0 : 1);
+        GetComponent<SpriteRenderer>().flipX = !playerTeam;
+    }
 
+    [ServerRpc]
+    void updateTeamServerRPC(bool playerTeam)
+    {
+        updateTeam(playerTeam);
+        updateTeamClientRPC(playerTeam);
     }
 
     [ClientRpc]
-    void testingClientRpc()
+    void updateTeamClientRPC(bool playerTeam)
     {
-
+        updateTeam(playerTeam);
     }
 
 }

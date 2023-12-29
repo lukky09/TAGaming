@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using Unity.VisualScripting;
 using TMPro;
+using Unity.Netcode;
 
 [IncludeInSettings(true)]
 public class BarScoreManager : MonoBehaviour
@@ -16,18 +17,19 @@ public class BarScoreManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI timerText;
     [SerializeField] float fightLength;
     [SerializeField] GameObject itemToAnimate;
-    [SerializeField] GameObject transition;
     [SerializeField] TextMeshProUGUI gameOverText;
-    [SerializeField] PlayersManager playerManagerRef;
+     PlayersManager playerManagerRef;
     public bool StartTimer = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerTeamBar = transform.GetChild(1).GetComponent<Slider>();
-        textLeft = transform.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>();
-        enemyTeamBar = transform.GetChild(2).GetComponent<Slider>();
-        textRight = transform.GetChild(2).GetChild(2).GetComponent<TextMeshProUGUI>();
+        playerManagerRef = FindObjectOfType<PlayersManager>();
+        Transform uiCanvas = FindObjectOfType<Canvas>().transform;
+        playerTeamBar = uiCanvas.GetChild(1).GetComponent<Slider>();
+        textLeft = uiCanvas.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>();
+        enemyTeamBar = uiCanvas.GetChild(2).GetComponent<Slider>();
+        textRight = uiCanvas.GetChild(2).GetChild(2).GetComponent<TextMeshProUGUI>();
         playerTeamBar.maxValue = maxScore;
         enemyTeamBar.maxValue = maxScore;
         playerTeamBar.value = 0;
@@ -47,19 +49,12 @@ public class BarScoreManager : MonoBehaviour
             StartCoroutine(victoryAnimation());
     }
 
-    public static void addscore(bool forPlayerTeam, float amount)
+    public void updateScoreVisuals(int leftTeamAmount, int rightTeamAmount)
     {
         if (playerTeamBar == null)
             return;
-        if (forPlayerTeam)
-            playerTeamBar.value += amount;
-        else
-            enemyTeamBar.value += amount;
-        updateScoreText();
-    }
-
-    static void updateScoreText()
-    {
+        playerTeamBar.value = leftTeamAmount;
+        enemyTeamBar.value = rightTeamAmount;
         textLeft.text = playerTeamBar.value.ToString();
         textRight.text = enemyTeamBar.value.ToString();
     }

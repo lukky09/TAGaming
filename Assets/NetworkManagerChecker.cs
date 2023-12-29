@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class NetworkManagerChecker : MonoBehaviour
 {
-    private void Awake()
+    private void Start()
     {
         if (!LobbyManager.instance.IsOnline)
             NetworkManager.Singleton.StartHost();

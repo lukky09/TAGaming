@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem.XR.Haptics;
 
 public class SnowBrawler : MonoBehaviour
 {
     protected int ballAmount { get; set; }
     protected GameObject caughtBall { get; set; }
     protected int ballPowerId { get; set; }
-
+    public BarScoreRtc BarScoreReference { set { _barScoreRef = value; } }
+    BarScoreRtc _barScoreRef;
     [SerializeField] GameObject displayedBall;
     [SerializeField] GameObject numberReference;
+    
     public bool playerteam;
     public float throwSpeed;
     public float originalRunSpeed;
@@ -80,7 +83,7 @@ public class SnowBrawler : MonoBehaviour
             {
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam)
-                    BarScoreManager.addscore(bol.getPlayerTeam(), bol.getBallScore());
+                    _barScoreRef.addScoreServerRPC(bol.getPlayerTeam(), bol.getBallScore());
                 StartCoroutine(getHitNumerator(0.5f, collision.gameObject));
                 bol.trySelfDestruct(gameObject);
             }
