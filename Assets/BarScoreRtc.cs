@@ -36,7 +36,6 @@ public class BarScoreRtc : NetworkBehaviour
 
     void updateBarContent()
     {
-        Debug.Log(_teamScore[0] + "|" + _teamScore[1]);
         _barScoreManagerRef.updateScoreVisuals(_teamScore[0], _teamScore[1]);
     }
 }

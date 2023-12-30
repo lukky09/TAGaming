@@ -71,7 +71,6 @@ public class PlayersManager : MonoBehaviour
                     }
                 }
             }
-            Debug.Log(accesibleAreas.Count);
         }
 
     }
@@ -173,10 +172,10 @@ public class PlayersManager : MonoBehaviour
             {
                 scripts = item.GetComponents<MonoBehaviour>();
                 foreach (MonoBehaviour script in scripts)
-                {
                     script.enabled = activate;
-                }
                 item.GetComponent<ColorTaker>().enabled = true;
+                if (item.GetComponent<PlayerPlacementScript>() != null)
+                    item.GetComponent<PlayerPlacementScript>().enabled = true;
                 if (item.GetComponent<CoordinateMovement>() != null)
                     item.GetComponent<CoordinateMovement>().enabled = true;
             }

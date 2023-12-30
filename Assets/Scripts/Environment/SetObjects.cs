@@ -91,7 +91,6 @@ public class SetObjects : MonoBehaviour
 
     public void fillMap()
     {
-        Debug.Log("Mulai Fill");
         //horizontal
         for (int i = 0; i < width; i++)
         {
@@ -118,6 +117,7 @@ public class SetObjects : MonoBehaviour
                 else if (stageUnfolded[i, j] == 2)
                 {
                     temp = Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
+                    temp.GetComponent<NetworkObject>().Spawn(true);
                     temp.transform.SetParent(powerUpContainer.transform);
                 }
                 else if (stageUnfolded[i, j] == 3)
@@ -128,8 +128,7 @@ public class SetObjects : MonoBehaviour
 
                 }
             }
-        Debug.Log("Tengah Fill");
-        if (!LobbyManager.instance.IsOnline)
+        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
             PlayerPositions[0, UnityEngine.Random.Range(0, 5)] = 1;
         else
         {
@@ -151,7 +150,7 @@ public class SetObjects : MonoBehaviour
                         PlayerPositions[i, j] = 0;
                 }
         }
-        if (!LobbyManager.instance.IsOnline || LobbyManager.instance.IsHosting)
+        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline || LobbyManager.instance.IsHosting)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -166,13 +165,12 @@ public class SetObjects : MonoBehaviour
             barScoreGO.GetComponent<NetworkObject>().Spawn(true);
         }
         Debug.Log("Fill Selesai");
-        printCoordinatesAndPositions();
+        //printCoordinatesAndPositions();
     }
 
     public Vector3 GetPositionFromOrderID(int OrderID, bool isLeftTeam)
     {
         int eh = isLeftTeam ? 0 : 1;
-        Debug.Log(PlayerPositions[0, 0]);
         for (int i = 0; i < 5; i++)
         {
             if (PlayerPositions[eh, i] == OrderID)

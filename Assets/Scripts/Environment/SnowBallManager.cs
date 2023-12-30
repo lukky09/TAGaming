@@ -1,35 +1,44 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 
 public class SnowBallManager : MonoBehaviour
 {
     public static SnowBallManager Instance;
-    public GameObject snowballscontainer;
+   [SerializeField] GameObject _snowballsContainerPrefab;
+    GameObject _snowballsContainer;
+    bool _isCurrentlyOnline;
 
     [SerializeField] GameObject snowball;
     [SerializeField] float respawnTime;
     [SerializeField] int respawnAmount;
-    [SerializeField] ColorManager colManager;
     float currentrespawnTimer;
 
     private void Awake()
     {
-        if (Instance == null)
-            Instance = this;
+        Instance = this;
     }
 
     // Start is called before the first frame update
     void Start()
     {
+        _isCurrentlyOnline = LobbyManager.instance != null && LobbyManager.instance.IsOnline;
         currentrespawnTimer = respawnTime;
+        if (!_isCurrentlyOnline || LobbyManager.instance.IsHosting)
+        {
+            _snowballsContainer =  Instantiate(_snowballsContainerPrefab);
+            _snowballsContainer.transform.position = Vector3.zero;
+            _snowballsContainer.GetComponent<NetworkObject>().Spawn(true);
+            FindObjectOfType<SetObjects>().powerUpContainer = _snowballsContainer;
+        }
     }
 
     public void destroyball(int index)
     {
-        GameObject ball = snowballscontainer.transform.GetChild(index).gameObject;
+        GameObject ball = _snowballsContainer.transform.GetChild(index).gameObject;
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
        if(SetObjects.getMap(true) != null)
             SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
@@ -58,7 +67,8 @@ public class SnowBallManager : MonoBehaviour
             if (SetObjects.getMap(false)[y, x] == 0)
             {
                 ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 0.5f), Quaternion.identity);
-                ballz.transform.SetParent(snowballscontainer.transform, true);
+                ballz.GetComponent<NetworkObject>().Spawn(true);
+                ballz.transform.SetParent(_snowballsContainer.transform, true);
                 //Debug.Log("Bola ke-" + i + " = " + x + " " + y);
                 SetObjects.setMap(y, x, 4);
             }
@@ -68,8 +78,11 @@ public class SnowBallManager : MonoBehaviour
      public void addBallinVector(Vector2 v)
     {
         GameObject ballz;
-        ballz = Instantiate(snowball,snowballscontainer.transform );
+        ballz = Instantiate(snowball);
+            ballz.GetComponent<NetworkObject>().Spawn(true);
+        ballz.transform.SetParent(_snowballsContainer.transform,true);
         ballz.transform.position = v;
+       
     }
 
     public bool deleteclosestball(Transform objecttransform, float rangetreshold)
@@ -87,14 +100,14 @@ public class SnowBallManager : MonoBehaviour
     public GameObject getClosestBall(Transform objecttransform, float rangetreshold)
     {
         int index = getNearestBallIndex(objecttransform, rangetreshold);
-        return snowballscontainer.transform.GetChild(index).gameObject;
+        return _snowballsContainer.transform.GetChild(index).gameObject;
     }
 
     public int getNearestBallIndex(Transform objectTracked)
     {
         float closestrange = 999, range;
         int i = 0, index = -1;
-        foreach (Transform ballz in snowballscontainer.transform)
+        foreach (Transform ballz in _snowballsContainer.transform)
         {
             range = Vector2.Distance(ballz.position, objectTracked.position);
             if (range < closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
@@ -111,7 +124,7 @@ public class SnowBallManager : MonoBehaviour
     {
         float closestrange = 999, currrange;
         int i = 0, index = -1;
-        foreach (Transform ballz in snowballscontainer.transform)
+        foreach (Transform ballz in _snowballsContainer.transform)
         {
             currrange = Vector2.Distance(ballz.position, objectTracked.position);
             if (currrange < range && currrange < closestrange && (ballz.GetComponent<PowerUp>() == null || ballz.GetComponent<PowerUp>().isActive()))
@@ -121,7 +134,7 @@ public class SnowBallManager : MonoBehaviour
             }
             i++;
         }
-        if (index > -1 && Vector2.Distance(snowballscontainer.transform.GetChild(index).gameObject.transform.position, objectTracked.position) < range)
+        if (index > -1 && Vector2.Distance(_snowballsContainer.transform.GetChild(index).gameObject.transform.position, objectTracked.position) < range)
             return index;
         else
             return -1;
@@ -130,7 +143,7 @@ public class SnowBallManager : MonoBehaviour
     public int getIndexfromSnowball(GameObject go)
     {
         int i = 0;
-        foreach (Transform item in snowballscontainer.transform)
+        foreach (Transform item in _snowballsContainer.transform)
         {
             if (item.gameObject == go)
                 return i;
@@ -144,8 +157,8 @@ public class SnowBallManager : MonoBehaviour
 
         try
         {
-            if (snowballscontainer.transform.childCount > 0)
-                return snowballscontainer.transform.GetChild(index).gameObject;
+            if (_snowballsContainer.transform.childCount > 0)
+                return _snowballsContainer.transform.GetChild(index).gameObject;
             return null;
         }
         catch (System.Exception)
@@ -158,7 +171,7 @@ public class SnowBallManager : MonoBehaviour
     public bool isAnyBallNear(Vector2 position)
     {
 
-        foreach (Transform item in snowballscontainer.transform)
+        foreach (Transform item in _snowballsContainer.transform)
         {
             if (Vector2.Distance(position, item.position) < 1 && (item.GetComponent<PowerUp>() == null || item.GetComponent<PowerUp>().isActive()))
                 return true;
@@ -169,6 +182,6 @@ public class SnowBallManager : MonoBehaviour
 
     public int getBallAmount()
     {
-        return snowballscontainer.transform.childCount;
+        return _snowballsContainer.transform.childCount;
     }
 }

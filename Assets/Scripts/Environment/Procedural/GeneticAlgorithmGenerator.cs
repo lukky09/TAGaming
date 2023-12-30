@@ -13,13 +13,7 @@ using GeneticSharp.Domain.Mutations;
 using GeneticSharp.Domain.Terminations;
 using GeneticSharp.Domain.Randomizations;
 using GeneticSharp.Domain;
-using TMPro;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using static UnityEngine.UI.Image;
 using System.IO;
-using System.IO.Pipes;
-using System.Runtime.InteropServices.ComTypes;
 using Debug = UnityEngine.Debug;
 
 public class GameChromosome : ChromosomeBase
@@ -255,7 +249,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         }
 
         //Cek kalau multiplayer
-        if (LobbyManager.instance.IsOnline)
+        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline )
         {
             LobbyManager.instance.changeLobbyVariable(
                 new string[] { "MapSize", "MapData" },

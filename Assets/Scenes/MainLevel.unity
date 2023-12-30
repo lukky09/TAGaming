@@ -1252,10 +1252,10 @@ Camera:
   m_LensShift: {x: 0, y: 0}
   m_NormalizedViewPortRect:
     serializedVersion: 2
-    x: 0.20364584
+    x: 0.20052084
     y: 0
     width: 0.33333334
-    height: 0.4583333
+    height: 0.45092592
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 34
@@ -1915,7 +1915,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rok: {fileID: 11400000, guid: 3691f70950302044b88fb69076322f75, type: 2}
-  powerUpContainer: {fileID: 1070962874}
+  powerUpContainer: {fileID: 251614235622042230, guid: 612f5ccf47e58964b94d0b7dbafb9e9a, type: 3}
   powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
   playerManagerReference: {fileID: 69075706}
   _barScoreRTCGO: {fileID: 6217131823896234848, guid: 0fa10cbe4b57b4349955011336d816c6, type: 3}
@@ -1931,11 +1931,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: be58d14dcebbc0346a782c718100653f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  snowballscontainer: {fileID: 1070962874}
+  _snowballsContainerPrefab: {fileID: 251614235622042230, guid: 612f5ccf47e58964b94d0b7dbafb9e9a, type: 3}
   snowball: {fileID: 8116715311126598154, guid: 61af0f86775c2284082ff6188235a03a, type: 3}
   respawnTime: 3
   respawnAmount: 3
-  colManager: {fileID: 0}
 --- !u!1 &833046901
 GameObject:
   m_ObjectHideFlags: 0
@@ -5901,37 +5900,6 @@ MonoBehaviour:
   m_DeselectOnBackgroundClick: 1
   m_PointerBehavior: 0
   m_CursorLockBehavior: 0
---- !u!1 &1070962874
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1070962875}
-  m_Layer: 6
-  m_Name: Snowballs
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1070962875
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1070962874}
-  serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1259516629
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -7853,7 +7821,6 @@ SceneRoots:
   - {fileID: 69075705}
   - {fileID: 2052031804}
   - {fileID: 1058008731}
-  - {fileID: 1070962875}
   - {fileID: 479397661}
   - {fileID: 2075824793}
   - {fileID: 6545231580250008583}

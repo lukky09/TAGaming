@@ -6,7 +6,7 @@ MonoImporter:
   defaultReferences:
   - rok: {fileID: 11400000, guid: 54711e54b9bb0ad4da8b25014eba7d13, type: 2}
   - powerUp: {fileID: 1486903719415665064, guid: c5da4071e7e20b042a96813bcb0ee8f6, type: 3}
-  executionOrder: 0
+  executionOrder: 20
   icon: {instanceID: 0}
   userData: 
   assetBundleName: 

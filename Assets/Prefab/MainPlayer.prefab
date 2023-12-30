@@ -185,6 +185,7 @@ GameObject:
   - component: {fileID: 3380666572601521304}
   - component: {fileID: 3380666572601521305}
   - component: {fileID: -1919244248669674146}
+  - component: {fileID: 2031870407277574561}
   - component: {fileID: 2134150185695370686}
   - component: {fileID: 8924029344212408981}
   - component: {fileID: 3463483119679756593}
@@ -374,7 +375,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 2914711138
+  GlobalObjectIdHash: 3096430162
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -394,7 +395,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2b8e6bdf7134ca46ab6babcbf22949a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Arrow: {fileID: 984346783031192498}
 --- !u!114 &3380666572601521305
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -442,6 +442,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4981d692fed9660459e21153988e1385, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2031870407277574561
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380666572601521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e1094b2202c941488c9ec2471feebf2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Arrow: {fileID: 984346783031192498}
 --- !u!114 &2134150185695370686
 MonoBehaviour:
   m_ObjectHideFlags: 0

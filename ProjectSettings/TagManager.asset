@@ -9,6 +9,7 @@ TagManager:
   - EnemyTeam
   - Wall
   - BallPile
+  - SnowballContainer
   layers:
   - Default
   - TransparentFX

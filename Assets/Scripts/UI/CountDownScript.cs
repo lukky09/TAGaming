@@ -17,6 +17,7 @@ public class CountDownScript : MonoBehaviour
 
     IEnumerator startCountdown()
     {
+        Debug.Log("Countdown Start");
         //Time.timeScale = 0;
         _pmObject.activatePlayersScript(false);
         TextMeshProUGUI text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();

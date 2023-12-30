@@ -24,7 +24,6 @@ public class AudioScript : MonoBehaviour
                 audioObject = this;
                 if (!SoundOnOffManager.isSongOn)
                 {
-                    Debug.Log("Coba Matiin");
                     audioObject.GetComponent<AudioSource>().playOnAwake = false;
                     audioObject.GetComponent<AudioSource>().Stop();
                 }
