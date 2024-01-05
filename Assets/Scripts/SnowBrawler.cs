@@ -82,7 +82,7 @@ public class SnowBrawler : MonoBehaviour
             else
             {
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
-                if (bol.getPlayerTeam() != playerteam)
+                if (bol.getPlayerTeam() != playerteam && _barScoreRef != null)
                     _barScoreRef.addScoreServerRPC(bol.getPlayerTeam(), bol.getBallScore());
                 StartCoroutine(getHitNumerator(0.5f, collision.gameObject));
                 bol.trySelfDestruct(gameObject);
@@ -199,11 +199,10 @@ public class SnowBrawler : MonoBehaviour
         }
         canAct = false;
         animator.SetBool("IsHit", true);
-        Debug.Log("Kena Hit");
+        //Debug.Log("Kena Hit");
         yield return new WaitForSeconds(seconds);
         canAct = true;
         animator.SetBool("IsHit", false);
-        Debug.Log("Selesai Kena Hit");
     }
 
     public IEnumerator catchBall()

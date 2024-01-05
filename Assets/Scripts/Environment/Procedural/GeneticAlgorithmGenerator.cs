@@ -248,9 +248,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
             SetObjects.setMap(deflatten(a, SetObjects.getWidth() / 2, SetObjects.getHeight()), useMirrorFitness);
         }
 
+        Debug.Log("Mau ngubah data");
         //Cek kalau multiplayer
-        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline )
+        if (LobbyManager.IsOnline)
         {
+            Debug.Log("Ngubah Data");
             LobbyManager.instance.changeLobbyVariable(
                 new string[] { "MapSize", "MapData" },
                 new string[] { $"{SetObjects.getWidth()},{SetObjects.getHeight()}", geneToMultiplayerData(a) });
@@ -335,7 +337,7 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
         // Kalau Generation biasa
         if (!MapData.Contains(' '))
             for (int i = 0; i < height; i++)
-                for (int j = 0; j < width/2; j++)
+                for (int j = 0; j < width / 2; j++)
                 {
                     try
                     {
@@ -343,9 +345,9 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
                     }
                     catch (Exception e)
                     {
-                        Debug.LogError(i * (width / 2) + j +" , "+ MapData.Length);
+                        Debug.LogError(i * (width / 2) + j + " , " + MapData.Length);
                     }
-                    
+
                 }
         //Kalau Template Generation
         else
@@ -399,11 +401,11 @@ public class GeneticAlgorithmGenerator : MonoBehaviour
     {
         int[,] tempTemplate = arrays;
         Coordinate[] _5Coordinates = new Coordinate[] {
-            new Coordinate(Mathf.RoundToInt(width/3),Mathf.RoundToInt(height/4)),
-            new Coordinate(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt(height/4)),
-            new Coordinate(Mathf.RoundToInt(width/2),Mathf.RoundToInt(height/2)),
-            new Coordinate(Mathf.RoundToInt(width/3),Mathf.RoundToInt((height*3)/4)),
-            new Coordinate(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt((height*3)/4)),
+            new(Mathf.RoundToInt(width/3),Mathf.RoundToInt(height/4)),
+            new(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt(height/4)),
+            new(Mathf.RoundToInt(width/2),Mathf.RoundToInt(height/2)),
+            new(Mathf.RoundToInt(width/3),Mathf.RoundToInt((height*3)/4)),
+            new(Mathf.RoundToInt((width*2)/3),Mathf.RoundToInt((height*3)/4)),
         };
         foreach (Coordinate item in _5Coordinates)
         {

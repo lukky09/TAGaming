@@ -18,13 +18,13 @@ public class BarScoreManager : MonoBehaviour
     [SerializeField] float fightLength;
     [SerializeField] GameObject itemToAnimate;
     [SerializeField] TextMeshProUGUI gameOverText;
-     PlayersManager playerManagerRef;
+     PlayerManager playerManagerRef;
     public bool StartTimer = false;
 
     // Start is called before the first frame update
     void Start()
     {
-        playerManagerRef = FindObjectOfType<PlayersManager>();
+        playerManagerRef = FindObjectOfType<PlayerManager>();
         Transform uiCanvas = FindObjectOfType<Canvas>().transform;
         playerTeamBar = uiCanvas.GetChild(1).GetComponent<Slider>();
         textLeft = uiCanvas.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>();
@@ -62,7 +62,7 @@ public class BarScoreManager : MonoBehaviour
     IEnumerator victoryAnimation()
     {
         StartTimer = false;
-        playerManagerRef.activatePlayersScript(false);
+        playerManagerRef.setPlayerScriptActive(false);
         itemToAnimate?.SetActive(true);
         if (fightLength <= 0)
             gameOverText.text = "Time Up!";
@@ -75,6 +75,7 @@ public class BarScoreManager : MonoBehaviour
             gameOverText.text = "enemy team wins";
         playerManagerRef.gameOverAnimation(playerTeamBar.value >= enemyTeamBar.value);
         yield return new WaitForSecondsRealtime(2);
+        NetworkManager.Singleton.Shutdown();
         GetComponent<MainMenuNavigation>().changeSceneIndex(-1);
     }
 }

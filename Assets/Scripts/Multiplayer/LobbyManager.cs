@@ -25,14 +25,15 @@ public class LobbyManager : MonoBehaviour
     [SerializeField] MainMenuNavigation _menuNavigationRef;
     Lobby _currentLobby;
     bool _isHosting;
-    bool _isOnline;
     bool _startedSearch;
     string _thisPlayerId;
 
     public Lobby CurrentLobby { get { return _currentLobby; } }
     public bool IsHosting { get { return _isHosting; } }
-    public bool IsOnline { get { return _isOnline; } }
     public string PlayerID { get { return _thisPlayerId; } }
+
+    static bool _isOnline;
+    public static bool IsOnline { get { return _isOnline; } }
 
     public static LobbyManager instance;
 
@@ -52,7 +53,7 @@ public class LobbyManager : MonoBehaviour
             Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
             _thisPlayerId = AuthenticationService.Instance.PlayerId;
         };
-        AuthenticationService.Instance.SignInAnonymouslyAsync();
+        await AuthenticationService.Instance.SignInAnonymouslyAsync();
     }
 
     public async void createLobby()
@@ -117,7 +118,7 @@ public class LobbyManager : MonoBehaviour
 
     float _updateCooldown = 1.1f;
     float _currentUpdateCooldown;
-    async void LobbyViewUpdate()
+    void LobbyViewUpdate()
     {
         _currentUpdateCooldown -= Time.deltaTime;
         if (_currentUpdateCooldown <= 0)
@@ -230,7 +231,7 @@ public class LobbyManager : MonoBehaviour
 
         }
     }
-    
+
     public void startGame()
     {
         changeLobbyVariable("HasStarted", "y");
@@ -278,7 +279,7 @@ public class LobbyManager : MonoBehaviour
         {
             for (int j = 0; j < 5; j++)
             {
-                randomedIndex = UnityEngine.Random.Range(0,5);
+                randomedIndex = UnityEngine.Random.Range(0, 5);
                 numberStorage = teamOrder[i, j];
                 teamOrder[i, j] = teamOrder[i, randomedIndex];
                 teamOrder[i, randomedIndex] = numberStorage;
@@ -297,7 +298,7 @@ public class LobbyManager : MonoBehaviour
         return result;
     }
 
-        public async void joinLobby(string lobbbyID)
+    public async void joinLobby(string lobbbyID)
     {
         try
         {

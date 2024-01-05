@@ -24,7 +24,7 @@ public class BotActions : MonoBehaviour
 
     [SerializeField] GameObject noticeMark;
     Rigidbody2D thisRigid;
-    PlayersManager playerManagerRef;
+    PlayerManager playerManagerRef;
     GameObject target;
     Vector2 lastpos, direction,viewDirection;
     float timeDelay = 0.5f, currentTimeDelay = 0;
@@ -79,7 +79,7 @@ public class BotActions : MonoBehaviour
         this.walkLocation = walkLocation;
     }
 
-    public void setMapSegmentID(int mapSegmentid, PlayersManager playerManagerRef)
+    public void setMapSegmentID(int mapSegmentid, PlayerManager playerManagerRef)
     {
         this.mapSegmentid = mapSegmentid;
         this.playerManagerRef = playerManagerRef;
@@ -281,7 +281,6 @@ public class BotActions : MonoBehaviour
             StartCoroutine(snowBrawlerRef.catchBall());
         isSameBall = true;
         catchTimer = catchTimerDelay;
-        Debug.Log("Coba Tangkap Bola");
     }
 
     public void tryCatchBall()
@@ -290,7 +289,6 @@ public class BotActions : MonoBehaviour
         {
             StartCoroutine(snowBrawlerRef.catchBall());
             catchTimer = catchTimerDelay;
-            Debug.Log("Coba Tangkap Bola");
         }
     }
 

@@ -7,7 +7,7 @@ public class NetworkManagerChecker : MonoBehaviour
 {
     private void Start()
     {
-        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
+        if (!LobbyManager.IsOnline)
             NetworkManager.Singleton.StartHost();
         else
         {

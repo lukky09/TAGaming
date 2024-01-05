@@ -17,7 +17,6 @@ public class CameraController2D : MonoBehaviour
     {
         camSize = new float[2] { 0, Camera.main.orthographicSize };
         camSize[0] = camSize[1] * Camera.main.aspect;
-        followedObjetTransform = ObjectToFollow.transform;
     }
 
     public void setCameraFollower(GameObject anobject,bool free)
@@ -29,6 +28,8 @@ public class CameraController2D : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (followedObjetTransform == null)
+            return;
         if (!freeFollow)
         {
             //ini harus ada ukuran levelnya biar g glitchy

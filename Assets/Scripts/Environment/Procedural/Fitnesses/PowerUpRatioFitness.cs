@@ -36,7 +36,7 @@ public class PowerUpRatioFitness : InLoopFitnessBase
         if (maxRatio < minRatio)
         {
             Debug.LogWarning("Min dan max ditukar");
-            (minRatio, maxRatio) = (minRatio, maxRatio);
+            (maxRatio, minRatio) = (minRatio, maxRatio);
         }
 
         float nilaiMinus = 0;

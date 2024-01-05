@@ -121,7 +121,7 @@ public class BallPowerUp : MonoBehaviour
         Collider2D[] explosiveCollision = Physics2D.OverlapCircleAll(transform.position, explosionRadius, 8);
 
         int hitPlayers = 0;
-        Debug.Log("Boom");
+        //Debug.Log("Boom");
         foreach (Collider2D coll in explosiveCollision)
         {
             // Nggak isa melakukan coroutine kalau object ilang
@@ -132,11 +132,5 @@ public class BallPowerUp : MonoBehaviour
         FindObjectOfType<BarScoreRtc>().addScoreServerRPC(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
         Destroy(gameObject);
 
-    }
-
-    void OnDrawGizmos()
-    {
-        Gizmos.color = Color.black;
-        Gizmos.DrawWireSphere(transform.position, explosionRadius);
     }
 }

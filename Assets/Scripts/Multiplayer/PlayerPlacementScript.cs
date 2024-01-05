@@ -11,16 +11,20 @@ public class PlayerPlacementScript : NetworkBehaviour
     int _SpawnID;
     [SerializeField] GameObject Arrow;
     SnowBrawler _snowbrawlerRef;
-    Rigidbody2D _rigidBodyRef;
 
     // Start is called before the first frame update
     void Start()
     {
-        _rigidBodyRef = GetComponent<Rigidbody2D>();
+        //Matiin script biar g isa gerak
+        GetComponent<PlayerMovement>().enabled = false;
+        GetComponent<ShootMechanic>().enabled = false;
+        GetComponent<CatchBall>().enabled = false;
+        if(LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
+        FindObjectOfType<PlayerManager>().updatePlayerServerRPC();
         _snowbrawlerRef = GetComponent<SnowBrawler>();
         _SpawnID = 1;
         string isLeftTeam = "y";
-        if (LobbyManager.instance != null && LobbyManager.instance.IsOnline)
+        if (LobbyManager.IsOnline)
         {
             int thisJoinOrder = 0;
             //Ambil data player ini
@@ -36,22 +40,23 @@ public class PlayerPlacementScript : NetworkBehaviour
                 if (Int32.Parse(p.Data["joinOrder"].Value) < thisJoinOrder && p.Data["isLeftTeam"].Value.Equals(isLeftTeam))
                     _SpawnID++;
             //Dan juga ganti tim kalau tim kanan
-            updateTeamServerRPC(isLeftTeam.Equals("y"));
+            if (IsOwner)
+                updateTeamServerRPC(isLeftTeam.Equals("y"));
         }
-        //_rigidBodyRef.MovePosition(FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, isLeftTeam.Equals("y")));
-        transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, isLeftTeam.Equals("y"));
+        if (FindObjectOfType<SetObjects>() != null)
+            transform.position = FindObjectOfType<SetObjects>().GetPositionFromOrderID(_SpawnID, isLeftTeam.Equals("y"));
 
         //transform.SetParent(GameObject.Find("Players").transform);
         if (IsOwner)
         {
-            FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
+            if (FindObjectOfType<CameraController2D>() != null)
+                FindObjectOfType<CameraController2D>().setCameraFollower(gameObject, false);
             Arrow.SetActive(true);
         }
         else
         {
             Destroy(GetComponent<PlayerMovement>());
         }
-
     }
 
     [ServerRpc]

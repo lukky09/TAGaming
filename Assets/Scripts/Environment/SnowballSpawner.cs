@@ -5,7 +5,7 @@ using UnityEngine;
 public class SnowballSpawner : MonoBehaviour
 {
     [SerializeField] GameObject snowball;
-    [SerializeField] GameObject snowballContainer;
+    public GameObject snowballContainer;
     [SerializeField] SnowBallManager snowballManager;
     [SerializeField] float timerDelay;
    

@@ -20,8 +20,8 @@ public class SetObjects : MonoBehaviour
     public TileBase rok;
     public GameObject powerUpContainer;
     public GameObject powerUp;
-    [SerializeField] PlayersManager playerManagerReference;
-    [SerializeField] GameObject _barScoreRTCGO;
+    PlayerManager playerManagerReference;
+    [SerializeField] GameObject _RTCManagerReference;
 
     public Coordinate[,] PlayerCoordinates;
     public int[,] PlayerPositions;
@@ -86,6 +86,10 @@ public class SetObjects : MonoBehaviour
     {
         PlayerCoordinates = new Coordinate[2, 5];
         mapTilemap = this.GetComponent<Tilemap>();
+        GameObject barScoreGO = Instantiate(_RTCManagerReference);
+        if(LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
+            barScoreGO.GetComponent<NetworkObject>().Spawn(true);
+        playerManagerReference = barScoreGO.GetComponent<PlayerManager>();
         fillMap();
     }
 
@@ -114,7 +118,7 @@ public class SetObjects : MonoBehaviour
                 tempCoor = new Coordinate(j, i);
                 if (stageUnfolded[i, j] == 1)
                     mapTilemap.SetTile(new Vector3Int(j + 1, -i - 1, 1), rok);
-                else if (stageUnfolded[i, j] == 2)
+                else if (stageUnfolded[i, j] == 2 && (!LobbyManager.IsOnline || LobbyManager.instance.IsHosting))
                 {
                     temp = Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
                     temp.GetComponent<NetworkObject>().Spawn(true);
@@ -128,7 +132,7 @@ public class SetObjects : MonoBehaviour
 
                 }
             }
-        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline)
+        if (!LobbyManager.IsOnline)
             PlayerPositions[0, UnityEngine.Random.Range(0, 5)] = 1;
         else
         {
@@ -150,7 +154,7 @@ public class SetObjects : MonoBehaviour
                         PlayerPositions[i, j] = 0;
                 }
         }
-        if (LobbyManager.instance == null || !LobbyManager.instance.IsOnline || LobbyManager.instance.IsHosting)
+        if ( !LobbyManager.IsOnline || LobbyManager.instance.IsHosting)
         {
             for (int i = 0; i < 2; i++)
             {
@@ -161,8 +165,6 @@ public class SetObjects : MonoBehaviour
                         playerManagerReference.makeNewBot(PlayerCoordinates[i, j], i == 0);
                 }
             }
-            GameObject barScoreGO = Instantiate(_barScoreRTCGO);
-            barScoreGO.GetComponent<NetworkObject>().Spawn(true);
         }
         Debug.Log("Fill Selesai");
         //printCoordinatesAndPositions();

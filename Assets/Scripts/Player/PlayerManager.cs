@@ -1,13 +1,10 @@
-using Scriban.Syntax;
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.TextCore.Text;
-using Random = UnityEngine.Random;
 
-public class PlayersManager : MonoBehaviour
+public class PlayerManager : NetworkBehaviour
 {
     GameObject[] players;
     [SerializeField] Material material;
@@ -16,12 +13,10 @@ public class PlayersManager : MonoBehaviour
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] bool spawnPlayer;
 
-    [SerializeField] GameObject levelCamera;
-
     List<bool[,]> accesibleAreas;
     List<int[]> areaCorners;
 
-    private void Start()
+    private void Awake()
     {
         players = new GameObject[10];
         foreach (SnowBrawler item in GameObject.FindObjectsOfType<SnowBrawler>())
@@ -71,11 +66,12 @@ public class PlayersManager : MonoBehaviour
                     }
                 }
             }
+            FindObjectOfType<CountDownScript>().startCounting(this);
         }
 
     }
 
-    static public bool isLeftTeam(GameObject player)
+    public bool isLeftTeam(GameObject player)
     {
         return Coordinate.returnAsCoordinate(player.transform.position).xCoor < (SetObjects.getWidth() / 2) + 1;
     }
@@ -84,7 +80,7 @@ public class PlayersManager : MonoBehaviour
     {
         int i = getFirstNullPlayerIndex();
         players[i] = Instantiate(playerPrefab, c.returnAsVector(), Quaternion.identity);
-        levelCamera.GetComponent<CameraController2D>().setCameraFollower(players[i], false);
+        FindObjectOfType<CameraController2D>().setCameraFollower(players[i], false);
     }
 
     public void makeNewBot(Coordinate c, bool isPlayerTeam)
@@ -108,8 +104,8 @@ public class PlayersManager : MonoBehaviour
         if (!isAIActive)
             tempEnemyPrefab.GetComponent<StateMachine>().enabled = false;
         players[i] = tempEnemyPrefab;
-        //if (LobbyManager.instance.IsOnline)
-        //    players[i].GetComponent<NetworkObject>().Spawn();
+        if (LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
+            tempEnemyPrefab.GetComponent<NetworkObject>().Spawn(true);
     }
 
     public GameObject getnearestPlayer(Transform player, bool includeCollision, float visionRange)
@@ -163,13 +159,27 @@ public class PlayersManager : MonoBehaviour
         return -1;
     }
 
-    public void activatePlayersScript(bool activate)
+    public void setPlayerScriptActive(bool activate)
+    {
+        updatePlayerServerRPC();
+        activatePlayersScript(activate);
+        //updatePlayerActivityScriptActiveClientRPC(activate);
+    }
+
+    [ClientRpc]
+    void updatePlayerActivityScriptActiveClientRPC(bool activate)
+    {
+        activatePlayersScript(activate);
+    }
+
+    void activatePlayersScript(bool activate)
     {
         MonoBehaviour[] scripts;
         foreach (GameObject item in players)
         {
             if (item != null)
             {
+                Debug.Log(item.name);
                 scripts = item.GetComponents<MonoBehaviour>();
                 foreach (MonoBehaviour script in scripts)
                     script.enabled = activate;
@@ -186,9 +196,36 @@ public class PlayersManager : MonoBehaviour
     {
         foreach (GameObject item in players)
         {
-            item.GetComponent<Animator>().SetBool("GameDone",true);
-            item.GetComponent<Animator>().SetBool("HasWon", item.GetComponent<SnowBrawler>().getplayerteam() == playerTeamWin);
+            if (item != null)
+            {
+                item.GetComponent<Animator>().SetBool("GameDone", true);
+                item.GetComponent<Animator>().SetBool("HasWon", item.GetComponent<SnowBrawler>().getplayerteam() == playerTeamWin);
+            }
         }
     }
 
+    [ServerRpc]
+    public void updatePlayerServerRPC()
+    {
+        Debug.Log("Yer Mum");
+        updatePlayers();
+        updatePlayersClientRPC();
+    }
+
+    [ClientRpc]
+    void updatePlayersClientRPC()
+    {
+        updatePlayers();
+    }
+
+    void updatePlayers()
+    {
+        int i = 0;
+        players = new GameObject[10];
+        foreach (SnowBrawler brawler in FindObjectsOfType<SnowBrawler>())
+        {
+            players[i] = brawler.gameObject;
+            i++;
+        }
+    }
 }

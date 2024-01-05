@@ -6,20 +6,21 @@ using UnityEngine;
 
 public class CountDownScript : MonoBehaviour
 {
-    [SerializeField] PlayersManager _pmObject;
+    PlayerManager _playerManagerRefl;
     [SerializeField] BarScoreManager _bsObject;
 
     // Start is called before the first frame update
-    void Start()
+
+    public void startCounting(PlayerManager playerManagerReff)
     {
+        _playerManagerRefl = playerManagerReff;
         StartCoroutine(startCountdown());
     }
 
-    IEnumerator startCountdown()
+    public IEnumerator startCountdown()
     {
         Debug.Log("Countdown Start");
         //Time.timeScale = 0;
-        _pmObject.activatePlayersScript(false);
         TextMeshProUGUI text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         // Tunggu animasi transisi mari
         yield return new WaitForSecondsRealtime(1);
@@ -32,7 +33,7 @@ public class CountDownScript : MonoBehaviour
         text.text = "GO!";
         yield return new WaitForSecondsRealtime(1);
         //Time.timeScale = 1;
-        _pmObject.activatePlayersScript(true);
+        _playerManagerRefl.setPlayerScriptActive(true);
         _bsObject.StartTimer = true;
         Destroy(gameObject);
     }

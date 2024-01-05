@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class SnowBallManager : MonoBehaviour
 {
     public static SnowBallManager Instance;
-   [SerializeField] GameObject _snowballsContainerPrefab;
+    [SerializeField] GameObject _snowballsContainerPrefab;
     GameObject _snowballsContainer;
     bool _isCurrentlyOnline;
 
@@ -25,13 +26,23 @@ public class SnowBallManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _isCurrentlyOnline = LobbyManager.instance != null && LobbyManager.instance.IsOnline;
+        _isCurrentlyOnline = LobbyManager.IsOnline;
         currentrespawnTimer = respawnTime;
-        if (!_isCurrentlyOnline || LobbyManager.instance.IsHosting)
+        //Kalau Tutorial
+        if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
         {
-            _snowballsContainer =  Instantiate(_snowballsContainerPrefab);
+            _snowballsContainer = gameObject;
+            foreach (SnowballSpawner spawner in FindObjectsOfType<SnowballSpawner>())
+            {
+                spawner.snowballContainer = gameObject;
+            }
+        }
+        else if (!_isCurrentlyOnline || LobbyManager.instance.IsHosting)
+        {
+            _snowballsContainer = Instantiate(_snowballsContainerPrefab);
             _snowballsContainer.transform.position = Vector3.zero;
-            _snowballsContainer.GetComponent<NetworkObject>().Spawn(true);
+            if (NetworkManager.Singleton != null && NetworkManager.Singleton.isActiveAndEnabled)
+                _snowballsContainer.GetComponent<NetworkObject>().Spawn(true);
             FindObjectOfType<SetObjects>().powerUpContainer = _snowballsContainer;
         }
     }
@@ -40,7 +51,7 @@ public class SnowBallManager : MonoBehaviour
     {
         GameObject ball = _snowballsContainer.transform.GetChild(index).gameObject;
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
-       if(SetObjects.getMap(true) != null)
+        if (SetObjects.getMap(true) != null)
             SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
         Destroy(ball);
     }
@@ -64,7 +75,7 @@ public class SnowBallManager : MonoBehaviour
         {
             x = Mathf.RoundToInt(UnityEngine.Random.Range(0, SetObjects.getWidth() - 2));
             y = Mathf.RoundToInt(UnityEngine.Random.Range(0, SetObjects.getHeight() - 2));
-            if (SetObjects.getMap(false)[y, x] == 0)
+            if (SetObjects.getMap(false)[y, x] == 0 && (!LobbyManager.IsOnline ||LobbyManager.instance.IsHosting))
             {
                 ballz = Instantiate(snowball, new Vector3(x + 1.5f, -y - 0.5f), Quaternion.identity);
                 ballz.GetComponent<NetworkObject>().Spawn(true);
@@ -75,14 +86,14 @@ public class SnowBallManager : MonoBehaviour
         }
     }
 
-     public void addBallinVector(Vector2 v)
+    public void addBallinVector(Vector2 v)
     {
         GameObject ballz;
         ballz = Instantiate(snowball);
-            ballz.GetComponent<NetworkObject>().Spawn(true);
-        ballz.transform.SetParent(_snowballsContainer.transform,true);
+        if (NetworkManager.Singleton != null && NetworkManager.Singleton.isActiveAndEnabled)
+            ballz.transform.SetParent(_snowballsContainer.transform, true);
         ballz.transform.position = v;
-       
+
     }
 
     public bool deleteclosestball(Transform objecttransform, float rangetreshold)
@@ -149,7 +160,7 @@ public class SnowBallManager : MonoBehaviour
                 return i;
             i++;
         }
-        return -1 ;
+        return -1;
     }
 
     public GameObject getBallfromIndex(int index)
