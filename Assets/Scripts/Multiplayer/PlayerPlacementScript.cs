@@ -20,7 +20,7 @@ public class PlayerPlacementScript : NetworkBehaviour
         GetComponent<ShootMechanic>().enabled = false;
         GetComponent<CatchBall>().enabled = false;
         if(LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
-        FindObjectOfType<PlayerManager>().updatePlayerServerRPC();
+        FindObjectOfType<PlayerManager>().doPlayersUpdate();
         _snowbrawlerRef = GetComponent<SnowBrawler>();
         _SpawnID = 1;
         string isLeftTeam = "y";

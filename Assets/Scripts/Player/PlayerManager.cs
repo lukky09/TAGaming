@@ -161,7 +161,7 @@ public class PlayerManager : NetworkBehaviour
 
     public void setPlayerScriptActive(bool activate)
     {
-        updatePlayerServerRPC();
+        doPlayersUpdate();
         activatePlayersScript(activate);
         //updatePlayerActivityScriptActiveClientRPC(activate);
     }
@@ -204,10 +204,14 @@ public class PlayerManager : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
-    public void updatePlayerServerRPC()
+    public void doPlayersUpdate()
     {
-        Debug.Log("Yer Mum");
+        updatePlayerServerRPC();
+    }
+
+    [ServerRpc]
+    void updatePlayerServerRPC()
+    {
         updatePlayers();
         updatePlayersClientRPC();
     }
