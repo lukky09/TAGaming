@@ -122,7 +122,6 @@ public class SetObjects : MonoBehaviour
                 {
                     temp = Instantiate(powerUp, tempCoor.returnAsVector(), Quaternion.identity);
                     temp.GetComponent<NetworkObject>().Spawn(true);
-                    temp.transform.SetParent(powerUpContainer.transform);
                 }
                 else if (stageUnfolded[i, j] == 3)
                 {

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEditor.Progress;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -87,7 +88,7 @@ public class PlayerManager : NetworkBehaviour
     {
         int i = getFirstNullPlayerIndex();
         GameObject tempEnemyPrefab = Instantiate(enemyPrefab, c.returnAsVector(), Quaternion.identity);
-        tempEnemyPrefab.transform.localScale = new Vector3(isPlayerTeam ? 1 : -1, 1, 1);
+        tempEnemyPrefab.GetComponent<BotActionsRPC>().SpriteFlip = !isPlayerTeam;
         if (isPlayerTeam)
         {
             tempEnemyPrefab.GetComponent<SnowBrawler>().playerteam = true;
@@ -104,7 +105,7 @@ public class PlayerManager : NetworkBehaviour
         if (!isAIActive)
             tempEnemyPrefab.GetComponent<StateMachine>().enabled = false;
         players[i] = tempEnemyPrefab;
-        if (LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
+        if (!LobbyManager.IsOnline || LobbyManager.instance.IsHosting)
             tempEnemyPrefab.GetComponent<NetworkObject>().Spawn(true);
     }
 
@@ -179,7 +180,6 @@ public class PlayerManager : NetworkBehaviour
         {
             if (item != null)
             {
-                Debug.Log(item.name);
                 scripts = item.GetComponents<MonoBehaviour>();
                 foreach (MonoBehaviour script in scripts)
                     script.enabled = activate;
@@ -213,6 +213,13 @@ public class PlayerManager : NetworkBehaviour
     void updatePlayerServerRPC()
     {
         updatePlayers();
+        for (int i = 0; i < players.Length; i++)
+        {
+            if (players[i] == null)
+                break;
+            if (players[i].GetComponent<BotActionsRPC>() != null)
+                players[i].GetComponent<BotActionsRPC>().updateTeamClientRPC(players[i].GetComponent<SnowBrawler>().getplayerteam());
+        }
         updatePlayersClientRPC();
     }
 

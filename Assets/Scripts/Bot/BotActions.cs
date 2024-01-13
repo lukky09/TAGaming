@@ -26,6 +26,7 @@ public class BotActions : MonoBehaviour
     Rigidbody2D thisRigid;
     PlayerManager playerManagerRef;
     GameObject target;
+    BotActionsRPC _botActionRef;
     Vector2 lastpos, direction,viewDirection;
     float timeDelay = 0.5f, currentTimeDelay = 0;
     SnowBrawler snowBrawlerRef;
@@ -38,6 +39,7 @@ public class BotActions : MonoBehaviour
         catchTimer = 0;
         thisRigid = GetComponent<Rigidbody2D>();
         snowBrawlerRef = GetComponent<SnowBrawler>();
+        _botActionRef = GetComponent<BotActionsRPC>();
     }
 
     public void forgetTarget()
@@ -168,7 +170,7 @@ public class BotActions : MonoBehaviour
             viewDirection = Vector3.Normalize((Vector2)target.transform.position - (Vector2)transform.position);
 
         if (viewDirection.x != 0)
-            transform.localScale = new Vector3(viewDirection.x / Mathf.Abs(viewDirection.x), transform.localScale.y, transform.localScale.z);
+            _botActionRef.SpriteFlip = viewDirection.x < 0;
     }
 
     public void walkSideways()

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -8,7 +9,6 @@ using UnityEngine.SceneManagement;
 
 public class SnowBallManager : MonoBehaviour
 {
-    public static SnowBallManager Instance;
     [SerializeField] GameObject _snowballsContainerPrefab;
     GameObject _snowballsContainer;
     bool _isCurrentlyOnline;
@@ -18,10 +18,6 @@ public class SnowBallManager : MonoBehaviour
     [SerializeField] int respawnAmount;
     float currentrespawnTimer;
 
-    private void Awake()
-    {
-        Instance = this;
-    }
 
     // Start is called before the first frame update
     void Start()
@@ -44,6 +40,11 @@ public class SnowBallManager : MonoBehaviour
             if (NetworkManager.Singleton != null && NetworkManager.Singleton.isActiveAndEnabled)
                 _snowballsContainer.GetComponent<NetworkObject>().Spawn(true);
             FindObjectOfType<SetObjects>().powerUpContainer = _snowballsContainer;
+            foreach (PowerUp powerUp in FindObjectsOfType<PowerUp>())
+                powerUp.transform.SetParent(_snowballsContainer.transform);
+            foreach (SnowBrawler brawler in FindObjectsOfType<SnowBrawler>())
+                brawler.SnowballManagerRef = this;
+
         }
     }
 
@@ -181,9 +182,9 @@ public class SnowBallManager : MonoBehaviour
 
     public bool isAnyBallNear(Vector2 position)
     {
-
         foreach (Transform item in _snowballsContainer.transform)
         {
+            Debug.Log(item.name);
             if (Vector2.Distance(position, item.position) < 1 && (item.GetComponent<PowerUp>() == null || item.GetComponent<PowerUp>().isActive()))
                 return true;
         }

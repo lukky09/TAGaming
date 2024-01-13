@@ -11,7 +11,10 @@ public class SnowBrawler : MonoBehaviour
     protected GameObject caughtBall { get; set; }
     protected int ballPowerId { get; set; }
     public BarScoreRtc BarScoreReference { set { _barScoreRef = value; } }
+    public SnowBallManager SnowballManagerRef { get { return _snowballManagerRef; } set { _snowballManagerRef = value; } }
+    
     BarScoreRtc _barScoreRef;
+    SnowBallManager _snowballManagerRef;
     [SerializeField] GameObject displayedBall;
     [SerializeField] GameObject numberReference;
     
@@ -92,12 +95,12 @@ public class SnowBrawler : MonoBehaviour
 
     public void getBall()
     {
-        int ballindex = SnowBallManager.Instance.getNearestBallIndex(transform);
-        if (ballindex < 0 || Vector2.Distance(transform.position, SnowBallManager.Instance.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
+        int ballindex = _snowballManagerRef.getNearestBallIndex(transform);
+        if (ballindex < 0 || Vector2.Distance(transform.position, _snowballManagerRef.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
             return;
-        if (SnowBallManager.Instance.getBallfromIndex(ballindex).GetComponent<PowerUp>())
+        if (_snowballManagerRef.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
-            (ballSprite, ballPowerId) = SnowBallManager.Instance.getBallfromIndex(SnowBallManager.Instance.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
+            (ballSprite, ballPowerId) = _snowballManagerRef.getBallfromIndex(_snowballManagerRef.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
             if (ballPowerId > 0)
             {
                 displayedBall.GetComponent<SpriteRenderer>().sprite = ballSprite;
@@ -106,11 +109,11 @@ public class SnowBrawler : MonoBehaviour
         }
         else
         {
-            int deletedIndex = SnowBallManager.Instance.getNearestBallIndex(transform, ballTakeRange);
+            int deletedIndex = _snowballManagerRef.getNearestBallIndex(transform, ballTakeRange);
             if (deletedIndex >= 0)
             {
                 ballPowerId = 0;
-                SnowBallManager.Instance.deleteclosestball(transform, ballTakeRange);
+                _snowballManagerRef.deleteclosestball(transform, ballTakeRange);
                 ballAmount = 1;
                 ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
             }

@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour
     Rigidbody2D thisRigid;
     ShootMechanic SMReference;
     SnowBrawler SBReference;
-    SpriteRenderer SRReference;
+    SnowbrawlerActionsRPC SBAReference;
   
     
     float _lastPosX;
@@ -24,7 +24,7 @@ public class PlayerMovement : MonoBehaviour
         thisRigid = GetComponent<Rigidbody2D>();
         SMReference = GetComponent<ShootMechanic>();
         SBReference = GetComponent<SnowBrawler>();
-        SRReference = GetComponent<SpriteRenderer>();
+        SBAReference = GetComponent<SnowbrawlerActionsRPC>();
         thisRigid.useFullKinematicContacts = true;
 
 
@@ -51,7 +51,7 @@ public class PlayerMovement : MonoBehaviour
     private void FixedUpdate()
     {
         thisRigid.MovePosition((Vector2)this.transform.position + moveDirection * Time.deltaTime);
-        SRReference.flipX = MathF.Abs(transform.position.x - _lastPosX) > 0.1f ? (transform.position.x - _lastPosX) < -0 : SRReference.flipX;
+        SBAReference.SpriteFlip = MathF.Abs(transform.position.x - _lastPosX) > 0.1f ? (transform.position.x - _lastPosX) < -0 : SBAReference.SpriteFlip;
         _lastPosX = transform.position.x;
     }
 

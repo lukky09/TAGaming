@@ -24,7 +24,6 @@ public class BarScoreManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        playerManagerRef = FindObjectOfType<PlayerManager>();
         Transform uiCanvas = FindObjectOfType<Canvas>().transform;
         playerTeamBar = uiCanvas.GetChild(1).GetComponent<Slider>();
         textLeft = uiCanvas.GetChild(1).GetChild(2).GetComponent<TextMeshProUGUI>();
@@ -62,6 +61,7 @@ public class BarScoreManager : MonoBehaviour
     IEnumerator victoryAnimation()
     {
         StartTimer = false;
+        playerManagerRef = FindObjectOfType<PlayerManager>();
         playerManagerRef.setPlayerScriptActive(false);
         itemToAnimate?.SetActive(true);
         if (fightLength <= 0)
