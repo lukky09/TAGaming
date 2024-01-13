@@ -184,7 +184,6 @@ public class SnowBallManager : MonoBehaviour
     {
         foreach (Transform item in _snowballsContainer.transform)
         {
-            Debug.Log(item.name);
             if (Vector2.Distance(position, item.position) < 1 && (item.GetComponent<PowerUp>() == null || item.GetComponent<PowerUp>().isActive()))
                 return true;
         }
