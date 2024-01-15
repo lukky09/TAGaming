@@ -29,7 +29,7 @@ public class ShootMechanic : SnowBrawler
     void Update()
     {
         base.Update();
-        if (!canAct)
+        if (!canAct || !IsOwner)
         {
             isAiming = false;
             line1.SetActive(false);

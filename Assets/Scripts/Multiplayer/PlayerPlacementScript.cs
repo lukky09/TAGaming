@@ -76,7 +76,7 @@ public class PlayerPlacementScript : NetworkBehaviour
     {
         _snowbrawlerRef.playerteam = playerTeam;
         GetComponent<ColorTaker>().updateColor(playerTeam ? 0 : 1);
-        GetComponent<SpriteRenderer>().flipX = !playerTeam;
+        transform.localScale = new Vector3(playerTeam ? 1 : -1, 1, 1);
     }
 
 }

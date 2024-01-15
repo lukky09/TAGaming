@@ -34,6 +34,8 @@ public class CoordinateMovement : MonoBehaviour
 
     public void setPathCoordinates(Coordinate[] pathCoordinate)
     {
+        if (pathCoordinate == null)
+            return;
         _pathCoordinates = pathCoordinate;
         _targetCoordinate = pathCoordinate[pathCoordinate.Length - 1];
         _currentPathIndex = 0;

@@ -19,7 +19,7 @@ public class BarScoreRtc : NetworkBehaviour
         }
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     public void addScoreServerRPC(bool forLeftTeam, int amount)
     {
         _teamScore[forLeftTeam ? 0 : 1] += amount;

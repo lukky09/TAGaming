@@ -99,12 +99,12 @@ GameObject:
   - component: {fileID: 3380666572601521302}
   - component: {fileID: 2134150185695370686}
   - component: {fileID: 8466225020258120766}
+  - component: {fileID: 3068996409306027619}
   - component: {fileID: 989328970205459513}
   - component: {fileID: 307614600252962186}
   - component: {fileID: 6630183316652505263}
   - component: {fileID: 4751214091012988773}
   - component: {fileID: 5503507543798492951}
-  - component: {fileID: 3068996409306027619}
   - component: {fileID: 1876497722103351837}
   - component: {fileID: 8113278078999068131}
   m_Layer: 3
@@ -308,6 +308,26 @@ MonoBehaviour:
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"},{"name":"CurrentChaseAmount","value":{"$content":0,"$type":"System.Int32"},"typeHandle":{"Identification":"System.Int32,
       mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089","$version":"A"},"$version":"A"}],"$version":"A"},"$version":"A"}}'
     _objectReferences: []
+--- !u!114 &3068996409306027619
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380666572601521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 1013344854
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!114 &989328970205459513
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -482,26 +502,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &3068996409306027619
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3380666572601521298}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1013344854
-  AlwaysReplicateAsRoot: 0
-  SynchronizeTransform: 1
-  ActiveSceneSynchronization: 0
-  SceneMigrationSynchronization: 1
-  SpawnWithObservers: 1
-  DontDestroyWithOwner: 0
-  AutoObjectParentSync: 1
 --- !u!114 &1876497722103351837
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -690,6 +690,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4123668929611318797}
     m_Modifications:
+    - target: {fileID: -8576505471331055641, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2764616811
+      objectReference: {fileID: 0}
     - target: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
       propertyPath: m_Name
       value: Bol

@@ -54,7 +54,7 @@ public class SnowBallManager : MonoBehaviour
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
         if (SetObjects.getMap(true) != null)
             SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
-        Destroy(ball);
+        ball.GetComponent<NetworkObject>().Despawn(true);
     }
 
     public void Update()
@@ -166,7 +166,6 @@ public class SnowBallManager : MonoBehaviour
 
     public GameObject getBallfromIndex(int index)
     {
-
         try
         {
             if (_snowballsContainer.transform.childCount > 0)

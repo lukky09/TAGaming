@@ -21,4 +21,31 @@ public class SnowbrawlerActionsRPC : NetworkBehaviour
         transform.localScale = new Vector3(_spriteFlip.Value ? -1 : 1, 1, 1);
     }
 
+    [ServerRpc]
+    public void ThrowBallServerRPC(Vector2 ThrowDirection,bool IsThrownBallFromCatching)
+    {
+        _snowBrawlerRef.shootBall(ThrowDirection);
+        ReduceBallAmountClientRPC(IsThrownBallFromCatching);
+    }
+
+    [ClientRpc]
+    public void ReduceBallAmountClientRPC(bool IsThrownBallFromCatching)
+    {
+        _snowBrawlerRef.UpdateHoldedBallsAmountAfterThrow(IsThrownBallFromCatching);
+    }
+
+    [ServerRpc]
+    public void PickUpBallServerRPC()
+    {
+        int currentBallAmount = _snowBrawlerRef.ballAmount;
+        _snowBrawlerRef.getBall();
+        if (_snowBrawlerRef.ballAmount > currentBallAmount)
+            AddBallAmountClientRPC(_snowBrawlerRef.ballPowerId);
+    }
+
+    [ClientRpc]
+    public void AddBallAmountClientRPC(int BallPowerID)
+    {
+        _snowBrawlerRef.UpdateHoldedBallsAmountAfterPickup(BallPowerID);
+    }
 }

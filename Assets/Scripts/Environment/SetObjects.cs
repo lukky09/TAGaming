@@ -86,10 +86,13 @@ public class SetObjects : MonoBehaviour
     {
         PlayerCoordinates = new Coordinate[2, 5];
         mapTilemap = this.GetComponent<Tilemap>();
-        GameObject barScoreGO = Instantiate(_RTCManagerReference);
-        if(!LobbyManager.IsOnline || LobbyManager.instance.IsHosting)
+        if (!LobbyManager.IsOnline || LobbyManager.instance.IsHosting)
+        {
+            GameObject barScoreGO = Instantiate(_RTCManagerReference);
             barScoreGO.GetComponent<NetworkObject>().Spawn(true);
-        playerManagerReference = barScoreGO.GetComponent<PlayerManager>();
+            playerManagerReference = barScoreGO.GetComponent<PlayerManager>();
+        }
+       
         fillMap();
     }
 

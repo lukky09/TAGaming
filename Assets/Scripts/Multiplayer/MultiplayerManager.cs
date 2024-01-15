@@ -11,16 +11,4 @@ public class MultiplayerManager : NetworkBehaviour
     private string _multiplayerName;
     public string MultiplayerName { get { return _multiplayerName; } set { _multiplayerName = value; } }
 
-    public void hostGame()
-    {
-        Debug.Log("Host dimulai");
-        NetworkManager.Singleton.StartHost();
-    }
-
-    public void startClient()
-    {
-        Debug.Log("Client dimulai");
-        NetworkManager.Singleton.StartClient();
-    }
-
 }

@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
-using static UnityEditor.Progress;
 
 public class PlayerManager : NetworkBehaviour
 {
@@ -209,7 +208,7 @@ public class PlayerManager : NetworkBehaviour
         updatePlayerServerRPC();
     }
 
-    [ServerRpc]
+    [ServerRpc(RequireOwnership = false)]
     void updatePlayerServerRPC()
     {
         updatePlayers();

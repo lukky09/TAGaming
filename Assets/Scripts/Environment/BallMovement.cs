@@ -1,9 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class BallMovement : MonoBehaviour
+public class BallMovement : NetworkBehaviour
 {
     [SerializeField] float speed;
     [SerializeField] Vector2 direction;
@@ -71,8 +72,11 @@ public class BallMovement : MonoBehaviour
 
     public void trySelfDestruct(GameObject collider)
     {
-        if (powerupId == 0)
+        if (powerupId == 0 && IsServer)
+        {
+            gameObject.GetComponent<NetworkObject>().Despawn(true);
             Destroy(gameObject);
+        }
         else
         {
             GetComponent<BallPowerUp>().modifyBall(collider);
@@ -96,7 +100,10 @@ public class BallMovement : MonoBehaviour
             if (powerupId == 5 || powerupId == 3)
                 GetComponent<BallPowerUp>().modifyBall(collision.gameObject);
             else
+            {
+                gameObject.GetComponent<NetworkObject>().Despawn(true);
                 Destroy(gameObject);
+            }
         }
 
     }

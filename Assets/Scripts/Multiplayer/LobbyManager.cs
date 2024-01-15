@@ -31,6 +31,7 @@ public class LobbyManager : MonoBehaviour
     public Lobby CurrentLobby { get { return _currentLobby; } }
     public bool IsHosting { get { return _isHosting; } }
     public string PlayerID { get { return _thisPlayerId; } }
+    public string PlayerName { get { return _multiplayerManagerRef.MultiplayerName; } }
 
     static bool _isOnline;
     public static bool IsOnline { get { return _isOnline; } }
@@ -133,10 +134,15 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
+    float _searchCooldown = 1.1f;
+    float _currentSearchCooldown;
     public async void searchLobby()
     {
+        _currentSearchCooldown -= Time.deltaTime;
         try
         {
+            if (_currentSearchCooldown > 0)
+                return;
             resetLobbySearch();
             Debug.Log("Cari Lobby");
             QueryResponse queryResponse = await Lobbies.Instance.QueryLobbiesAsync();
@@ -163,9 +169,11 @@ public class LobbyManager : MonoBehaviour
                 scView.GetComponent<RectTransform>().offsetMin = new Vector2(0, 0);
                 scView.GetComponent<RectTransform>().offsetMax = new Vector2(0, -150 * i);
                 scView.GetComponent<RectTransform>().sizeDelta = new Vector2(0, 150);
+                scView.GetComponent<RectTransform>().localScale = Vector3.one;
                 i++;
 
             }
+            _currentSearchCooldown = _searchCooldown;
         }
         catch (LobbyServiceException e)
         {

@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Threading.Tasks;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BotActions : MonoBehaviour
+public class BotActions : NetworkBehaviour
 {
     int mapSegmentid;
     float sidewaysAngle;
@@ -89,6 +90,8 @@ public class BotActions : MonoBehaviour
 
     private void Update()
     {
+        if (!IsServer)
+            return;
         searchTimer -= Time.deltaTime;
         currentTimeDelay -= Time.deltaTime;
         catchTimer -= Time.deltaTime;
@@ -103,10 +106,8 @@ public class BotActions : MonoBehaviour
 
     private void FixedUpdate()
     {
-
-        if (!snowBrawlerRef.canAct)
+        if (!snowBrawlerRef.canAct || !IsServer)
             return;
-
         sawBallGO = null; sawEnemyGO = null;;
         RaycastHit2D currentHitObject;
         float initialAngle = -linecastAngle / 2;

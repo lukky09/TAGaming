@@ -5,14 +5,16 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.InputSystem.XR.Haptics;
 
-public class SnowBrawler : MonoBehaviour
+public class SnowBrawler : NetworkBehaviour
 {
-    protected int ballAmount { get; set; }
+    public int ballAmount { get; set; }
     protected GameObject caughtBall { get; set; }
-    protected int ballPowerId { get; set; }
+    public int ballPowerId { get; set; }
     public BarScoreRtc BarScoreReference { set { _barScoreRef = value; } }
     public SnowBallManager SnowballManagerRef { get { return _snowballManagerRef; } set { _snowballManagerRef = value; } }
-    
+
+    SnowbrawlerActionsRPC _snowBrawlerActionRPCRef;
+    PowerUp _powerUpScriptRef;
     BarScoreRtc _barScoreRef;
     SnowBallManager _snowballManagerRef;
     [SerializeField] GameObject displayedBall;
@@ -44,8 +46,10 @@ public class SnowBrawler : MonoBehaviour
 
     public void Start()
     {
+        _powerUpScriptRef = FindObjectOfType<PowerUp>();
         animator = GetComponent<Animator>();
         SFXSource = GetComponent<AudioSource>();
+        _snowBrawlerActionRPCRef = GetComponent<SnowbrawlerActionsRPC>();
         isAiming = false;
         canAct = true;
         runSpeed = originalRunSpeed;
@@ -95,17 +99,18 @@ public class SnowBrawler : MonoBehaviour
 
     public void getBall()
     {
+        if (!IsServer && IsOwner)
+        {
+            _snowBrawlerActionRPCRef.PickUpBallServerRPC();
+            return;
+        }
         int ballindex = _snowballManagerRef.getNearestBallIndex(transform);
         if (ballindex < 0 || Vector2.Distance(transform.position, _snowballManagerRef.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
             return;
         if (_snowballManagerRef.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
             (ballSprite, ballPowerId) = _snowballManagerRef.getBallfromIndex(_snowballManagerRef.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
-            if (ballPowerId > 0)
-            {
-                displayedBall.GetComponent<SpriteRenderer>().sprite = ballSprite;
-                ballAmount = 1;
-            }
+            UpdateHoldedBallsAmountAfterPickup(ballPowerId);
         }
         else
         {
@@ -114,10 +119,19 @@ public class SnowBrawler : MonoBehaviour
             {
                 ballPowerId = 0;
                 _snowballManagerRef.deleteclosestball(transform, ballTakeRange);
-                ballAmount = 1;
-                ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
+                UpdateHoldedBallsAmountAfterPickup(ballPowerId);
             }
         }
+       
+    }
+
+    public void UpdateHoldedBallsAmountAfterPickup(int BallID)
+    {
+        if(BallID == 0)
+            ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
+        else
+            ballSprite = _powerUpScriptRef.getPowerUpSprite(BallID);
+        ballAmount = 1;
         SFXSource.clip = AudioScript.audioObject.getSound("Get");
         SFXSource.Play();
         updateHoldedBallVisuals(false);
@@ -125,6 +139,11 @@ public class SnowBrawler : MonoBehaviour
 
     public void shootBall(Vector2 direction)
     {
+        if (!IsServer)
+        {
+            _snowBrawlerActionRPCRef.ThrowBallServerRPC(direction, caughtBall != null);
+            return;
+        }
         GameObject ballin;
         if (caughtBall != null)
         {
@@ -132,19 +151,27 @@ public class SnowBrawler : MonoBehaviour
             ballin.GetComponent<BallMovement>().setDirection(direction);
             ballin.transform.position = this.transform.position;
             ballin.SetActive(true);
-            caughtBall = null;
         }
         else
         {
             ballin = Instantiate(ball, (Vector2)this.transform.position, Quaternion.identity);
             ballin.GetComponent<BallMovement>().initialize(throwSpeed, direction, playerteam, ballScoreInitial, this.GetComponent<BoxCollider2D>(), gameObject, ballPowerId);
-            ballAmount--;
+            ballin.GetComponent<NetworkObject>().Spawn(true);
             if (ballPowerId > 0)
                 ballin.GetComponent<SpriteRenderer>().sprite = ballSprite;
         }
+        ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
+        UpdateHoldedBallsAmountAfterThrow(caughtBall != null);
+    }
+
+    public void UpdateHoldedBallsAmountAfterThrow(bool IsCaughtBallThrown)
+    {
+        if(IsCaughtBallThrown)
+            caughtBall = null;
+        else
+            ballAmount--;
         SFXSource.clip = AudioScript.audioObject.getSound("Yeet");
         SFXSource.Play();
-        ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
         updateHoldedBallVisuals(true);
     }
 
@@ -259,6 +286,8 @@ public class SnowBrawler : MonoBehaviour
 
     void updateHoldedBallVisuals(bool isThrown)
     {
+        if (!IsOwner)
+            return;
         if (GetComponent<DisplayBall>() != null)
             GetComponent<DisplayBall>().updateUI(isThrown);
         if (caughtBall == null && ballAmount == 0)
