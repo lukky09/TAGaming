@@ -10,6 +10,7 @@ public class NameCheck : MonoBehaviour
 {
     [SerializeField] GameObject _layersContainer;
     [SerializeField] GameObject _nameLayer;
+    [SerializeField] GameObject _lobbyLayer;
     [SerializeField] TMP_InputField _nameField;
     [SerializeField] MultiplayerManager _multiRef;
 
@@ -28,6 +29,14 @@ public class NameCheck : MonoBehaviour
                 childObject.gameObject.SetActive(false);
             }
             _nameLayer.SetActive(true);
+        }
+        else
+        {
+            foreach (Transform childObject in _layersContainer.transform)
+            {
+                childObject.gameObject.SetActive(false);
+            }
+            _lobbyLayer.SetActive(true);
         }
     }
 

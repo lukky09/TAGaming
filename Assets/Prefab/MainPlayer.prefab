@@ -971,6 +971,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 4123668929611318797}
     m_Modifications:
+    - target: {fileID: -8576505471331055641, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2680407634
+      objectReference: {fileID: 0}
     - target: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
       propertyPath: m_Name
       value: Bol

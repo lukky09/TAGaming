@@ -19,7 +19,7 @@ public class SnowBrawler : NetworkBehaviour
     SnowBallManager _snowballManagerRef;
     [SerializeField] GameObject displayedBall;
     [SerializeField] GameObject numberReference;
-    
+
     public bool playerteam;
     public float throwSpeed;
     public float originalRunSpeed;
@@ -64,7 +64,7 @@ public class SnowBrawler : NetworkBehaviour
         if (currentTimeDelay <= 0)
         {
             animator.SetFloat("MoveSpeed", Vector2.Distance(lastpos, transform.position));
-            if((Vector2)transform.position - (Vector2)lastpos!= Vector2.zero)
+            if ((Vector2)transform.position - (Vector2)lastpos != Vector2.zero)
                 animator.SetFloat("SeeDirection", Vector2.Angle(Vector2.up, (Vector2)transform.position - (Vector2)lastpos));
             lastpos = transform.position;
             currentTimeDelay = timeDelay;
@@ -99,18 +99,18 @@ public class SnowBrawler : NetworkBehaviour
 
     public void getBall()
     {
-        if (!IsServer && IsOwner)
-        {
-            _snowBrawlerActionRPCRef.PickUpBallServerRPC();
-            return;
-        }
+        _snowBrawlerActionRPCRef.PickUpBallServerRPC();
+    }
+
+    public void PickUpBallFromGround()
+    {
         int ballindex = _snowballManagerRef.getNearestBallIndex(transform);
         if (ballindex < 0 || Vector2.Distance(transform.position, _snowballManagerRef.getBallfromIndex(ballindex).transform.position) > ballTakeRange)
             return;
         if (_snowballManagerRef.getBallfromIndex(ballindex).GetComponent<PowerUp>())
         {
             (ballSprite, ballPowerId) = _snowballManagerRef.getBallfromIndex(_snowballManagerRef.getNearestBallIndex(transform)).GetComponent<PowerUp>().getPowerupId();
-            UpdateHoldedBallsAmountAfterPickup(ballPowerId);
+            UpdateHoldedBallsAmountAfterPickup();
         }
         else
         {
@@ -119,18 +119,17 @@ public class SnowBrawler : NetworkBehaviour
             {
                 ballPowerId = 0;
                 _snowballManagerRef.deleteclosestball(transform, ballTakeRange);
-                UpdateHoldedBallsAmountAfterPickup(ballPowerId);
+                UpdateHoldedBallsAmountAfterPickup();
             }
         }
-       
     }
 
-    public void UpdateHoldedBallsAmountAfterPickup(int BallID)
+    public void UpdateHoldedBallsAmountAfterPickup()
     {
-        if(BallID == 0)
+        if (ballPowerId == 0)
             ballSprite = ball.GetComponent<SpriteRenderer>().sprite;
         else
-            ballSprite = _powerUpScriptRef.getPowerUpSprite(BallID);
+            ballSprite = _powerUpScriptRef.getPowerUpSprite(ballPowerId);
         ballAmount = 1;
         SFXSource.clip = AudioScript.audioObject.getSound("Get");
         SFXSource.Play();
@@ -139,11 +138,11 @@ public class SnowBrawler : NetworkBehaviour
 
     public void shootBall(Vector2 direction)
     {
-        if (!IsServer)
-        {
-            _snowBrawlerActionRPCRef.ThrowBallServerRPC(direction, caughtBall != null);
-            return;
-        }
+        _snowBrawlerActionRPCRef.ThrowBallServerRPC(direction);
+    }
+
+    public void ThrowBall(Vector2 direction)
+    {
         GameObject ballin;
         if (caughtBall != null)
         {
@@ -151,6 +150,7 @@ public class SnowBrawler : NetworkBehaviour
             ballin.GetComponent<BallMovement>().setDirection(direction);
             ballin.transform.position = this.transform.position;
             ballin.SetActive(true);
+            caughtBall = null;
         }
         else
         {
@@ -159,20 +159,25 @@ public class SnowBrawler : NetworkBehaviour
             ballin.GetComponent<NetworkObject>().Spawn(true);
             if (ballPowerId > 0)
                 ballin.GetComponent<SpriteRenderer>().sprite = ballSprite;
+            ballAmount--;
         }
         ballin.GetComponent<SpriteRenderer>().material = GetComponent<SpriteRenderer>().material;
-        UpdateHoldedBallsAmountAfterThrow(caughtBall != null);
-    }
-
-    public void UpdateHoldedBallsAmountAfterThrow(bool IsCaughtBallThrown)
-    {
-        if(IsCaughtBallThrown)
-            caughtBall = null;
-        else
-            ballAmount--;
         SFXSource.clip = AudioScript.audioObject.getSound("Yeet");
         SFXSource.Play();
         updateHoldedBallVisuals(true);
+    }
+
+    public void UpdateBallAmount(ulong NetworkObjectID, int BallAmount, int BallPowerID, bool isThrowing)
+    {
+        if (NetworkObjectID != 0)
+            foreach (BallMovement item in FindObjectsOfType<BallMovement>())
+                if (item.GetComponent<NetworkObject>().NetworkObjectId == NetworkObjectID)
+                {
+                    caughtBall = item.gameObject;
+                    break;
+                }
+        ballAmount = BallAmount;
+        ballPowerId = BallPowerID;
     }
 
     public int getBallAmount()
@@ -216,10 +221,10 @@ public class SnowBrawler : NetworkBehaviour
 
     public void getHit(float seconds, GameObject snowBall)
     {
-        StartCoroutine(getHitNumerator(seconds,snowBall));
+        StartCoroutine(getHitNumerator(seconds, snowBall));
     }
 
-    public IEnumerator getHitNumerator(float seconds,GameObject snowBall)
+    public IEnumerator getHitNumerator(float seconds, GameObject snowBall)
     {
         if (snowBall.GetComponent<BallMovement>().getPlayerTeam() != playerteam)
         {
@@ -286,9 +291,7 @@ public class SnowBrawler : NetworkBehaviour
 
     void updateHoldedBallVisuals(bool isThrown)
     {
-        if (!IsOwner)
-            return;
-        if (GetComponent<DisplayBall>() != null)
+        if (GetComponent<DisplayBall>() != null && IsOwner)
             GetComponent<DisplayBall>().updateUI(isThrown);
         if (caughtBall == null && ballAmount == 0)
         {

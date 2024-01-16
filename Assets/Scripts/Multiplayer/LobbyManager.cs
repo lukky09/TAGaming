@@ -48,13 +48,15 @@ public class LobbyManager : MonoBehaviour
         instance = this;
 
         await UnityServices.InitializeAsync();
-
         AuthenticationService.Instance.SignedIn += () =>
         {
             Debug.Log("Signed in as " + AuthenticationService.Instance.PlayerId);
             _thisPlayerId = AuthenticationService.Instance.PlayerId;
         };
-        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        if (!AuthenticationService.Instance.IsSignedIn)
+            await AuthenticationService.Instance.SignInAnonymouslyAsync();
+        else
+            _thisPlayerId = AuthenticationService.Instance.PlayerId;
     }
 
     public async void createLobby()

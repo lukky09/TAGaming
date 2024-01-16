@@ -55,6 +55,8 @@ public class PlayerPlacementScript : NetworkBehaviour
         }
         else
         {
+            //Ini dilakukan agar karakter di server bisa mengambil bola
+            _snowbrawlerRef.SnowballManagerRef = FindObjectOfType<SnowBallManager>();
             Destroy(GetComponent<PlayerMovement>());
         }
     }

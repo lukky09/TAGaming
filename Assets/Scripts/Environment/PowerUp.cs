@@ -87,7 +87,6 @@ public class PowerUp : NetworkBehaviour
     [ClientRpc]
     public void SpawnPowerupBallClientRPC(int PowerID, ClientRpcParams CRPCParams)
     {
-        Debug.Log(PowerID);
         currentSpawnTime = 0;
         GetComponent<Animator>().speed = 1;
         ball.SetActive(true);

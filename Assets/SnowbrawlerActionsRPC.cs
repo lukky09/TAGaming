@@ -22,30 +22,33 @@ public class SnowbrawlerActionsRPC : NetworkBehaviour
     }
 
     [ServerRpc]
-    public void ThrowBallServerRPC(Vector2 ThrowDirection,bool IsThrownBallFromCatching)
+    public void ThrowBallServerRPC(Vector2 ThrowDirection)
     {
-        _snowBrawlerRef.shootBall(ThrowDirection);
-        ReduceBallAmountClientRPC(IsThrownBallFromCatching);
+        _snowBrawlerRef.ThrowBall(ThrowDirection);
+        ulong ballid = _snowBrawlerRef.getCaughtBall() == null ? 0 : _snowBrawlerRef.getCaughtBall().GetComponent<NetworkObject>().NetworkObjectId;
+        ReduceBallAmountClientRPC(ballid, _snowBrawlerRef.getBallAmount(), _snowBrawlerRef.ballPowerId);
     }
 
     [ClientRpc]
-    public void ReduceBallAmountClientRPC(bool IsThrownBallFromCatching)
+    public void ReduceBallAmountClientRPC(ulong NetworkObjectID, int BallAmount, int BallPowerID)
     {
-        _snowBrawlerRef.UpdateHoldedBallsAmountAfterThrow(IsThrownBallFromCatching);
+        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID, false);
     }
 
     [ServerRpc]
     public void PickUpBallServerRPC()
     {
         int currentBallAmount = _snowBrawlerRef.ballAmount;
-        _snowBrawlerRef.getBall();
+        _snowBrawlerRef.PickUpBallFromGround();
+        ulong ballid = _snowBrawlerRef.getCaughtBall() == null ? 0 : _snowBrawlerRef.getCaughtBall().GetComponent<NetworkObject>().NetworkObjectId;
         if (_snowBrawlerRef.ballAmount > currentBallAmount)
-            AddBallAmountClientRPC(_snowBrawlerRef.ballPowerId);
+            AddBallAmountClientRPC(ballid, _snowBrawlerRef.getBallAmount(), _snowBrawlerRef.ballPowerId);
     }
 
     [ClientRpc]
-    public void AddBallAmountClientRPC(int BallPowerID)
+    public void AddBallAmountClientRPC(ulong NetworkObjectID, int BallAmount, int BallPowerID)
     {
-        _snowBrawlerRef.UpdateHoldedBallsAmountAfterPickup(BallPowerID);
+        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID, false);
+        _snowBrawlerRef.UpdateHoldedBallsAmountAfterPickup();
     }
 }
