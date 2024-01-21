@@ -18,7 +18,14 @@ public class BallMovement : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        thisRigid = this.GetComponent<Rigidbody2D>();
+        GetComponent<CircleCollider2D>().enabled = false;
+        thisRigid = GetComponent<Rigidbody2D>();
+        if (IsServer)
+        {
+            GetComponent<CircleCollider2D>().enabled = true;
+            IgnorePlayerClientRPC(currentCollider.GetComponent<NetworkObject>().NetworkObjectId);
+            InitializeClientBallClientRPC(speed,direction,fromPlayerTeam,ballScore,powerupId);
+        }
     }
 
     public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower)
@@ -94,7 +101,7 @@ public class BallMovement : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        AudioSource.PlayClipAtPoint(AudioScript.audioObject.getSound("Get"),transform.position);
+        AudioSource.PlayClipAtPoint(AudioScript.audioObject.getSound("Hit"),transform.position);
         if (collision.tag == "Wall")
         {
             if (powerupId == 5 || powerupId == 3)
@@ -102,7 +109,6 @@ public class BallMovement : NetworkBehaviour
             else
             {
                 gameObject.GetComponent<NetworkObject>().Despawn(true);
-                Destroy(gameObject);
             }
         }
 
@@ -135,5 +141,36 @@ public class BallMovement : NetworkBehaviour
     public GameObject getThrower()
     {
         return thrower;
+    }
+
+    [ClientRpc]
+    void IgnorePlayerClientRPC(ulong PlayerID)
+    {
+        foreach (SnowBrawler player in FindObjectsOfType<SnowBrawler>())
+        {
+            if(player.GetComponent<NetworkObject>().NetworkObjectId == PlayerID)
+            {
+                thrower = player.gameObject;
+                GetComponent<CircleCollider2D>().enabled = true;
+                Physics2D.IgnoreCollision(this.GetComponent<CircleCollider2D>(), player.GetComponent<Collider2D>());
+                break;
+            }
+        }
+    }
+
+    [ClientRpc]
+    void InitializeClientBallClientRPC(float speed, Vector2 direction, bool isPlayerTeam, int ballScore,int BallPowerID)
+    {
+        thisRigid = this.GetComponent<Rigidbody2D>();
+        this.speed = speed;
+        this.direction = direction;
+        this.fromPlayerTeam = isPlayerTeam;
+        this.ballScore = ballScore;
+        thisRigid.rotation = -Vector2.SignedAngle(direction, Vector2.right);
+        if (BallPowerID != 0)
+        {
+           GetComponent<SpriteRenderer>().sprite = FindObjectOfType<PowerUp>().getPowerUpSprite(BallPowerID);
+            powerupId = BallPowerID;
+        }
     }
 }

@@ -107,6 +107,7 @@ GameObject:
   - component: {fileID: 5503507543798492951}
   - component: {fileID: 1876497722103351837}
   - component: {fileID: 8113278078999068131}
+  - component: {fileID: 2665158237930627558}
   m_Layer: 3
   m_Name: Enemy
   m_TagString: EnemyTeam
@@ -528,7 +529,7 @@ MonoBehaviour:
   ScaleThreshold: 0.01
   UseQuaternionSynchronization: 0
   UseQuaternionCompression: 0
-  UseHalfFloatPrecision: 0
+  UseHalfFloatPrecision: 1
   InLocalSpace: 0
   Interpolate: 1
   SlerpPosition: 0
@@ -544,6 +545,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bff5b59e7322c5147ac52a47bc23c9b5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &2665158237930627558
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3380666572601521298}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 815fb2a4cfe86a24d9c0da75e88e8983, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList: []
+  m_Animator: {fileID: 3380666572601521301}
 --- !u!1 &4550136698602446182
 GameObject:
   m_ObjectHideFlags: 0

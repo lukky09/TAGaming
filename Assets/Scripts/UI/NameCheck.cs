@@ -14,8 +14,6 @@ public class NameCheck : MonoBehaviour
     [SerializeField] TMP_InputField _nameField;
     [SerializeField] MultiplayerManager _multiRef;
 
-    public delegate void nameEvent(string name);
-    public event nameEvent onNameChanged;
     private void Start()
     {
         if (PlayerPrefs.HasKey("MPName"))

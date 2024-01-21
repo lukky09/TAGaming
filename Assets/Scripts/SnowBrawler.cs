@@ -79,21 +79,47 @@ public class SnowBrawler : NetworkBehaviour
         {
             if (iscatching)
             {
-                if (caughtBall != null)
-                    Destroy(caughtBall);
+                if (caughtBall != null && IsServer)
+                    caughtBall.GetComponent<NetworkObject>().Despawn();
                 caughtBall = collision.gameObject;
-                caughtBall.SetActive(false);
-                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
-                updateHoldedBallVisuals(false);
+                GetCaughtBallServerRPC();
             }
             else
             {
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam && _barScoreRef != null)
                     _barScoreRef.addScoreServerRPC(bol.getPlayerTeam(), bol.getBallScore());
-                StartCoroutine(getHitNumerator(0.5f, collision.gameObject));
+                if(IsServer)
+                    GetHitAnimationStartClientRPC(0.5f, bol.getPlayerTeam(),bol.getBallScore());
                 bol.trySelfDestruct(gameObject);
             }
+        }
+    }
+
+    [ServerRpc(RequireOwnership = false)]
+    void GetCaughtBallServerRPC()
+    {
+        caughtBall.SetActive(false);
+        caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
+        updateHoldedBallVisuals(false);
+        GetCaughtBallClientRPC(caughtBall.GetComponent<NetworkObject>().NetworkObjectId);
+    }
+
+    [ClientRpc]
+    void GetCaughtBallClientRPC(ulong BallID)
+    {
+        foreach (BallMovement Ball in FindObjectsOfType<BallMovement>())
+        {
+            if(Ball.GetComponent<NetworkObject>().NetworkObjectId == BallID)
+            {
+                Debug.Log("DApat bolanya");
+                caughtBall = Ball.gameObject;
+                caughtBall.SetActive(false);
+                caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
+                updateHoldedBallVisuals(false);
+                break;
+            }
+                
         }
     }
 
@@ -221,15 +247,25 @@ public class SnowBrawler : NetworkBehaviour
 
     public void getHit(float seconds, GameObject snowBall)
     {
-        StartCoroutine(getHitNumerator(seconds, snowBall));
+        if (!IsServer)
+            return;
+        BallMovement ballMovementScript = snowBall.GetComponent<BallMovement>();
+        GetHitAnimationStartClientRPC(seconds, ballMovementScript.getPlayerTeam(), ballMovementScript.getBallScore());
+
     }
 
-    public IEnumerator getHitNumerator(float seconds, GameObject snowBall)
+    [ClientRpc]
+    void GetHitAnimationStartClientRPC(float seconds, bool BallTeam, int BallScore)
     {
-        if (snowBall.GetComponent<BallMovement>().getPlayerTeam() != playerteam)
+        StartCoroutine(getHitNumerator(seconds, BallTeam, BallScore));
+    }
+
+    public IEnumerator getHitNumerator(float seconds, bool BallTeam, int BallScore)
+    {
+        if (BallTeam != playerteam)
         {
             GameObject numbers = Instantiate(numberReference);
-            numbers.GetComponent<NumbersController>().setGambar(snowBall.GetComponent<BallMovement>().getBallScore());
+            numbers.GetComponent<NumbersController>().setGambar(BallScore);
             numbers.GetComponent<NumbersController>().StartingPosition = transform.position;
         }
         canAct = false;
@@ -240,7 +276,29 @@ public class SnowBrawler : NetworkBehaviour
         animator.SetBool("IsHit", false);
     }
 
-    public IEnumerator catchBall()
+    public void catchBall()
+    {
+        if (IsServer)
+            CatchBallClientRPC();
+        else
+            CatchBallServerRPC();
+    }
+
+    [ServerRpc]
+    void CatchBallServerRPC()
+    {
+        Debug.Log("Client Tried to catch ball");
+        StartCoroutine(catchBallNumerator());
+        CatchBallClientRPC();
+    }
+
+    [ClientRpc]
+    void CatchBallClientRPC()
+    {
+        StartCoroutine(catchBallNumerator());
+    }
+
+    public IEnumerator catchBallNumerator()
     {
         runSpeed = 0;
         iscatching = true;
@@ -275,8 +333,9 @@ public class SnowBrawler : NetworkBehaviour
 
     public void tryCatch()
     {
+        Debug.Log("Snowbrawler Catch");
         if (!iscatching)
-            StartCoroutine(catchBall());
+            catchBall();
     }
 
     public bool getIsCatching()

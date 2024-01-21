@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using UnityEngine;
 
 public class ShootMechanic : SnowBrawler
@@ -16,7 +17,7 @@ public class ShootMechanic : SnowBrawler
     private float currentAimTime;
 
     // Start is called before the first frame update
-    void Start()
+    new void Start()
     {
         playerteam = true;
         currentAimTime = 0;
@@ -26,7 +27,7 @@ public class ShootMechanic : SnowBrawler
     }
 
     // Update is called once per frame
-    void Update()
+    new void Update()
     {
         base.Update();
         if (!canAct || !IsOwner)
@@ -56,7 +57,7 @@ public class ShootMechanic : SnowBrawler
             line1.SetActive(false);
             line2.SetActive(false);
             isAiming = false;
-            StartCoroutine(Fakeout());
+            DoFakeoutServerRPC();
             return;
         }
         if (!Input.GetMouseButton(0) && isAiming)
@@ -87,6 +88,19 @@ public class ShootMechanic : SnowBrawler
             line2.GetComponent<LineRenderer>().SetPosition(0, Vector3.zero);
             line2.GetComponent<LineRenderer>().SetPosition(1, Quaternion.Euler(0, 0, currentaimangle / 2) * throwDir * 20);
         }
+    }
+
+    [ServerRpc]
+    void DoFakeoutServerRPC()
+    {
+        StartCoroutine(Fakeout());
+        DoFakeoutClientRPC();
+    }
+
+    [ClientRpc]
+    void DoFakeoutClientRPC()
+    {
+        StartCoroutine(Fakeout());
     }
 
     IEnumerator Fakeout()

@@ -7706,6 +7706,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
+      propertyPath: NetworkConfig.TickRate
+      value: 60
+      objectReference: {fileID: 0}
+    - target: {fileID: 8731919307070151943, guid: ca399ec96925f5e4f93a2feabc6eafb4, type: 3}
       propertyPath: NetworkConfig.OldPrefabList.Array.size
       value: 0
       objectReference: {fileID: 0}

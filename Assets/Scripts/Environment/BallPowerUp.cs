@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 
-public class BallPowerUp : MonoBehaviour
+public class BallPowerUp : NetworkBehaviour
 {
     [SerializeField] int pierceScoreAdd;
     [SerializeField] Sprite normalBallSprite;
@@ -30,6 +31,7 @@ public class BallPowerUp : MonoBehaviour
     public void modifyBall(GameObject collider)
     {
         SnowBrawler sbReff = collider.GetComponent<SnowBrawler>();
+        ulong colliderNetworkID = collider.GetComponent<NetworkObject>().NetworkObjectId;
         switch (bmRef.getBallPowerId())
         {
             //Piercer
@@ -40,11 +42,12 @@ public class BallPowerUp : MonoBehaviour
             case 2:
                 if (bmRef.getPlayerTeam() != sbReff.getplayerteam())
                 {
-                    bmRef.ballIsCatched(bmRef.getPlayerTeam(), sbReff.ballScoreAdd, sbReff.ballSpeedAdd, collider.GetComponent<BoxCollider2D>(),bmRef.getThrower());
+                    bmRef.ballIsCatched(bmRef.getPlayerTeam(), sbReff.ballScoreAdd, sbReff.ballSpeedAdd, collider.GetComponent<BoxCollider2D>(), bmRef.getThrower());
                     bmRef.setDirection(bmRef.getThrower().transform.position - transform.position);
+                    BoomerangUpdateClientRPC(colliderNetworkID);
                 }
                 else
-                    Destroy(gameObject);
+                    GetComponent<NetworkObject>().Despawn();
                 break;
             //Le Bombe
             case 3:
@@ -53,6 +56,7 @@ public class BallPowerUp : MonoBehaviour
                 collision = collider;
                 distance = collider.transform.position - transform.position;
                 StartCoroutine(TimedExplode(explosionDelay));
+                BombStickClientRPC(colliderNetworkID);
                 break;
             //Hu dingin
             case 4:
@@ -95,6 +99,38 @@ public class BallPowerUp : MonoBehaviour
                 Destroy(gameObject);
                 break;
         }
+    }
+
+    [ClientRpc]
+    void BoomerangUpdateClientRPC(ulong PlayerID)
+    {
+        Debug.Log(bmRef.getThrower().name);
+        foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
+        {
+            if (Brawler.GetComponent<NetworkObject>().NetworkObjectId == PlayerID)
+            {
+                transform.position = Brawler.transform.position;
+                break;
+            }
+        }
+        bmRef.setDirection(bmRef.getThrower().transform.position - transform.position);
+    }
+
+    [ClientRpc]
+    void BombStickClientRPC(ulong CollidedPlayer)
+    {
+        GetComponent<CircleCollider2D>().enabled = false;
+        GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
+        foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
+        {
+            if(Brawler.GetComponent<NetworkObject>().NetworkObjectId == CollidedPlayer)
+            {
+                collision = Brawler.gameObject;
+                break;
+            }
+        }
+        distance = collision.transform.position - transform.position;
+        StartCoroutine(TimedExplode(explosionDelay));
     }
 
     private void Update()

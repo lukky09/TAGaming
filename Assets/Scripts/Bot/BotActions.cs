@@ -281,7 +281,7 @@ public class BotActions : NetworkBehaviour
     public void tryCatchBallChance()
     {
         if (Random.Range(1, 100) < catchChance && !isSameBall)
-            StartCoroutine(snowBrawlerRef.catchBall());
+            snowBrawlerRef.catchBall();
         isSameBall = true;
         catchTimer = catchTimerDelay;
     }
@@ -290,7 +290,7 @@ public class BotActions : NetworkBehaviour
     {
         if (catchTimer < 0)
         {
-            StartCoroutine(snowBrawlerRef.catchBall());
+            snowBrawlerRef.catchBall();
             catchTimer = catchTimerDelay;
         }
     }
