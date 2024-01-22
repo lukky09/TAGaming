@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Netcode;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -31,7 +32,8 @@ public class BallPowerUp : NetworkBehaviour
     public void modifyBall(GameObject collider)
     {
         SnowBrawler sbReff = collider.GetComponent<SnowBrawler>();
-        ulong colliderNetworkID = collider.GetComponent<NetworkObject>().NetworkObjectId;
+        NetworkObject networkRef = collider.GetComponent<NetworkObject>();
+        ulong colliderNetworkID = networkRef == null? 0: networkRef.NetworkObjectId;
         switch (bmRef.getBallPowerId())
         {
             //Piercer
@@ -55,20 +57,19 @@ public class BallPowerUp : NetworkBehaviour
                 GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
                 collision = collider;
                 distance = collider.transform.position - transform.position;
-                StartCoroutine(TimedExplode(explosionDelay));
-                BombStickClientRPC(colliderNetworkID);
+                BombStickClientRPC(colliderNetworkID,transform.position, distance);
                 break;
             //Hu dingin
             case 4:
-                sbReff.slowDown(movementSpeedSlow, slowTime);
-                Destroy(gameObject);
+                GoSlowClientRPC(colliderNetworkID);
+                GetComponent<NetworkObject>().Despawn(true);
                 break;
             //Tembok?
             case 5:
                 Vector2 backPos = (Vector2)transform.position + bmRef.getDirection() * 2f;
                 float angle = Vector2.SignedAngle((Vector2)transform.position, backPos);
                 float dist = Mathf.Sqrt(1 + Mathf.Pow(Mathf.Sin(Mathf.Deg2Rad * angle * 2), 2));
-                backPos = (Vector2)transform.position + bmRef.getDirection() * dist * 1.1f;
+                backPos = (Vector2)transform.position + bmRef.getDirection() * dist  + bmRef.getDirection() * GetComponent<CircleCollider2D>().radius * 1.1f;
                 Debug.DrawLine(transform.position, backPos, Color.red, 5);
                 Collider2D[] explosiveCollision = Physics2D.OverlapCircleAll(backPos, 0.1f, 64);
                 foreach (Collider2D item in explosiveCollision)
@@ -79,15 +80,17 @@ public class BallPowerUp : NetworkBehaviour
                 {
                     GameObject[] balls = new GameObject[splitBalls];
                     float initialAngle = -splitRange / 2;
+                    BallMovement movementRef;
                     for (int i = 0; i < splitBalls; i++)
                     {
                         balls[i] = Instantiate(gameObject, backPos, Quaternion.identity);
-                        //balls[i].GetComponent<BallMovement>().initialize();
-                        balls[i].GetComponent<BallMovement>().setDirection(Quaternion.Euler(0, 0, initialAngle + i * (splitRange / (splitBalls - 1))) * bmRef.getDirection());
-                        balls[i].GetComponent<BallMovement>().setBallScore(Mathf.CeilToInt(bmRef.getBallScore() / 2));
-                        balls[i].GetComponent<BallMovement>().setPowerUpID(0);
+                        movementRef = balls[i].GetComponent<BallMovement>();
+                        movementRef.setDirection(Quaternion.Euler(0, 0, initialAngle + i * (splitRange / (splitBalls - 1))) * bmRef.getDirection());
+                        movementRef.setBallScore(Mathf.CeilToInt(bmRef.getBallScore() / 2));
+                        movementRef.setPowerUpID(0);
                         balls[i].GetComponent<SpriteRenderer>().sprite = normalBallSprite;
                         balls[i].transform.localScale = new Vector3(0.7f, 0.7f, 1);
+                        balls[i].GetComponent<NetworkObject>().Spawn(true);
                         for (int j = 0; j < i; j++)
                             Physics2D.IgnoreCollision(balls[i].GetComponent<CircleCollider2D>(), balls[j].GetComponent<CircleCollider2D>());
                     }
@@ -117,20 +120,39 @@ public class BallPowerUp : NetworkBehaviour
     }
 
     [ClientRpc]
-    void BombStickClientRPC(ulong CollidedPlayer)
+    void BombStickClientRPC(ulong CollidedPlayer, Vector3 ObjectPosition, Vector2 Distance)
     {
+        transform.position = ObjectPosition - (Vector3)Distance;
         GetComponent<CircleCollider2D>().enabled = false;
         GetComponent<Rigidbody2D>().bodyType = RigidbodyType2D.Static;
-        foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
+        if (CollidedPlayer != 0)
         {
-            if(Brawler.GetComponent<NetworkObject>().NetworkObjectId == CollidedPlayer)
+            foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
             {
-                collision = Brawler.gameObject;
-                break;
+                if (Brawler.GetComponent<NetworkObject>().NetworkObjectId == CollidedPlayer)
+                {
+                    collision = Brawler.gameObject;
+                    break;
+                }
             }
         }
-        distance = collision.transform.position - transform.position;
+        else
+        {
+            collision = FindObjectOfType<SetObjects>().gameObject;
+        }
+        distance = Distance;
         StartCoroutine(TimedExplode(explosionDelay));
+    }
+
+    [ClientRpc]
+    void GoSlowClientRPC(ulong CollidedPlayer)
+    {
+        foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
+            if (Brawler.GetComponent<NetworkObject>().NetworkObjectId == CollidedPlayer)
+            {
+                Brawler.slowDown(movementSpeedSlow, slowTime);
+                break;
+            }
     }
 
     private void Update()
@@ -157,16 +179,20 @@ public class BallPowerUp : NetworkBehaviour
         Collider2D[] explosiveCollision = Physics2D.OverlapCircleAll(transform.position, explosionRadius, 8);
 
         int hitPlayers = 0;
-        //Debug.Log("Boom");
         foreach (Collider2D coll in explosiveCollision)
         {
             // Nggak isa melakukan coroutine kalau object ilang
-            coll.GetComponent<SnowBrawler>().getHit(0.5f,gameObject);
+            coll.GetComponent<SnowBrawler>().getHit(0.5f, gameObject);
             if (coll.GetComponent<SnowBrawler>().getplayerteam() != bmRef.getPlayerTeam())
+            {
                 hitPlayers++;
+            }
         }
-        FindObjectOfType<BarScoreRtc>().addScoreServerRPC(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
+        if (IsServer)
+        {
+            FindObjectOfType<BarScoreRtc>().addScoreServerRPC(bmRef.getPlayerTeam(), bmRef.getBallScore() * hitPlayers);
+            gameObject.GetComponent<NetworkObject>().Despawn(false);
+        }
         Destroy(gameObject);
-
     }
 }

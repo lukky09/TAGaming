@@ -23,8 +23,9 @@ public class BallMovement : NetworkBehaviour
         if (IsServer)
         {
             GetComponent<CircleCollider2D>().enabled = true;
-            IgnorePlayerClientRPC(currentCollider.GetComponent<NetworkObject>().NetworkObjectId);
-            InitializeClientBallClientRPC(speed,direction,fromPlayerTeam,ballScore,powerupId);
+            InitializeClientBallClientRPC(speed, direction, fromPlayerTeam, ballScore, powerupId);
+            if (currentCollider != null)
+                IgnorePlayerClientRPC(currentCollider.GetComponent<NetworkObject>().NetworkObjectId);
         }
     }
 

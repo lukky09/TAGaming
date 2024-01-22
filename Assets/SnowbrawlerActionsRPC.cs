@@ -26,13 +26,14 @@ public class SnowbrawlerActionsRPC : NetworkBehaviour
     {
         _snowBrawlerRef.ThrowBall(ThrowDirection);
         ulong ballid = _snowBrawlerRef.getCaughtBall() == null ? 0 : _snowBrawlerRef.getCaughtBall().GetComponent<NetworkObject>().NetworkObjectId;
-        ReduceBallAmountClientRPC(ballid, _snowBrawlerRef.getBallAmount(), _snowBrawlerRef.ballPowerId);
+        ThrowBallClientRPC(ballid, _snowBrawlerRef.getBallAmount(), _snowBrawlerRef.ballPowerId, transform.position, ThrowDirection);
     }
 
     [ClientRpc]
-    public void ReduceBallAmountClientRPC(ulong NetworkObjectID, int BallAmount, int BallPowerID)
+    public void ThrowBallClientRPC(ulong NetworkObjectID, int BallAmount, int BallPowerID, Vector3 ThrowerPosition, Vector2 ThrowDirection)
     {
-        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID, false);
+        _snowBrawlerRef.ThrowCaughtBallClient(NetworkObjectID, ThrowDirection, ThrowerPosition);
+        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID);
     }
 
     [ServerRpc]
@@ -48,7 +49,7 @@ public class SnowbrawlerActionsRPC : NetworkBehaviour
     [ClientRpc]
     public void AddBallAmountClientRPC(ulong NetworkObjectID, int BallAmount, int BallPowerID)
     {
-        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID, false);
+        _snowBrawlerRef.UpdateBallAmount(NetworkObjectID, BallAmount, BallPowerID);
         _snowBrawlerRef.UpdateHoldedBallsAmountAfterPickup();
     }
 }

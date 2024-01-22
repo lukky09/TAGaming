@@ -321,7 +321,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  GlobalObjectIdHash: 1013344854
+  GlobalObjectIdHash: 3206766055
   AlwaysReplicateAsRoot: 0
   SynchronizeTransform: 1
   ActiveSceneSynchronization: 0
@@ -377,7 +377,7 @@ MonoBehaviour:
   castingLength: 10
   sphereCastRadius: 1.5
   catchTimerDelay: 3
-  catchChance: 60
+  catchChance: 25
   noticeMark: {fileID: 7215567336116283612}
 --- !u!114 &6630183316652505263
 MonoBehaviour:
@@ -707,7 +707,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8576505471331055641, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
       propertyPath: GlobalObjectIdHash
-      value: 2764616811
+      value: 3206766055
       objectReference: {fileID: 0}
     - target: {fileID: 1284263136227948241, guid: 4a47fccdcdaac8a48a0843cd0a9ba7bd, type: 3}
       propertyPath: m_Name

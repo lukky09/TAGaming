@@ -89,8 +89,8 @@ public class SnowBrawler : NetworkBehaviour
                 BallMovement bol = collision.gameObject.GetComponent<BallMovement>();
                 if (bol.getPlayerTeam() != playerteam && _barScoreRef != null)
                     _barScoreRef.addScoreServerRPC(bol.getPlayerTeam(), bol.getBallScore());
-                if(IsServer)
-                    GetHitAnimationStartClientRPC(0.5f, bol.getPlayerTeam(),bol.getBallScore());
+                if (IsServer)
+                    GetHitAnimationStartClientRPC(0.5f, bol.getPlayerTeam(), bol.getBallScore());
                 bol.trySelfDestruct(gameObject);
             }
         }
@@ -110,16 +110,14 @@ public class SnowBrawler : NetworkBehaviour
     {
         foreach (BallMovement Ball in FindObjectsOfType<BallMovement>())
         {
-            if(Ball.GetComponent<NetworkObject>().NetworkObjectId == BallID)
+            if (Ball.GetComponent<NetworkObject>().NetworkObjectId == BallID)
             {
-                Debug.Log("DApat bolanya");
                 caughtBall = Ball.gameObject;
                 caughtBall.SetActive(false);
                 caughtBall.GetComponent<BallMovement>().ballIsCatched(getplayerteam(), ballScoreAdd, ballSpeedAdd, GetComponent<BoxCollider2D>(), gameObject);
                 updateHoldedBallVisuals(false);
                 break;
             }
-                
         }
     }
 
@@ -193,15 +191,29 @@ public class SnowBrawler : NetworkBehaviour
         updateHoldedBallVisuals(true);
     }
 
-    public void UpdateBallAmount(ulong NetworkObjectID, int BallAmount, int BallPowerID, bool isThrowing)
+    //Fungsi dipakai untuk melempar bola yang dipegang client
+    public void ThrowCaughtBallClient(ulong NetworkObjectID, Vector2 ThrowDirection, Vector3 ThrowFrom)
     {
-        if (NetworkObjectID != 0)
+        if (caughtBall == null || NetworkObjectID != 0)
+            return;
+        caughtBall.transform.position = ThrowFrom;
+        caughtBall.GetComponent<BallMovement>().setDirection(ThrowDirection);
+        caughtBall.SetActive(true);
+    }
+
+    public void UpdateBallAmount(ulong NetworkBallID, int BallAmount, int BallPowerID)
+    {
+        if (NetworkBallID != 0)
             foreach (BallMovement item in FindObjectsOfType<BallMovement>())
-                if (item.GetComponent<NetworkObject>().NetworkObjectId == NetworkObjectID)
+            {
+                if (item.GetComponent<NetworkObject>().NetworkObjectId == NetworkBallID)
                 {
                     caughtBall = item.gameObject;
                     break;
                 }
+            }
+        else if(NetworkBallID == 0)
+            caughtBall = null;
         ballAmount = BallAmount;
         ballPowerId = BallPowerID;
     }
@@ -251,8 +263,8 @@ public class SnowBrawler : NetworkBehaviour
             return;
         BallMovement ballMovementScript = snowBall.GetComponent<BallMovement>();
         GetHitAnimationStartClientRPC(seconds, ballMovementScript.getPlayerTeam(), ballMovementScript.getBallScore());
-
     }
+
 
     [ClientRpc]
     void GetHitAnimationStartClientRPC(float seconds, bool BallTeam, int BallScore)
@@ -262,7 +274,7 @@ public class SnowBrawler : NetworkBehaviour
 
     public IEnumerator getHitNumerator(float seconds, bool BallTeam, int BallScore)
     {
-        if (BallTeam != playerteam)
+        if (BallTeam != playerteam && BallScore > 0)
         {
             GameObject numbers = Instantiate(numberReference);
             numbers.GetComponent<NumbersController>().setGambar(BallScore);

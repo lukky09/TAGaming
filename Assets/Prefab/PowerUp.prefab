@@ -124,9 +124,9 @@ MonoBehaviour:
   spawnTime: 5
   playerMaterial: {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
   materialColor: {r: 0.2688679, g: 1, b: 0.32270822, a: 0}
-  startingValue: 2
+  startingValue: 1
   ValueRange: 5
-  randomPowerup: 0
+  randomPowerup: 1
   powerUpSprites:
   - {fileID: -1821757262, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
   - {fileID: -599599054, guid: 4f9ce5e0244d2e24b9507c8c62b8e188, type: 3}
