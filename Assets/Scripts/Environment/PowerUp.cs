@@ -32,7 +32,7 @@ public class PowerUp : NetworkBehaviour
             return;
         }
         if (startingValue > ValueRange || startingValue < 0 || randomPowerup)
-            powerUpValue = Random.Range(1, startingValue + 1);
+            powerUpValue = Random.Range(1, ValueRange + 1);
         else
             powerUpValue = startingValue;
         ball.GetComponent<SpriteRenderer>().sprite = powerUpSprites[powerUpValue - 1];
@@ -50,7 +50,7 @@ public class PowerUp : NetworkBehaviour
             ball.SetActive(true);
             if (randomPowerup)
             {
-                powerUpValue = Random.Range(1, startingValue + 1);
+                powerUpValue = Random.Range(1, ValueRange + 1);
                 ball.GetComponent<SpriteRenderer>().sprite = powerUpSprites[powerUpValue - 1];
             }
             SpawnPowerupBallClientRPC(powerUpValue, new ClientRpcParams());
