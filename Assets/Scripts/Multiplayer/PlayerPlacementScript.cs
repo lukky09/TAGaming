@@ -5,6 +5,7 @@ using System.Globalization;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerPlacementScript : NetworkBehaviour
 {
@@ -15,12 +16,15 @@ public class PlayerPlacementScript : NetworkBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Matiin script biar g isa gerak
-        GetComponent<PlayerMovement>().enabled = false;
-        GetComponent<ShootMechanic>().enabled = false;
-        GetComponent<CatchBall>().enabled = false;
-        if(LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
-        FindObjectOfType<PlayerManager>().doPlayersUpdate();
+        //Nyalain Script kalau tutorial
+        if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
+        {
+            GetComponent<PlayerMovement>().enabled = true;
+            GetComponent<ShootMechanic>().enabled = true;
+            GetComponent<CatchBall>().enabled = true;
+        }
+        if (LobbyManager.IsOnline && LobbyManager.instance.IsHosting)
+            FindObjectOfType<PlayerManager>().doPlayersUpdate();
         _snowbrawlerRef = GetComponent<SnowBrawler>();
         _SpawnID = 1;
         string isLeftTeam = "y";

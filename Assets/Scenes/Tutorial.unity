@@ -470,12 +470,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 056c9a9ae6466dd45ab9c57b7261d647, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  material: {fileID: 2100000, guid: ac8ddd7877d83fc40a9a6c75236581ab, type: 2}
-  playerPrefab: {fileID: 3380666572601521298, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
-  isAIActive: 1
-  enemyPrefab: {fileID: 8190896904697680640, guid: 4690a3ed094d4ca4b98e55ac896d4ed2, type: 3}
-  spawnPlayer: 1
-  levelCamera: {fileID: 519420028}
 --- !u!1 &116114499
 GameObject:
   m_ObjectHideFlags: 0
@@ -688,6 +682,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 2343908663
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -1493,6 +1491,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3659203535
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -1663,6 +1665,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1906266535
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -2004,7 +2010,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c88f5cead0c0b2a4eb05b5900433f8d1, type: 3}
   m_Name: 
@@ -2522,6 +2528,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3689905030
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -2630,7 +2640,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3380666572601521300, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -4.85
+      value: 51.61
       objectReference: {fileID: 0}
     - target: {fileID: 3380666572601521300, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
       propertyPath: m_LocalPosition.y
@@ -2668,6 +2678,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7600770541280034084, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 817545631
+      objectReference: {fileID: 0}
     - target: {fileID: 8094063347812486162, guid: 74631aa2889f1d04d91665bd30c33b1c, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -2688,6 +2702,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 623723695
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -6998,6 +7016,43 @@ MonoBehaviour:
   roomWidth: 15
   roomsStart: -12.5
   transitionLength: 1
+--- !u!1 &1008022528 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3380666572601521298, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
+  m_PrefabInstance: {fileID: 1474017448}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1008022539
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008022528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 3844990217
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
+--- !u!114 &1008022540
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1008022528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bff5b59e7322c5147ac52a47bc23c9b5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1045511576
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -15367,6 +15422,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 100033107
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -16239,6 +16298,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1980269673
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -16635,10 +16698,20 @@ PrefabInstance:
       propertyPath: objectToDelete
       value: 
       objectReference: {fileID: 1684510292}
+    - target: {fileID: 7600770541280034084, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3084660408
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3380666572601521298, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
+      insertIndex: 6
+      addedObject: {fileID: 1008022539}
+    - targetCorrespondingSourceObject: {fileID: 3380666572601521298, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1008022540}
   m_SourcePrefab: {fileID: 100100000, guid: fc570b2259651af43b5155537a5ab7be, type: 3}
 --- !u!1 &1525917221
 GameObject:
@@ -16696,6 +16769,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3973402980
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -16765,6 +16842,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 1326574592
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 
@@ -17547,6 +17628,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2075824793}
     m_Modifications:
+    - target: {fileID: -355371179623073172, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
+      propertyPath: GlobalObjectIdHash
+      value: 3939853317
+      objectReference: {fileID: 0}
     - target: {fileID: 4975152431852153115, guid: 1e8760632c986ca4c8ed3b0b91eee026, type: 3}
       propertyPath: objectToDelete
       value: 

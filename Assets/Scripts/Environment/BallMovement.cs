@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class BallMovement : NetworkBehaviour
 {
@@ -27,6 +28,8 @@ public class BallMovement : NetworkBehaviour
             if (currentCollider != null)
                 IgnorePlayerClientRPC(currentCollider.GetComponent<NetworkObject>().NetworkObjectId);
         }
+        if(SceneManager.GetActiveScene().name.Equals("Tutorial"))
+            GetComponent<CircleCollider2D>().enabled = true;
     }
 
     public void initialize(float speed, Vector2 direction, bool isPlayerTeam, int ballScore, Collider2D you, GameObject thrower)
@@ -80,10 +83,14 @@ public class BallMovement : NetworkBehaviour
 
     public void trySelfDestruct(GameObject collider)
     {
-        if (powerupId == 0 && IsServer)
+        if (!IsServer)
+            return;
+        if (powerupId == 0)
         {
-            gameObject.GetComponent<NetworkObject>().Despawn(true);
-            Destroy(gameObject);
+            if (gameObject.GetComponent<NetworkObject>() != null && gameObject.GetComponent<NetworkObject>().IsSpawned)
+                gameObject.GetComponent<NetworkObject>().Despawn(true);
+            else
+                Destroy(gameObject);
         }
         else
         {
@@ -102,14 +109,17 @@ public class BallMovement : NetworkBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        AudioSource.PlayClipAtPoint(AudioScript.audioObject.getSound("Hit"),transform.position);
+        AudioSource.PlayClipAtPoint(AudioScript.audioObject.getSound("GotHit"),transform.position);
         if (collision.tag == "Wall")
         {
             if (powerupId == 5 || powerupId == 3)
                 GetComponent<BallPowerUp>().modifyBall(collision.gameObject);
             else
             {
-                gameObject.GetComponent<NetworkObject>().Despawn(true);
+                if (gameObject.GetComponent<NetworkObject>().IsSpawned)
+                    gameObject.GetComponent<NetworkObject>().Despawn(true);
+                else
+                    Destroy(gameObject);
             }
         }
 
@@ -149,7 +159,7 @@ public class BallMovement : NetworkBehaviour
     {
         foreach (SnowBrawler player in FindObjectsOfType<SnowBrawler>())
         {
-            if(player.GetComponent<NetworkObject>().NetworkObjectId == PlayerID)
+            if(player.GetComponent<NetworkObject>() != null && player.GetComponent<NetworkObject>().NetworkObjectId == PlayerID)
             {
                 thrower = player.gameObject;
                 GetComponent<CircleCollider2D>().enabled = true;

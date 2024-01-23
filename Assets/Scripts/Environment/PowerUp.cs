@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PowerUp : NetworkBehaviour
 {
@@ -25,7 +26,7 @@ public class PowerUp : NetworkBehaviour
         Material m = new Material(playerMaterial);
         m.SetColor("_OutlineColor", materialColor);
         m.SetFloat("_OutlineThickness", 1);
-        if (!IsServer)
+        if (!IsServer && !SceneManager.GetActiveScene().name.Equals("Tutorial"))
         {
             RequestBallPowerUpUpdateServerRPC(new ServerRpcParams());
             return;

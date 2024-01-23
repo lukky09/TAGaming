@@ -32,6 +32,8 @@ public class SnowBallManager : MonoBehaviour
             {
                 spawner.snowballContainer = gameObject;
             }
+            foreach (SnowBrawler brawler in FindObjectsOfType<SnowBrawler>())
+                brawler.SnowballManagerRef = this;
         }
         else if (!_isCurrentlyOnline || LobbyManager.instance.IsHosting)
         {
@@ -54,7 +56,10 @@ public class SnowBallManager : MonoBehaviour
         Coordinate ballcoor = AStarAlgorithm.vectorToCoordinate(ball.transform.position);
         if (SetObjects.getMap(true) != null)
             SetObjects.setMap(ballcoor.yCoor, ballcoor.xCoor, 0);
-        ball.GetComponent<NetworkObject>().Despawn(true);
+        if (ball.GetComponent<NetworkObject>() != null)
+            ball.GetComponent<NetworkObject>().Despawn(true);
+        else
+            Destroy(ball);
     }
 
     public void Update()
