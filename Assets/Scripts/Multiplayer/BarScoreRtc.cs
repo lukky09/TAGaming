@@ -5,8 +5,13 @@ using UnityEngine;
 
 public class BarScoreRtc : NetworkBehaviour
 {
-    BarScoreManager _barScoreManagerRef;
+    public float TimerCoundown { get { return _timerCountdownServer.Value; } }
+    float _timerCountdown;
     int[] _teamScore;
+
+    NetworkVariable<float> _timerCountdownServer = new(3, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Server);
+    BarScoreManager _barScoreManagerRef;
+    
 
     // Start is called before the first frame update
     void Start()
@@ -17,6 +22,19 @@ public class BarScoreRtc : NetworkBehaviour
         {
             snowbrawler.BarScoreReference = this;
         }
+        _timerCountdown = 5;
+        if (IsServer)
+            FindObjectOfType<CountDownScript>().startCounting(GetComponent<PlayerManager>(),5);
+        else
+            FindObjectOfType<CountDownScript>().startCounting(GetComponent<PlayerManager>(), _timerCountdownServer.Value);
+    }
+
+    private void Update()
+    {
+        if (!IsServer)
+            return;
+        _timerCountdown -= Time.deltaTime;
+        _timerCountdownServer.Value = _timerCountdown;
     }
 
     [ServerRpc(RequireOwnership = false)]

@@ -12,6 +12,7 @@ public class PlayerManager : NetworkBehaviour
     [SerializeField] bool isAIActive;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] bool spawnPlayer;
+    bool _gameHasStarted;
 
     List<bool[,]> accesibleAreas;
     List<int[]> areaCorners;
@@ -66,7 +67,6 @@ public class PlayerManager : NetworkBehaviour
                     }
                 }
             }
-            FindObjectOfType<CountDownScript>().startCounting(this);
         }
 
     }

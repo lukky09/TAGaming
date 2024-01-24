@@ -73,7 +73,8 @@ public class LobbyManager : MonoBehaviour
                     {"HasStarted" , new DataObject(DataObject.VisibilityOptions.Public, "n" ) },
                     {"MapSize" , new DataObject(DataObject.VisibilityOptions.Member, "-" ) },
                     {"MapData" , new DataObject(DataObject.VisibilityOptions.Member, "-" ) },
-                    {"PlayerOrder" , new DataObject(DataObject.VisibilityOptions.Member, createPlayerOrder() ) }
+                    {"PlayerOrder" , new DataObject(DataObject.VisibilityOptions.Member, createPlayerOrder() ) },
+                    {"RelayCode" , new DataObject(DataObject.VisibilityOptions.Member, "0" ) }
                 }
             };
             Lobby multiplayerLobby = await LobbyService.Instance.CreateLobbyAsync(lobbyName, maxPlayers, lobbyOptions);
@@ -242,11 +243,6 @@ public class LobbyManager : MonoBehaviour
         }
     }
 
-    public void startGame()
-    {
-        changeLobbyVariable("HasStarted", "y");
-    }
-
     public async void changeOwnPlayerVariable(string VariableName, PlayerDataObject.VisibilityOptions visibility, string VariableValue)
     {
         _currentLobby = await LobbyService.Instance.UpdatePlayerAsync(_currentLobby.Id, _thisPlayerId, new UpdatePlayerOptions()
@@ -257,13 +253,13 @@ public class LobbyManager : MonoBehaviour
         });
     }
 
-    public async void changeLobbyVariable(string VariableName, string VariableValue)
+    public async void changeLobbyVariable(string VariableName, DataObject.VisibilityOptions visibility, string VariableValue)
     {
         _currentLobby = await LobbyService.Instance.UpdateLobbyAsync(_currentLobby.Id, new UpdateLobbyOptions()
         {
             Data = new Dictionary<string, DataObject>
             {
-                {VariableName, new DataObject(DataObject.VisibilityOptions.Public,VariableValue)  }
+                {VariableName, new DataObject(visibility,VariableValue)  }
             }
         });
     }

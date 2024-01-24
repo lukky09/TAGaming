@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Unity.Netcode;
 using Unity.VisualScripting;
@@ -69,7 +70,14 @@ public class BotActions : NetworkBehaviour
         this.target = target;
         target.GetComponent<SnowBrawler>().isTargeted = true;
         if (target.GetComponent<ShootMechanic>() != null)
-            StartCoroutine(visualiseNotice());
+            //Kirim hanya ke client yang dinotice
+            setTargetClientRPC(new ClientRpcParams { Send = new ClientRpcSendParams { TargetClientIds = new List<ulong> { target.GetComponent<NetworkObject>().OwnerClientId } } });
+    }
+
+    [ClientRpc]
+    public void setTargetClientRPC(ClientRpcParams CRParams)
+    {
+        StartCoroutine(visualiseNotice());
     }
 
     public void setWalkLocation(Coordinate walkLocation)

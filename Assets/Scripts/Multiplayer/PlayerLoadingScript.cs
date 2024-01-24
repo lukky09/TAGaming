@@ -9,12 +9,16 @@ using UnityEngine.SceneManagement;
 public class PlayerLoadingScript : MonoBehaviour
 {
     Lobby _lobby { get { return LobbyManager.instance.CurrentLobby; } }
+    RelayManager _relayManRef;
     // Start is called before the first frame update
-    void Start()
+    async void Start()
     {
+        _relayManRef = GetComponent<RelayManager>();
         if (LobbyManager.instance.IsHosting)
         {
             LobbyManager.instance.changeOwnPlayerVariable("isReady", PlayerDataObject.VisibilityOptions.Member, "y");
+            string joinRelayCode = await _relayManRef.CreateRelay();
+            LobbyManager.instance.changeLobbyVariable("RelayCode", DataObject.VisibilityOptions.Member, joinRelayCode);
         }
         else
         {
@@ -24,7 +28,6 @@ public class PlayerLoadingScript : MonoBehaviour
             int mapHeight = Int32.Parse(mapSizeString.Split(',')[1]);
             SetObjects.setMap(GeneticAlgorithmGenerator.multiplayerDataToMap(mapData, mapWidth, mapHeight), true);
             LobbyManager.instance.changeOwnPlayerVariable("isReady", PlayerDataObject.VisibilityOptions.Member, "y");
-            Debug.Log("Map Siap");
         }
     }
 
@@ -43,14 +46,17 @@ public class PlayerLoadingScript : MonoBehaviour
         bool _everyoneReady = true;
         foreach (Player p in _lobby.Players)
         {
-            //Debug.Log(p.Data["Name"].Value + " "+p.Data["isReady"].Value);
             if (!p.Data["isReady"].Value.Equals("y"))
             {
                 _everyoneReady = false;
                 break;
             }
         }
-        if (_everyoneReady)
+        if (_everyoneReady && !_lobby.Data["RelayCode"].Value.Equals("0"))
+        {
+            if (!LobbyManager.instance.IsHosting)
+                _relayManRef.JoinRelay(_lobby.Data["RelayCode"].Value);
             SceneManager.LoadScene(5);
+        }
     }
 }

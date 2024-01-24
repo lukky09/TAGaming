@@ -7,34 +7,42 @@ using UnityEngine;
 public class CountDownScript : MonoBehaviour
 {
     PlayerManager _playerManagerRefl;
+    TextMeshProUGUI _textReference;
     [SerializeField] BarScoreManager _bsObject;
+    bool _beginCountdown;
+    float _currentCountdownTimer;
 
     // Start is called before the first frame update
 
-    public void startCounting(PlayerManager playerManagerReff)
+    public void startCounting(PlayerManager playerManagerReff, float Time)
     {
+        _textReference = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
         _playerManagerRefl = playerManagerReff;
-        StartCoroutine(startCountdown());
+        _currentCountdownTimer = Time;
+        _beginCountdown = true;
+        _textReference.gameObject.SetActive(true);
+        _textReference.text = "";
+
     }
 
-    public IEnumerator startCountdown()
+    private void Update()
     {
-        Debug.Log("Countdown Start");
-        //Time.timeScale = 0;
-        TextMeshProUGUI text = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-        // Tunggu animasi transisi mari
-        yield return new WaitForSecondsRealtime(1);
-        text.gameObject.SetActive(true);
-        for (int i = 3; i > 0; i--)
+        if (!_beginCountdown)
+            return;
+        _currentCountdownTimer -= Time.deltaTime;
+        switch (_currentCountdownTimer)
         {
-            text.text = i.ToString();
-            yield return new WaitForSecondsRealtime(1);
+            case <= 4 and >= 1:
+                _textReference.text = (Mathf.CeilToInt(_currentCountdownTimer) - 1).ToString();
+                break;
+            case > 0 and < 1:
+                _textReference.text = "GO";
+                break;
+            case <= 0:
+                _playerManagerRefl.setPlayerScriptActive(true);
+                _bsObject.StartTimer = true;
+                Destroy(gameObject);
+                break;
         }
-        text.text = "GO!";
-        yield return new WaitForSecondsRealtime(1);
-        //Time.timeScale = 1;
-        _playerManagerRefl.setPlayerScriptActive(true);
-        _bsObject.StartTimer = true;
-        Destroy(gameObject);
     }
 }
