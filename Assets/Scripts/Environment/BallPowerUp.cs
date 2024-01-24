@@ -107,7 +107,6 @@ public class BallPowerUp : NetworkBehaviour
     [ClientRpc]
     void BoomerangUpdateClientRPC(ulong PlayerID)
     {
-        Debug.Log(bmRef.getThrower().name);
         foreach (SnowBrawler Brawler in FindObjectsOfType<SnowBrawler>())
         {
             if (Brawler.GetComponent<NetworkObject>().NetworkObjectId == PlayerID)

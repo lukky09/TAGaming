@@ -22,7 +22,7 @@ public class RelayManager : MonoBehaviour
         {
             Allocation allocation = await RelayService.Instance.CreateAllocationAsync(9);
              _joinCode = await RelayService.Instance.GetJoinCodeAsync(allocation.AllocationId);
-            Debug.Log("Kode Relay yang didapat : "+ _joinCode);
+            //Debug.Log("Kode Relay yang didapat : "+ _joinCode);
 
             _serverData = new(allocation, "dtls");
             return _joinCode;
