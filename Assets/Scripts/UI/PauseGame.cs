@@ -33,6 +33,8 @@ public class PauseGame : MonoBehaviour
     {
         isPaused = pause;
         pauseScreen.SetActive(pause);
+        if (LobbyManager.IsOnline)
+            return;
         Time.timeScale = 1 - Convert.ToInt32(pause);
     }
 

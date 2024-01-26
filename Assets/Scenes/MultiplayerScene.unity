@@ -1792,7 +1792,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _lobbyScrollViewViewport: {fileID: 2107059264}
   _scrollViewContentPrefab: {fileID: 5672406164621727537, guid: 1184a83ba1031ab4ebfeab88109f4651, type: 3}
-  _multiplayerManagerRef: {fileID: 0}
   _LobbyScreen: {fileID: 351915042}
   _searchScreen: {fileID: 1927179483}
   _team1Text: {fileID: 1252338722}
@@ -2556,7 +2555,7 @@ MonoBehaviour:
   _nameLayer: {fileID: 697512979}
   _lobbyLayer: {fileID: 1615636681}
   _nameField: {fileID: 65676202}
-  _multiRef: {fileID: 1742295036}
+  _nameText: {fileID: 839448448}
 --- !u!1 &679529392
 GameObject:
   m_ObjectHideFlags: 0
@@ -7957,7 +7956,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1615636682
 RectTransform:
   m_ObjectHideFlags: 0
@@ -9993,7 +9992,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &2107962939
 RectTransform:
   m_ObjectHideFlags: 0

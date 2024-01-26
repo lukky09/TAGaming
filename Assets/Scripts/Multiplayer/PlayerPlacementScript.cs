@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
+using TMPro;
+using Unity.Collections;
 using Unity.Netcode;
 using Unity.Services.Lobbies.Models;
 using UnityEngine;
@@ -11,11 +13,16 @@ public class PlayerPlacementScript : NetworkBehaviour
 {
     int _SpawnID;
     [SerializeField] GameObject Arrow;
+    [SerializeField] GameObject Text;
     SnowBrawler _snowbrawlerRef;
+
+    NetworkVariable<FixedString64Bytes> _characterName = new("Dunno", NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
 
     // Start is called before the first frame update
     void Start()
     {
+        if (IsOwner)
+            _characterName.Value = NameCheck.MultiplayerName;
         //Nyalain Script kalau tutorial
         if (SceneManager.GetActiveScene().name.Equals("Tutorial"))
         {
@@ -62,6 +69,8 @@ public class PlayerPlacementScript : NetworkBehaviour
             //Ini dilakukan agar karakter di server bisa mengambil bola
             _snowbrawlerRef.SnowballManagerRef = FindObjectOfType<SnowBallManager>();
             Destroy(GetComponent<PlayerMovement>());
+            Text.SetActive(true);
+            Text.GetComponent<TextMeshProUGUI>().text = _characterName.Value.ToString();
         }
     }
 

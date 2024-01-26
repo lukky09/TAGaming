@@ -10,15 +10,23 @@ public class SnowbrawlerActionsRPC : NetworkBehaviour
 
     NetworkVariable<bool> _spriteFlip = new(false, NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
     SnowBrawler _snowBrawlerRef;
+    [SerializeField] RectTransform NameText;
+    bool _isPlayer;
 
     protected void Awake()
     {
         _snowBrawlerRef = GetComponent<SnowBrawler>();
+        if (GetComponent<PlayerMovement>() != null)
+            _isPlayer = true;
     }
 
+    Vector3 _flipVector;
     protected void FixedUpdate()
     {
-        transform.localScale = new Vector3(_spriteFlip.Value ? -1 : 1, 1, 1);
+        _flipVector = new Vector3(_spriteFlip.Value ? -1 : 1, 1, 1);
+        transform.localScale = _flipVector;
+        if (_isPlayer)
+            NameText.localScale = _flipVector;
     }
 
     [ServerRpc]

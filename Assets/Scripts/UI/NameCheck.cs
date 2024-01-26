@@ -12,15 +12,17 @@ public class NameCheck : MonoBehaviour
     [SerializeField] GameObject _nameLayer;
     [SerializeField] GameObject _lobbyLayer;
     [SerializeField] TMP_InputField _nameField;
-    [SerializeField] MultiplayerManager _multiRef;
+    [SerializeField] TextMeshProUGUI _nameText;
+    private static string _multiplayerName;
+    public static string MultiplayerName { get { return _multiplayerName; } set { _multiplayerName = value; } }
 
     private void Start()
     {
         if (PlayerPrefs.HasKey("MPName"))
         {
-            _multiRef.MultiplayerName = PlayerPrefs.GetString("MPName");
+            _multiplayerName = PlayerPrefs.GetString("MPName");
         }
-        if (_multiRef.MultiplayerName == null)
+        if (_multiplayerName == null)
         {
             foreach (Transform childObject in _layersContainer.transform)
             {
@@ -40,11 +42,12 @@ public class NameCheck : MonoBehaviour
 
     public void nameBackButtonCheck(GameObject multiplayerActionLayer)
     {
-        if (_multiRef.MultiplayerName == null)
+        if (_multiplayerName == null)
         {
             SceneManager.LoadScene(0);
             return;
         }
+        _nameLayer.SetActive(true);
         multiplayerActionLayer.SetActive(true);
         gameObject.SetActive(true);
     }
@@ -52,9 +55,12 @@ public class NameCheck : MonoBehaviour
     public void saveName(GameObject openedLayer)
     {
         if (_nameField.text.Replace(" ", string.Empty).Length != 0)
-            _multiRef.MultiplayerName = _nameField.text;
+        {
+            _multiplayerName = _nameField.text;
+            _nameText.text = _multiplayerName;
+        }
         else
-            _multiRef.MultiplayerName = "Player#" + UnityEngine.Random.Range(1,10000).ToString();
+            _multiplayerName = "Player#" + UnityEngine.Random.Range(1, 10000).ToString();
         _nameField.text = "";
         openedLayer.SetActive(true);
         _nameLayer.SetActive(false);

@@ -15,7 +15,6 @@ public class LobbyManager : MonoBehaviour
 {
     [SerializeField] GameObject _lobbyScrollViewViewport;
     [SerializeField] GameObject _scrollViewContentPrefab;
-    [SerializeField] MultiplayerManager _multiplayerManagerRef;
     [SerializeField] GameObject _LobbyScreen;
     [SerializeField] GameObject _searchScreen;
     [SerializeField] TextMeshProUGUI _team1Text;
@@ -31,7 +30,6 @@ public class LobbyManager : MonoBehaviour
     public Lobby CurrentLobby { get { return _currentLobby; } }
     public bool IsHosting { get { return _isHosting; } }
     public string PlayerID { get { return _thisPlayerId; } }
-    public string PlayerName { get { return _multiplayerManagerRef.MultiplayerName; } }
 
     static bool _isOnline;
     public static bool IsOnline { get { return _isOnline; } }
@@ -42,7 +40,6 @@ public class LobbyManager : MonoBehaviour
     async void Start()
     {
         _isOnline = false;
-        _multiplayerManagerRef = transform.GetChild(0).GetComponent<MultiplayerManager>();
         _startedSearch = false;
         _isHosting = false;
         instance = this;
@@ -63,7 +60,7 @@ public class LobbyManager : MonoBehaviour
     {
         try
         {
-            string lobbyName = _multiplayerManagerRef.MultiplayerName + "'s Lobby";
+            string lobbyName = NameCheck.MultiplayerName + "'s Lobby";
             int maxPlayers = 10;
             CreateLobbyOptions lobbyOptions = new CreateLobbyOptions
             {
@@ -98,7 +95,7 @@ public class LobbyManager : MonoBehaviour
         {
             Data = new Dictionary<string, PlayerDataObject>
                     {
-                        {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, _multiplayerManagerRef.MultiplayerName) },
+                        {"Name", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member, NameCheck.MultiplayerName) },
                         {"isLeftTeam", new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,(isLeftTeam == true)? "y" : "n") },
                         {"isReady",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Member,"n") },
                         {"joinOrder",new PlayerDataObject(PlayerDataObject.VisibilityOptions.Public,$"{order}") }
